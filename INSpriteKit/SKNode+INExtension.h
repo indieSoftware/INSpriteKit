@@ -25,13 +25,27 @@
 
 @interface SKNode (INExtension)
 
-/// Removes and readds the node to its parent so the node will be at top of all other parent's childen.
+
+/**
+ Removes and re-adds the node to its parent so the node will be at top of all other parent's childen.
+ */
 - (void)bringToFront;
 
-/// Removes the node and inserts it to the parent at position 0 so it will become the first node in the tree with all other children ontop of it.
+
+/**
+ Removes the node and inserts it to the parent at position 0 so it will become the first node in the tree with all other children ontop of it.
+ */
 - (void)sendToBack;
 
-/// Runs a new action sequence with the given actions.
+
+/**
+ Runs a new action sequence with the given actions.
+ 
+ It's a shortcut for writing
+ 
+    [SKNode runAction:[SKAction sequence:actions]]
+ 
+ */
 - (void)runActions:(NSArray *)actions;
 
 

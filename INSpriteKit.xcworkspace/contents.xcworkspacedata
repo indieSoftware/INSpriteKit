@@ -40,5 +40,11 @@
       <FileRef
          location = "group:INSKScrollNode.m">
       </FileRef>
+      <FileRef
+         location = "group:INSKTiledImageNode.h">
+      </FileRef>
+      <FileRef
+         location = "group:INSKTiledImageNode.m">
+      </FileRef>
    </Group>
 </Workspace>

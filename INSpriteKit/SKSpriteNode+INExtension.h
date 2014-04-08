@@ -25,8 +25,10 @@
 
 @interface SKSpriteNode (INExtension)
 
+
 /**
  Returns the sprite node's unscaled size by dividing the node's size with the scale factor.
+ 
  @return The unscaled size of the node.
  */
 - (CGSize)sizeUnscaled;

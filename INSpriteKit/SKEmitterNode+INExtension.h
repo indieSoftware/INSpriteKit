@@ -25,22 +25,29 @@
 
 @interface SKEmitterNode (INExtension)
 
+
 /**
  Creates and initializes a new emitter node using a sks file stored in the app bundle.
- @param sksFile The name of the sks file. If no file coult be found with the given name the extension "sks" will be appended.
+ 
+ @param sksFile The name of the sks file. If no file coult be found with the given name the extension "sks" will be appended to the name and retried.
  @return A new emitter node.
  */
 + (instancetype)emitterNodeWithFileNamed:(NSString *)sksFile;
 
+
 /**
  Returns the maximal life time of this emitter.
+ 
  Calculates the maximum seconds this emitter will have some particles to show at total.
+ 
  @return The emitter's life time in seconds. 0 if no particles will be shown and NAN if the emitter last for infinity.
  */
 - (CGFloat)emitterLife;
 
+
 /**
  Creates and runs a new action which will remove this emitter from the parent node after the emitter's life has passed.
+ 
  For calculating the method emitterLife will be used and a new action will only be created if the result value is not NAN.
  */
 - (void)runActionToRemoveWhenFinished;

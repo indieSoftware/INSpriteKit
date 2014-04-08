@@ -38,11 +38,15 @@
 
 #pragma mark - public methods
 
-- (instancetype)init {
++ (INSKScrollNode *)scrollNodeWithSize:(CGSize)scrollNodeSize {
+    return [[INSKScrollNode alloc] initWithSize:scrollNodeSize];
+}
+
+- (instancetype)initWithSize:(CGSize)scrollNodeSize {
     self = [super init];
     if (self == nil) return self;
 
-    self.scrollNodeSize = CGSizeZero;
+    self.scrollNodeSize = scrollNodeSize;
     self.scrollContentSize = CGSizeZero;
     self.clipContent = NO;
     self.userInteractionEnabled = YES;

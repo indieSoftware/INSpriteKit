@@ -29,4 +29,5 @@
 #import "SKEmitterNode+INExtension.h"
 
 #import "INSKScrollNode.h"
+#import "INSKTiledImageNode.h"
 #import "INSKButton.h"
