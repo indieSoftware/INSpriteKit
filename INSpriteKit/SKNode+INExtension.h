@@ -39,6 +39,14 @@
 
 
 /**
+ Adds a node as child, but may also be nil which will not result in an exception.
+
+ @param node The node or nil to add as child.
+ */
+- (void)addChildOrNil:(SKNode *)node;
+
+
+/**
  Runs a new action sequence with the given actions.
  
  It's a shortcut for writing

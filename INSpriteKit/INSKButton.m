@@ -22,173 +22,158 @@
 
 
 #import "INSKButton.h"
+#import "SKNode+INExtension.h"
 #import <objc/message.h>
+
+
+@interface INSKButton ()
+
+@property (nonatomic, assign, readwrite) SEL actionTouchUpInside;
+@property (nonatomic, weak, readwrite) id targetTouchUpInside;
+@property (nonatomic, assign, readwrite) SEL actionTouchDown;
+@property (nonatomic, weak, readwrite) id targetTouchDown;
+@property (nonatomic, assign, readwrite) SEL actionTouchUp;
+@property (nonatomic, weak, readwrite) id targetTouchUp;
+
+@end
 
 
 @implementation INSKButton
 
-#pragma mark Texture Initializer
+#pragma mark - initializer
 
-/**
- * Override the super-classes designated initializer, to get a properly set SKButton in every case
- */
-- (id)initWithTexture:(SKTexture *)texture color:(UIColor *)color size:(CGSize)size {
-    return [self initWithTextureNormal:texture selected:nil disabled:nil];
++ (INSKButton *)buttonNodeWithSize:(CGSize)size {
+    return [[INSKButton alloc] initWithSize:size];
 }
 
-- (id)initWithTextureNormal:(SKTexture *)normal selected:(SKTexture *)selected {
-    return [self initWithTextureNormal:normal selected:selected disabled:nil];
-}
-
-/**
- * This is the designated Initializer
- */
-- (id)initWithTextureNormal:(SKTexture *)normal selected:(SKTexture *)selected disabled:(SKTexture *)disabled {
-    self = [super initWithTexture:normal color:[UIColor whiteColor] size:normal.size];
-    if (self) {
-        [self setNormalTexture:normal];
-        [self setSelectedTexture:selected];
-        [self setDisabledTexture:disabled];
-        [self setIsEnabled:YES];
-        [self setIsSelected:NO];
-        
-        _title = [SKLabelNode labelNodeWithFontNamed:@"Arial"];
-        [_title setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-        [_title setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        
-        [self addChild:_title];
-        [self setUserInteractionEnabled:YES];
-    }
-    return self;
-}
-
-- (instancetype)initWithColor:(UIColor *)color size:(CGSize)size {
-    self = [self initWithTextureNormal:nil selected:nil disabled:nil];
+- (instancetype)initWithSize:(CGSize)size {
+    self = [super initWithColor:[UIColor clearColor] size:size];
     if (self == nil) return self;
     
-    self.color = color;
-    self.size = size;
+    [self setUserInteractionEnabled:YES];
+
+    _enabled = YES;
+    _highlighted = NO;
+    _selected = NO;
+    self.updateSelectedStateAutomatically = NO;
     
     return self;
 }
 
 
-#pragma mark Image Initializer
+#pragma mark - public methods
 
-- (id)initWithImageNamedNormal:(NSString *)normal selected:(NSString *)selected {
-    return [self initWithImageNamedNormal:normal selected:selected disabled:nil];
+- (void)updateState {
+    [self removeAllSubnodes];
+    if (self.isEnabled) {
+        if (self.isSelected) {
+            if (self.isHighlighted) {
+                [self addChildOrNil:self.nodeSelectedHighlighted];
+            } else {
+                [self addChildOrNil:self.nodeSelectedNormal];
+            }
+        } else {
+            if (self.isHighlighted) {
+                [self addChildOrNil:self.nodeHighlighted];
+            } else {
+                [self addChildOrNil:self.nodeNormal];
+            }
+        }
+    } else {
+        [self addChildOrNil:self.nodeDisabled];
+    }
 }
 
-- (id)initWithImageNamedNormal:(NSString *)normal selected:(NSString *)selected disabled:(NSString *)disabled {
-    SKTexture *textureNormal = nil;
-    if (normal) {
-        textureNormal = [SKTexture textureWithImageNamed:normal];
-    }
-    
-    SKTexture *textureSelected = nil;
-    if (selected) {
-        textureSelected = [SKTexture textureWithImageNamed:selected];
-    }
-    
-    SKTexture *textureDisabled = nil;
-    if (disabled) {
-        textureDisabled = [SKTexture textureWithImageNamed:disabled];
-    }
-    
-    return [self initWithTextureNormal:textureNormal selected:textureSelected disabled:textureDisabled];
-}
 
-
-
-
-#pragma -
-#pragma mark Setting Target-Action pairs
+#pragma mark - setting target-action pairs
 
 - (void)setTouchUpInsideTarget:(id)target action:(SEL)action {
-    _targetTouchUpInside = target;
-    _actionTouchUpInside = action;
+    self.targetTouchUpInside = target;
+    self.actionTouchUpInside = action;
 }
 
 - (void)setTouchDownTarget:(id)target action:(SEL)action {
-    _targetTouchDown = target;
-    _actionTouchDown = action;
+    self.targetTouchDown = target;
+    self.actionTouchDown = action;
 }
 
 - (void)setTouchUpTarget:(id)target action:(SEL)action {
-    _targetTouchUp = target;
-    _actionTouchUp = action;
+    self.targetTouchUp = target;
+    self.actionTouchUp = action;
 }
 
-#pragma -
-#pragma mark Setter overrides
 
-- (void)setIsEnabled:(BOOL)isEnabled {
-    _isEnabled = isEnabled;
-    if ([self disabledTexture]) {
-        if (!_isEnabled) {
-            [self setTexture:_disabledTexture];
-        } else {
-            [self setTexture:_normalTexture];
-        }
-    }
+#pragma mark - private methods
+
+- (void)removeAllSubnodes {
+    [self.nodeDisabled removeFromParent];
+    [self.nodeNormal removeFromParent];
+    [self.nodeHighlighted removeFromParent];
+    [self.nodeSelectedNormal removeFromParent];
+    [self.nodeSelectedHighlighted removeFromParent];
 }
 
-- (void)setIsSelected:(BOOL)isSelected {
-    _isSelected = isSelected;
-    if ([self selectedTexture] && [self isEnabled]) {
-        if (_isSelected) {
-            [self setTexture:_selectedTexture];
-        } else {
-            [self setTexture:_normalTexture];
-        }
-    }
+
+#pragma mark - properties
+
+- (void)setEnabled:(BOOL)enabled {
+    if (_enabled == enabled) return;
+    
+    _enabled = enabled;
+    [self updateState];
 }
 
-#pragma -
-#pragma mark Touch Handling
+- (void)setHighlighted:(BOOL)highlighted {
+    if (_highlighted == highlighted) return;
+    
+    _highlighted = highlighted;
+    [self updateState];
+}
 
-/**
- * This method only occurs, if the touch was inside this node. Furthermore if
- * the Button is enabled, the texture should change to "selectedTexture".
- */
+- (void)setSelected:(BOOL)selected {
+    if (_selected == selected) return;
+    
+    _selected = selected;
+    [self updateState];
+}
+
+
+#pragma mark - touch handling
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([self isEnabled]) {
-        objc_msgSend(_targetTouchDown, _actionTouchDown);
-        [self setIsSelected:YES];
+    if (self.isEnabled) {
+        objc_msgSend(self.targetTouchDown, self.actionTouchDown);
+        self.highlighted = YES;
     }
 }
 
-/**
- * If the Button is enabled: This method looks, where the touch was moved to.
- * If the touch moves outside of the button, the isSelected property is restored
- * to NO and the texture changes to "normalTexture".
- */
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([self isEnabled]) {
+    if (self.isEnabled) {
         UITouch *touch = [touches anyObject];
         CGPoint touchPoint = [touch locationInNode:self.parent];
         
         if (CGRectContainsPoint(self.frame, touchPoint)) {
-            [self setIsSelected:YES];
+            self.highlighted = YES;
         } else {
-            [self setIsSelected:NO];
+            self.highlighted = NO;
         }
     }
 }
 
-/**
- * If the Button is enabled AND the touch ended in the buttons frame, the
- * selector of the target is run.
- */
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInNode:self.parent];
-    
-    if ([self isEnabled] && CGRectContainsPoint(self.frame, touchPoint)) {
-        objc_msgSend(_targetTouchUpInside, _actionTouchUpInside);
+    if (self.isEnabled) {
+        UITouch *touch = [touches anyObject];
+        CGPoint touchPoint = [touch locationInNode:self.parent];
+        
+        self.highlighted = NO;
+        if (CGRectContainsPoint(self.frame, touchPoint)) {
+            if (self.updateSelectedStateAutomatically) {
+                self.selected = !self.selected;
+            }
+            objc_msgSend(self.targetTouchUpInside, self.actionTouchUpInside);
+        }
+        objc_msgSend(self.targetTouchUp, self.actionTouchUp);
     }
-    [self setIsSelected:NO];
-    objc_msgSend(_targetTouchUp, _actionTouchUp);
 }
 
 @end

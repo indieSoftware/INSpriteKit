@@ -35,7 +35,7 @@
 
 @implementation INSKTiledImageNode
 
-+ (INSKTiledImageNode *)tiledImageNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
++ (INSKTiledImageNode *)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
     return [[INSKTiledImageNode alloc] initWithImageNamed:imageName tileSize:tileSize];
 }
 

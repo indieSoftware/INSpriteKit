@@ -37,6 +37,12 @@
     [parent insertChild:self atIndex:0];
 }
 
+- (void)addChildOrNil:(SKNode *)node {
+    if (node != nil) {
+        [self addChild:node];
+    }
+}
+
 - (void)runActions:(NSArray *)actions {
     [self runAction:[SKAction sequence:actions]];
 }

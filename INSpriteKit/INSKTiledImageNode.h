@@ -65,7 +65,7 @@
  @return A new instance.
  @see initWithImageNamed:tileSize:
  */
-+ (INSKTiledImageNode *)tiledImageNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
++ (INSKTiledImageNode *)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
 
 
 /**
