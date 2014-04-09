@@ -28,7 +28,7 @@ Add the following line to your Podfile:
 	pod 'INSpriteKit', :git => 'https://github.com/indieSoftware/INSpriteKit.git'
 
 
-**TDODO** make available through CocoaPods
+**TODO** make available through CocoaPods
 
 INSpriteKit is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:

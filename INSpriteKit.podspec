@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary          = "Some SpriteKit extensions used by indie-Software."
   s.homepage         = "https://github.com/indieSoftware/INSpriteKit"
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { "Sven Korset" => "Sven.Korset@indie-Software.de" }
+  s.author           = "Sven Korset"
 
   s.platform         = :ios
   s.ios.deployment_target = '7.0'
