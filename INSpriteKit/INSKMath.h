@@ -102,7 +102,7 @@ static inline GLKVector2 GLKVector2FromCGPoint(CGPoint point) {
 /// @name scalar calculations
 
 /**
- Ensures that a scalar value stays with the range [min..max], inclusive.
+ Ensures that a scalar value stays within the range [min..max], inclusive.
  */
 static inline CGFloat Clamp(CGFloat value, CGFloat min, CGFloat max) {
     return ((value < min) ? min : ((value > max) ? max : value));
