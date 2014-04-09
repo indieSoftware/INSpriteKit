@@ -10,7 +10,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.0'
   s.requires_arc     = true
   
-  s.dependency 'INLib', '~> 0.1'
   s.frameworks       = 'SpriteKit', 'GLKit'
   
   s.source           = { :git => "https://github.com/indieSoftware/INSpriteKit.git", :tag => "0.1.0" }

@@ -23,6 +23,7 @@
 
 #import "SKSpriteNode+INExtension.h"
 
+
 @implementation SKSpriteNode (INExtension)
 
 - (CGSize)sizeUnscaled {

@@ -35,12 +35,12 @@
 
 @implementation INSKTiledImageNode
 
-+ (INSKTiledImageNode *)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
-    return [[INSKTiledImageNode alloc] initWithImageNamed:imageName tileSize:tileSize];
++ (instancetype)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
+    return [[self alloc] initWithImageNamed:imageName tileSize:tileSize];
 }
 
 - (instancetype)initWithImageNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
-    self = [super initWithColor:[UIColor blueColor] size:CGSizeZero];
+    self = [super initWithColor:[SKColor blueColor] size:CGSizeZero];
     if (self == nil) return self;
 
     // load image

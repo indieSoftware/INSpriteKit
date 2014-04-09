@@ -23,6 +23,7 @@
 
 #import "SKNode+INExtension.h"
 
+
 @implementation SKNode (INExtension)
 
 - (void)bringToFront {

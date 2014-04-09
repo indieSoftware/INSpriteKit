@@ -23,17 +23,16 @@
 
 #import "INSKButton.h"
 #import "SKNode+INExtension.h"
-#import <objc/message.h>
 
 
 @interface INSKButton ()
 
-@property (nonatomic, assign, readwrite) SEL actionTouchUpInside;
-@property (nonatomic, weak, readwrite) id targetTouchUpInside;
-@property (nonatomic, assign, readwrite) SEL actionTouchDown;
-@property (nonatomic, weak, readwrite) id targetTouchDown;
-@property (nonatomic, assign, readwrite) SEL actionTouchUp;
-@property (nonatomic, weak, readwrite) id targetTouchUp;
+@property (nonatomic, assign, readwrite) SEL touchUpInsideSelector;
+@property (nonatomic, weak, readwrite) id touchUpInsideTarget;
+@property (nonatomic, assign, readwrite) SEL touchDownSelector;
+@property (nonatomic, weak, readwrite) id touchDownTarget;
+@property (nonatomic, assign, readwrite) SEL touchUpSelector;
+@property (nonatomic, weak, readwrite) id touchUpTarget;
 
 @end
 
@@ -42,26 +41,64 @@
 
 #pragma mark - initializer
 
-+ (INSKButton *)buttonNodeWithSize:(CGSize)size {
-    return [[INSKButton alloc] initWithSize:size];
++ (instancetype)buttonNodeWithSize:(CGSize)size {
+    return [[self alloc] initWithSize:size];
 }
 
 - (instancetype)initWithSize:(CGSize)size {
-    self = [super initWithColor:[UIColor clearColor] size:size];
-    if (self == nil) return self;
-    
-    [self setUserInteractionEnabled:YES];
+    if ((self = [super initWithColor:[SKColor clearColor] size:size])) {
+        [self initINSKButton];
+    }
+    return self;
+}
 
+- (instancetype)initWithColor:(SKColor *)color size:(CGSize)size {
+    if ((self = [super initWithColor:color size:size])) {
+        [self initINSKButton];
+    }
+    return self;
+}
+
+- (instancetype)initWithImageNamed:(NSString *)name {
+    if ((self = [super initWithImageNamed:name])) {
+        [self initINSKButton];
+    }
+    return self;
+}
+
+- (instancetype)initWithTexture:(SKTexture *)texture {
+    if ((self = [super initWithTexture:texture])) {
+        [self initINSKButton];
+    }
+    return self;
+}
+
+- (instancetype)initWithTexture:(SKTexture *)texture color:(SKColor *)color size:(CGSize)size {
+    if ((self = [super initWithTexture:texture color:color size:size])) {
+        [self initINSKButton];
+    }
+    return self;
+}
+
+- (void)initINSKButton {
+    [self setUserInteractionEnabled:YES];
+    
     _enabled = YES;
     _highlighted = NO;
     _selected = NO;
     self.updateSelectedStateAutomatically = NO;
-    
-    return self;
 }
 
 
-#pragma mark - public methods
+#pragma mark - private methods
+
+- (void)removeAllSubnodes {
+    [self.nodeDisabled removeFromParent];
+    [self.nodeNormal removeFromParent];
+    [self.nodeHighlighted removeFromParent];
+    [self.nodeSelectedNormal removeFromParent];
+    [self.nodeSelectedHighlighted removeFromParent];
+}
 
 - (void)updateState {
     [self removeAllSubnodes];
@@ -84,33 +121,37 @@
     }
 }
 
-
-#pragma mark - setting target-action pairs
-
-- (void)setTouchUpInsideTarget:(id)target action:(SEL)action {
-    self.targetTouchUpInside = target;
-    self.actionTouchUpInside = action;
-}
-
-- (void)setTouchDownTarget:(id)target action:(SEL)action {
-    self.targetTouchDown = target;
-    self.actionTouchDown = action;
-}
-
-- (void)setTouchUpTarget:(id)target action:(SEL)action {
-    self.targetTouchUp = target;
-    self.actionTouchUp = action;
+- (void)informTarget:(id)target withSelector:(SEL)selector {
+    // a replacement for performSelector:withObject:
+    NSMethodSignature *methodSig = [[target class] instanceMethodSignatureForSelector:selector];
+    if (methodSig != nil) {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
+        invocation.target = target;
+        invocation.selector = selector;
+        if (methodSig.numberOfArguments == 3) {
+            INSKButton *caller = self;
+            [invocation setArgument:&caller atIndex:2];
+        }
+        [invocation invoke];
+    }
 }
 
 
-#pragma mark - private methods
+#pragma mark - setting target-selector pairs
 
-- (void)removeAllSubnodes {
-    [self.nodeDisabled removeFromParent];
-    [self.nodeNormal removeFromParent];
-    [self.nodeHighlighted removeFromParent];
-    [self.nodeSelectedNormal removeFromParent];
-    [self.nodeSelectedHighlighted removeFromParent];
+- (void)setTouchUpInsideTarget:(id)target selector:(SEL)selector {
+    self.touchUpInsideTarget = target;
+    self.touchUpInsideSelector = selector;
+}
+
+- (void)setTouchDownTarget:(id)target selector:(SEL)selector {
+    self.touchDownTarget = target;
+    self.touchDownSelector = selector;
+}
+
+- (void)setTouchUpTarget:(id)target selector:(SEL)selector {
+    self.touchUpTarget = target;
+    self.touchUpSelector = selector;
 }
 
 
@@ -137,12 +178,37 @@
     [self updateState];
 }
 
+- (void)setNodeDisabled:(SKNode *)nodeDisabled {
+    _nodeDisabled = nodeDisabled;
+    [self updateState];
+}
+
+- (void)setNodeNormal:(SKNode *)nodeNormal {
+    _nodeNormal = nodeNormal;
+    [self updateState];
+}
+
+- (void)setNodeHighlighted:(SKNode *)nodeHighlighted {
+    _nodeHighlighted = nodeHighlighted;
+    [self updateState];
+}
+
+- (void)setNodeSelectedNormal:(SKNode *)nodeSelectedNormal {
+    _nodeSelectedNormal = nodeSelectedNormal;
+    [self updateState];
+}
+
+- (void)setNodeSelectedHighlighted:(SKNode *)nodeSelectedHighlighted {
+    _nodeSelectedHighlighted = nodeSelectedHighlighted;
+    [self updateState];
+}
+
 
 #pragma mark - touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.isEnabled) {
-        objc_msgSend(self.targetTouchDown, self.actionTouchDown);
+        [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
         self.highlighted = YES;
     }
 }
@@ -170,9 +236,9 @@
             if (self.updateSelectedStateAutomatically) {
                 self.selected = !self.selected;
             }
-            objc_msgSend(self.targetTouchUpInside, self.actionTouchUpInside);
+            [self informTarget:self.touchUpInsideTarget withSelector:self.touchUpInsideSelector];
         }
-        objc_msgSend(self.targetTouchUp, self.actionTouchUp);
+        [self informTarget:self.touchUpTarget withSelector:self.touchUpSelector];
     }
 }
 

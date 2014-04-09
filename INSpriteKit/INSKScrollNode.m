@@ -38,8 +38,8 @@
 
 #pragma mark - public methods
 
-+ (INSKScrollNode *)scrollNodeWithSize:(CGSize)scrollNodeSize {
-    return [[INSKScrollNode alloc] initWithSize:scrollNodeSize];
++ (instancetype)scrollNodeWithSize:(CGSize)scrollNodeSize {
+    return [[self alloc] initWithSize:scrollNodeSize];
 }
 
 - (instancetype)initWithSize:(CGSize)scrollNodeSize {
@@ -52,7 +52,7 @@
     self.userInteractionEnabled = YES;
 
     // create background node
-    self.scrollBackgroundNode = [SKSpriteNode spriteNodeWithColor:[UIColor clearColor] size:self.scrollNodeSize];
+    self.scrollBackgroundNode = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:self.scrollNodeSize];
     self.scrollBackgroundNode.anchorPoint = CGPointMake(0.0, 1.0);
     [self addChild:self.scrollBackgroundNode];
     
@@ -82,7 +82,7 @@
         
         [self.scrollContentNode removeFromParent];
         [self.cropNode addChild:self.scrollContentNode];
-        SKSpriteNode *maskNode = [SKSpriteNode spriteNodeWithColor:[UIColor blackColor] size:self.scrollBackgroundNode.size];
+        SKSpriteNode *maskNode = [SKSpriteNode spriteNodeWithColor:[SKColor blackColor] size:self.scrollBackgroundNode.size];
         maskNode.anchorPoint = CGPointMake(0.0, 1.0);
         self.cropNode.maskNode = maskNode;
     }

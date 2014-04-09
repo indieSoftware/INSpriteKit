@@ -24,6 +24,7 @@
 #import "SKEmitterNode+INExtension.h"
 #import "SKNode+INExtension.h"
 
+
 @implementation SKEmitterNode (INExtension)
 
 + (instancetype)emitterNodeWithFileNamed:(NSString *)sksFile {

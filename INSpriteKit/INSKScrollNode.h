@@ -59,9 +59,17 @@
  - Optionally set the clipContent flag if clipping is needed.
  
  Sublcasses of INSKScrollNode may want to override didScrollFromOffset:toOffset: to get informed about scroll movements.
+ 
+    INSKScrollNode *scrollNode = [INSKScrollNode scrollNodeWithSize:sizeOfScrollNode];
+    scrollNode.position = positionOfScrollNode;
+    scrollNode.scrollContentSize = sizeOfContent;
+    scrollNode.scrollContentNode addChild:anySKNodeTreeToShowAsContent];
+    [self addChild:scrollNode];
+ 
  */
 @interface INSKScrollNode : SKNode
 
+/// @name properties
 
 /**
  A not retained delegate object which will be informed about any scroll behaviour.
@@ -118,6 +126,11 @@
 @property (nonatomic, assign) BOOL clipContent;
 
 
+// ------------------------------------------------------------
+#pragma mark - init methods
+// ------------------------------------------------------------
+/// @name init methods
+
 /**
  Creates and initializes an instance of INSKScrollNode with the size of the visible scroll node's area.
  
@@ -127,7 +140,7 @@
  @return A new initialized instance.
  @see initWithSize:
  */
-+ (INSKScrollNode *)scrollNodeWithSize:(CGSize)scrollNodeSize;
++ (instancetype)scrollNodeWithSize:(CGSize)scrollNodeSize;
 
 
 /**
@@ -144,10 +157,7 @@
 // ------------------------------------------------------------
 #pragma mark - subclassing methods
 // ------------------------------------------------------------
-
-/**
- @name Methods for overriding by subclasses.
- */
+/// @name Methods for overriding by subclasses.
 
 /**
  Will be called after the user scrolled the content node.

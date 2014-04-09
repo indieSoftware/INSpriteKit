@@ -40,7 +40,13 @@
 
 /**
  Adds a node as child, but may also be nil which will not result in an exception.
-
+ 
+ Same as
+ 
+    if (node != nil) {
+        [self addChild:node];
+    }
+ 
  @param node The node or nil to add as child.
  */
 - (void)addChildOrNil:(SKNode *)node;
@@ -51,7 +57,7 @@
  
  It's a shortcut for writing
  
-    [SKNode runAction:[SKAction sequence:actions]]
+    [self runAction:[SKAction sequence:actions]]
  
  */
 - (void)runActions:(NSArray *)actions;

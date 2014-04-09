@@ -23,6 +23,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+
 /**
  A SKSpriteNode for large images which will be tiled to show as one.
  
@@ -31,9 +32,15 @@
  INSKTiledImageNode loads an image into memory and tiles it into smaller texture pieces each with a given tile size.
  Then each tile will be added as a SKSpriteNode subnode to the INSKTiledImageNode's instance at the correct position
  so the huge image consisting of the smaller pieces will look like one image.
+ 
+    INSKTiledImageNode *imageNode = [INSKTiledImageNode tiledImageNodeNamed:pathOfHugeImageInBundle tileSize:CGSizeMake(2048, 2048)];
+    imageNode.position = positionOfImageNode;
+    [self addChild:imageNode];
+ 
  */
 @interface INSKTiledImageNode : SKSpriteNode
 
+/// @name properties
 
 /**
  The number of colums the image is tiled in.
@@ -55,6 +62,11 @@
 @property (nonatomic, assign, readonly) CGSize tileSize;
 
 
+// ------------------------------------------------------------
+#pragma mark - init methods
+// ------------------------------------------------------------
+/// @name init methods
+
 /**
  Creates and returns a new instance of INSKTiledImageNode.
  
@@ -65,7 +77,7 @@
  @return A new instance.
  @see initWithImageNamed:tileSize:
  */
-+ (INSKTiledImageNode *)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
++ (instancetype)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
 
 
 /**

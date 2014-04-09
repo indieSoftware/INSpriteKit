@@ -27,15 +27,15 @@
 // ------------------------------------------------------------
 #pragma mark - definitions
 // ------------------------------------------------------------
+/// @name definitions
 
-///
 /**
  Epsilon architecture independent.
  */
 #if CGFLOAT_IS_DOUBLE
-#define kEpsilon DBL_EPSILON
+#define INSK_EPSILON DBL_EPSILON
 #else
-#define kEpsilon FLT_EPSILON
+#define INSK_EPSILON FLT_EPSILON
 #endif
 
 /**
@@ -51,6 +51,7 @@
 // ------------------------------------------------------------
 #pragma mark - CGPoint convertions
 // ------------------------------------------------------------
+/// @name CGPoint convertions
 
 /**
  Converts a CGSize directly into a CGPoint.
@@ -98,6 +99,7 @@ static inline GLKVector2 GLKVector2FromCGPoint(CGPoint point) {
 // ------------------------------------------------------------
 #pragma mark - scalar calculations
 // ------------------------------------------------------------
+/// @name scalar calculations
 
 /**
  Ensures that a scalar value stays with the range [min..max], inclusive.
@@ -117,6 +119,7 @@ static inline CGFloat ScalarSign(CGFloat value) {
 // ------------------------------------------------------------
 #pragma mark - CGPoint calculations
 // ------------------------------------------------------------
+/// @name CGPoint calculations
 
 /**
  Adds an offset (dx, dy) to the point.
@@ -275,16 +278,17 @@ static inline BOOL CGPointNearToPointWithVariance(CGPoint point1, CGPoint point2
 }
 
 /**
- Returns true if the CGPoints are nearly equal within a variance of kEpsilon.
+ Returns true if the CGPoints are nearly equal within a variance of INSK_EPSILON.
  */
 static inline BOOL CGPointNearToPoint(CGPoint point1, CGPoint point2) {
-    return CGPointNearToPointWithVariance(point1, point2, kEpsilon);
+    return CGPointNearToPointWithVariance(point1, point2, INSK_EPSILON);
 }
 
 
 // ------------------------------------------------------------
 #pragma mark - CGSize calculations
 // ------------------------------------------------------------
+/// @name CGSize calculations
 
 /**
  Scales a CGSize to fit a destination size respecting the aspect ratio and returns the scale factor.
@@ -352,6 +356,7 @@ static inline CGSize CGSizeScaledToSizeAspectFill(CGSize origSize, CGSize destSi
 // ------------------------------------------------------------
 #pragma mark - angular convertions and calculations
 // ------------------------------------------------------------
+/// @name angular convertions and calculations
 
 /**
  Converts an angle in degrees to radians.
@@ -429,6 +434,7 @@ static inline CGPoint CGPointRotateByAngle(CGPoint point, CGPoint pivot, CGFloat
 // ------------------------------------------------------------
 #pragma mark - random values
 // ------------------------------------------------------------
+/// @name random values
 
 /**
  Returns a random floating point number between 0.0 and 1.0, inclusive.

@@ -33,10 +33,18 @@
  After initializing a new instance assign SKNode objects to the node properties.
  They will be added and removed automatically upon the state changes of the button.
  At least the nodeNormal and nodeHighlighted node should be set with a visual representation or the button will be invisible.
+ It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the node properties.
  The nodeDisabled is only used if the enabled flag is manually set to NO.
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
- Register for target-action callbacks to get informed about user input.
- Call updateState after initializing to make the button visible.
+ Register for target-selector callbacks to get informed about user input.
+ 
+    INSKButton *button = [INSKButton buttonNodeWithSize:buttonSize];
+    button.position = buttonPosition;
+    button.nodeNormal = [SKSpriteNode spriteNodeWithImageNamed:@"buttonNormal"];
+    button.nodeHightlighted = [SKSpriteNode spriteNodeWithImageNamed:@"buttonHighlighted"];
+    [button setTouchUpInsideTarget:self selector:@selector(buttonPressed:)];
+    [self addChild:button];
+ 
  */
 @interface INSKButton : SKSpriteNode
 
@@ -79,10 +87,34 @@
  */
 @property (nonatomic, assign) BOOL updateSelectedStateAutomatically;
 
+
+/**
+ The node to show when the button's enabled property is set to NO.
+ */
 @property (nonatomic, strong) SKNode *nodeDisabled;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, no touch occured and the selected state is NO.
+ */
 @property (nonatomic, strong) SKNode *nodeNormal;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, a touch occured and the selected state is NO.
+ */
 @property (nonatomic, strong) SKNode *nodeHighlighted;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, no touch occured and the selected state is YES.
+ */
 @property (nonatomic, strong) SKNode *nodeSelectedNormal;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, a touch occured and the selected state is YES.
+ */
 @property (nonatomic, strong) SKNode *nodeSelectedHighlighted;
 
 
@@ -99,7 +131,7 @@
  @return A new button instance.
  @see initWithSize:
  */
-+ (INSKButton *)buttonNodeWithSize:(CGSize)size;
++ (instancetype)buttonNodeWithSize:(CGSize)size;
 
 
 /**
@@ -116,52 +148,50 @@
 
 
 // ------------------------------------------------------------
-#pragma mark - public methods
+#pragma mark - Target-selector setter
 // ------------------------------------------------------------
+/// @name Seting the target-selector pair.
 
 /**
- Updates the visual representation of the button.
+ Target-selector pair that is called when the touch goes up inside of the button's frame.
  
- All nodes are updating and adding to the tree as the states indicate.
- The method should be called after initializing and adding the corresponding node properties in order to make the button visible.
- @warning *This method should be called once after initializing.*
- */
-- (void)updateState;
-
-
-// ------------------------------------------------------------
-#pragma mark - Target-action setter
-// ------------------------------------------------------------
-
-/**
- @name Seting the target-action pair.
- */
-
-/**
- Target-action pair that is called when the touch goes up inside of the button's frame.
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
  
- @param target The target to invoce the action on. Will not be retained.
- @param action The action to call.
- */
-- (void)setTouchUpInsideTarget:(id)target action:(SEL)action;
-
-
-/**
- Target-action pair that is called when the touch goes down inside of the button's frame.
+    aSelector
+    aSelector:(INSKButton *)button
  
- @param target The target to invoce the action on. Will not be retained.
- @param action The action to call.
+ @param target The target to invoce the selector on. Will not be retained.
+ @param selector The selector to call on the target.
  */
-- (void)setTouchDownTarget:(id)target action:(SEL)action;
+- (void)setTouchUpInsideTarget:(id)target selector:(SEL)selector;
 
 
 /**
- Target-action pair that is called when the touch goes up inside or outside of the button's frame.
-
- @param target The target to invoce the action on. Will not be retained.
- @param action The action to call.
+ Target-selector pair that is called when the touch goes down inside of the button's frame.
+ 
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
+ 
+ aSelector
+ aSelector:(INSKButton *)button
+ 
+ @param target The target to invoce the selector on. Will not be retained.
+ @param selector The selector to call on the target.
  */
-- (void)setTouchUpTarget:(id)target action:(SEL)action;
+- (void)setTouchDownTarget:(id)target selector:(SEL)selector;
+
+
+/**
+ Target-selector pair that is called when the touch goes up inside or outside of the button's frame.
+
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
+ 
+ aSelector
+ aSelector:(INSKButton *)button
+ 
+ @param target The target to invoce the selector on. Will not be retained.
+ @param selector The selector to call on the target.
+ */
+- (void)setTouchUpTarget:(id)target selector:(SEL)selector;
 
 
 @end
