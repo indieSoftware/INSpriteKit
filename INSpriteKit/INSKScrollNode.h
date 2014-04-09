@@ -66,6 +66,7 @@
     scrollNode.scrollContentNode addChild:anySKNodeTreeToShowAsContent];
     [self addChild:scrollNode];
  
+ The content node's origin is defined as the upper left corner, so content objects should have a position with a negative Y-axis.
  */
 @interface INSKScrollNode : SKNode
 
@@ -111,6 +112,7 @@
  
  Other visible nodes should be added to this node for having them scrolled by calling addChild: on this property's node.
  The total size of the content is defined by scrollContentSize and should be changed there so the scroll node knows how far the user can scroll.
+ Keep in mind that the content frame is definied with the origin at the top left corner so adding subnodes to this node should have negative values for the Y-axis to be visible.
  
  @see scrollContentSize
  @warning *Warning:* Never change any properties of this node.
@@ -162,7 +164,7 @@
 /**
  Will be called after the user scrolled the content node.
  
- Subclasses may overridde this to get informed.
+ Subclasses may overridde this to get informed, but should never be called manually.
  This method informs the delegate about the movement so subclasses should call super.
  
  @param fromOffset The scrollContentNode's starting position.

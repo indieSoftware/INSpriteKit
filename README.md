@@ -7,10 +7,8 @@ A little iOS SpriteKit Library used in projects from the indie-Software company.
 
 ## Examples
 
-**TODO** Create example project
-
 To run the example project; clone the repo, and run `pod install` from the Example directory first.
-
+Then open the workspace file INSpriteKitExample.xcworkspace with Xcode and run the example.
 
 ## Requirements
 

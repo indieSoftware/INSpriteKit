@@ -108,10 +108,10 @@
     // limit scrolling horizontally
     if (self.scrollContentSize.width <= self.scrollNodeSize.width) {
         self.scrollContentNode.position = CGPointMake(0, self.scrollContentNode.position.y);
-    } else  if (self.scrollContentNode.position.x < 0.0) {
+    } else  if (self.scrollContentNode.position.x > 0.0) {
         self.scrollContentNode.position = CGPointMake(0, self.scrollContentNode.position.y);
-    } else if (self.scrollContentNode.position.x > self.scrollContentSize.width - self.scrollNodeSize.width) {
-        self.scrollContentNode.position = CGPointMake(self.scrollContentSize.width - self.scrollNodeSize.width, self.scrollContentNode.position.y);
+    } else if (self.scrollContentNode.position.x < -(self.scrollContentSize.width - self.scrollNodeSize.width)) {
+        self.scrollContentNode.position = CGPointMake(-(self.scrollContentSize.width - self.scrollNodeSize.width), self.scrollContentNode.position.y);
     }
     
     // limit scrolling vertically
