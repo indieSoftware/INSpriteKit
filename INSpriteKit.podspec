@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = "INSpriteKit"
   s.version          = "0.1.0"
-  s.summary          = "Some SpriteKit extensions used by indie-Software."
+  s.summary          = "A little iOS Library with SpriteKit extensions."
   s.homepage         = "https://github.com/indieSoftware/INSpriteKit"
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = "Sven Korset"
