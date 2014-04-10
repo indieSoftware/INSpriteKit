@@ -25,6 +25,10 @@ Add the following line to your Podfile:
 
 	pod 'INSpriteKit', :git => 'https://github.com/indieSoftware/INSpriteKit.git'
 
+or clone the repo manually and add the INSpriteKit directory to your project.
+
+Add the necessary frameworks mentioned in the requirements section to your project.
+Include the INSpriteKit.h header file to get access to all additions.
 
 **TODO** make available through CocoaPods
 

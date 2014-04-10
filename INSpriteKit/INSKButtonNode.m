@@ -1,4 +1,4 @@
-// INSKButton.m
+// INSKButtonNode.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,11 +21,11 @@
 // THE SOFTWARE.
 
 
-#import "INSKButton.h"
+#import "INSKButtonNode.h"
 #import "SKNode+INExtension.h"
 
 
-@interface INSKButton ()
+@interface INSKButtonNode ()
 
 @property (nonatomic, assign, readwrite) SEL touchUpInsideSelector;
 @property (nonatomic, weak, readwrite) id touchUpInsideTarget;
@@ -37,7 +37,7 @@
 @end
 
 
-@implementation INSKButton
+@implementation INSKButtonNode
 
 #pragma mark - initializer
 
@@ -129,7 +129,7 @@
         invocation.target = target;
         invocation.selector = selector;
         if (methodSig.numberOfArguments == 3) {
-            INSKButton *caller = self;
+            INSKButtonNode *caller = self;
             [invocation setArgument:&caller atIndex:2];
         }
         [invocation invoke];

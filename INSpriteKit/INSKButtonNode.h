@@ -1,4 +1,4 @@
-// INSKButton.h
+// INSKButtonNode.h
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -29,7 +29,7 @@
  
  This class represents a button which can be enabled and disabled.
  The highlight state will be updated by the user's touch and correspondign selectors called.
- The INSKButton instance can also be used as a toggle button with it's selected state which will also be automatically updated.
+ The INSKButtonNode instance can also be used as a toggle button with it's selected state which will also be automatically updated.
  After initializing a new instance assign SKNode objects to the node properties.
  They will be added and removed automatically upon the state changes of the button.
  At least the nodeNormal and nodeHighlighted node should be set with a visual representation or the button will be invisible.
@@ -38,7 +38,7 @@
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
  Register for target-selector callbacks to get informed about user input.
  
-    INSKButton *button = [INSKButton buttonNodeWithSize:buttonSize];
+    INSKButtonNode *button = [INSKButtonNode buttonNodeWithSize:buttonSize];
     button.position = buttonPosition;
     button.nodeNormal = [SKSpriteNode spriteNodeWithImageNamed:@"buttonNormal"];
     button.nodeHightlighted = [SKSpriteNode spriteNodeWithImageNamed:@"buttonHighlighted"];
@@ -46,7 +46,7 @@
     [self addChild:button];
  
  */
-@interface INSKButton : SKSpriteNode
+@interface INSKButtonNode : SKSpriteNode
 
 // ------------------------------------------------------------
 #pragma mark - Properties
@@ -123,7 +123,7 @@
 // ------------------------------------------------------------
 
 /**
- Creates and returns a new instance of INSKButton.
+ Creates and returns a new instance of INSKButtonNode.
  
  Calls initWithSize:.
  
@@ -135,10 +135,10 @@
 
 
 /**
- Initializes a INSKButton instance with the given size.
+ Initializes a INSKButtonNode instance with the given size.
  
  The size describes the touch area of the button.
- An instance of INSKButton is also a SKSpriteNode so a background image or color may be set.
+ An instance of INSKButtonNode is also a SKSpriteNode so a background image or color may be set.
  However the button representation should be done with the other nodes the button contains of.
  
  @param size The size of the button.
@@ -155,10 +155,10 @@
 /**
  Target-selector pair that is called when the touch goes up inside of the button's frame.
  
- The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButtonNode.
  
     aSelector
-    aSelector:(INSKButton *)button
+    aSelector:(INSKButtonNode *)button
  
  @param target The target to invoce the selector on. Will not be retained.
  @param selector The selector to call on the target.
@@ -169,10 +169,10 @@
 /**
  Target-selector pair that is called when the touch goes down inside of the button's frame.
  
- The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButtonNode.
  
  aSelector
- aSelector:(INSKButton *)button
+ aSelector:(INSKButtonNode *)button
  
  @param target The target to invoce the selector on. Will not be retained.
  @param selector The selector to call on the target.
@@ -183,10 +183,10 @@
 /**
  Target-selector pair that is called when the touch goes up inside or outside of the button's frame.
 
- The target's selector has to accept either no parameters at all or a single object of the type INSKButton.
+ The target's selector has to accept either no parameters at all or a single object of the type INSKButtonNode.
  
  aSelector
- aSelector:(INSKButton *)button
+ aSelector:(INSKButtonNode *)button
  
  @param target The target to invoce the selector on. Will not be retained.
  @param selector The selector to call on the target.
