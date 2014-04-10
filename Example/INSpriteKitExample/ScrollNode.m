@@ -27,10 +27,16 @@
     INSKScrollNode *scrollNode = [INSKScrollNode scrollNodeWithSize:CGSizeMake(500, 700)];
     scrollNode.position = CGPointMake(-scrollNode.scrollNodeSize.width / 2, scrollNode.scrollNodeSize.height / 2);
     scrollNode.scrollDelegate = self;
-    scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
+    [self addChild:scrollNode];
+
+    // Additional set up
     scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
     scrollNode.clipContent = YES;
-    [self addChild:scrollNode];
+    scrollNode.pageSize = CGSizeMake(100, 100);
+
+    // Set content size and position
+    scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
+    scrollNode.scrollContentPosition = CGPointMake(-(scrollNode.scrollContentSize.width - scrollNode.scrollNodeSize.width) / 2, (scrollNode.scrollContentSize.height - scrollNode.scrollNodeSize.height) / 2);
 
     // Add content to the scroll node
     SKSpriteNode *spaceship = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];

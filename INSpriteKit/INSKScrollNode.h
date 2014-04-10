@@ -97,6 +97,16 @@
 
 
 /**
+ The position of the scrollContentNode relative to it's parent which is this scroll node, thus the point has negative values for the X-axis and positive for the Y-axis.
+ 
+ Setting a new value with by this property also applies boundary checks afterwards 
+ so the scrollContentNode may be repositioned if it otherwise would be outside of the visible frame.
+ Update the scrollContentNode's position property directly if you don't want the boundary checks to be applied.
+ */
+@property (nonatomic, assign) CGPoint scrollContentPosition;
+
+
+/**
  The background of the scroll node with the size equal to the scroll node itself.
  
  It is a SKSpriteNode which is needed to catch user input inside of the scroll node.
@@ -126,6 +136,9 @@
  If set to YES the content will be clipped to the bounds of the scroll node, otherwise it may be visible beneath it's bounds.
  */
 @property (nonatomic, assign) BOOL clipContent;
+
+
+@property (nonatomic, assign) CGSize pageSize;
 
 
 // ------------------------------------------------------------
