@@ -138,6 +138,16 @@
 @property (nonatomic, assign) BOOL clipContent;
 
 
+/**
+ Defines the size of each page. Defaults to CGSizeZero, so paging is disabled.
+ 
+ To enable paging for the scroll node set width and/or height of the page size with a value greater than zero.
+ After the scroll content has been dragged the content will snap according to the page's size.
+ A usual use case for paging should be having a page size of equal size to the scroll node's size itself:
+ 
+    scrollNode.pageSize = scrollNode.scrollNodeSize;
+ 
+ */
 @property (nonatomic, assign) CGSize pageSize;
 
 
