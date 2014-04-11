@@ -54,6 +54,7 @@ static CGFloat const PagedContentMoveActionDuration = 0.3;
     self.scrollContentSize = CGSizeZero;
     self.clipContent = NO;
     self.pageSize = CGSizeZero;
+    self.pagingMode = INSKScrollNodePageModeNone;
     self.userInteractionEnabled = YES;
 
     // create background node
@@ -103,11 +104,14 @@ static CGFloat const PagedContentMoveActionDuration = 0.3;
 
 - (void)setScrollContentSize:(CGSize)scrollContentSize {
     _scrollContentSize = scrollContentSize;
+
+    [self stopScrollAnimations];
     [self applyScrollLimits];
 }
 
 - (void)setScrollContentPosition:(CGPoint)scrollContentPosition {
     self.scrollContentNode.position = scrollContentPosition;
+    [self stopScrollAnimations];
     [self applyScrollLimits];
 }
 
@@ -144,11 +148,80 @@ static CGFloat const PagedContentMoveActionDuration = 0.3;
     self.scrollContentNode.position = [self positionWithScrollLimitsApplyed:self.scrollContentNode.position];
 }
 
+- (void)stopScrollAnimations {
+    [self.scrollContentNode removeActionForKey:PagedContentMoveActionName];
+}
+
+- (void)applySnappingWithDirection:(CGPoint)direction {
+    if (self.pagingMode == INSKScrollNodePageModeNone) return;
+    
+    // calculate translation for page snapping
+    CGPoint translation = CGPointZero;
+    NSLog(@"dir %f", direction.x);
+    
+    if (self.pageSize.width > 0) {
+        CGFloat translationX = (NSInteger)self.scrollContentNode.position.x % (NSInteger)self.pageSize.width;
+        BOOL snappingOccured = NO;
+        if (self.pagingMode == INSKScrollNodePageModeDirection) {
+            if (direction.x < 0) {
+                translation.x = -self.pageSize.width - translationX;
+                snappingOccured = YES;
+            } else if (direction.x > 0) {
+                translation.x = -translationX;
+                snappingOccured = YES;
+            } else {
+                // use INSKScrollNodePageModeHalfPage behavior
+            }
+        }
+        if (!snappingOccured) {
+            if (fabs(translationX) >= self.pageSize.width / 2) {
+                translation.x = -self.pageSize.width - translationX;
+            } else {
+                translation.x = -translationX;
+            }
+        }
+    }
+    
+    if (self.pageSize.height > 0) {
+        CGFloat translationY = (NSInteger)self.scrollContentNode.position.y % (NSInteger)self.pageSize.height;
+        BOOL snappingOccured = NO;
+        if (self.pagingMode == INSKScrollNodePageModeDirection) {
+            if (direction.y > 0) {
+                translation.y = self.pageSize.height - translationY;
+                snappingOccured = YES;
+            } else if (direction.y < 0) {
+                translation.y = -translationY;
+                snappingOccured = YES;
+            } else {
+                // use INSKScrollNodePageModeHalfPage behavior
+            }
+        }
+        if (!snappingOccured) {
+            if (translationY >= self.pageSize.height / 2) {
+                translation.y = self.pageSize.height - translationY;
+            } else {
+                translation.y = -translationY;
+            }
+        }
+    }
+    
+    // apply scroll bounds for destination position
+    CGPoint destinationPosition = CGPointAdd(self.scrollContentNode.position, translation);
+    destinationPosition = [self positionWithScrollLimitsApplyed:destinationPosition];
+    
+    // apply snap animation
+    if (!CGPointNearToPoint(destinationPosition, self.scrollContentNode.position)) {
+        SKAction *move = [SKAction moveTo:destinationPosition duration:PagedContentMoveActionDuration];
+        move.timingMode = SKActionTimingEaseOut;
+        [self.scrollContentNode runAction:move withKey:PagedContentMoveActionName];
+    }
+}
+
 
 #pragma mark - touch events
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.scrollContentNode removeActionForKey:PagedContentMoveActionName];
+    [self stopScrollAnimations];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -178,41 +251,25 @@ static CGFloat const PagedContentMoveActionDuration = 0.3;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    // calculate translation for page snapping
-    CGPoint translation = CGPointZero;
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self.scene];
+    CGPoint lastLocation = [touch previousLocationInNode:self.scene];
+    CGPoint direction = CGPointSubtract(location, lastLocation);
 
-    if (self.pageSize.width > 0) {
-        CGFloat translationX = (NSInteger)self.scrollContentNode.position.x % (NSInteger)self.pageSize.width;
-        if (fabs(translationX) >= self.pageSize.width / 2) {
-            translation.x = -self.pageSize.width - translationX;
-        } else {
-            translation.x = -translationX;
-        }
-    }
-
-    if (self.pageSize.height > 0) {
-        CGFloat translationY = (NSInteger)self.scrollContentNode.position.y % (NSInteger)self.pageSize.height;
-        if (translationY >= self.pageSize.height / 2) {
-            translation.y = self.pageSize.height - translationY;
-        } else {
-            translation.y = -translationY;
-        }
-    }
-    
-    // apply scroll bounds for destination position
-    CGPoint destinationPosition = CGPointAdd(self.scrollContentNode.position, translation);
-    destinationPosition = [self positionWithScrollLimitsApplyed:destinationPosition];
-    
-    // apply snap animation
-    if (!CGPointNearToPoint(destinationPosition, self.scrollContentNode.position)) {
-        SKAction *move = [SKAction moveTo:destinationPosition duration:PagedContentMoveActionDuration];
-        move.timingMode = SKActionTimingEaseOut;
-        [self.scrollContentNode runAction:move withKey:PagedContentMoveActionName];
-    }
+    [self applySnappingWithDirection:direction];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self.scene];
+    CGPoint lastLocation = [touch previousLocationInNode:self.scene];
+    CGPoint direction = CGPointSubtract(location, lastLocation);
+    
+    [self applySnappingWithDirection:direction];
 }
+
+
+#pragma mark - methods to override
 
 - (void)didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset {
     if ([self.scrollDelegate respondsToSelector:@selector(scrollNode:didScrollFromOffset:toOffset:)]) {

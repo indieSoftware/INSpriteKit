@@ -109,6 +109,16 @@ static inline CGFloat Clamp(CGFloat value, CGFloat min, CGFloat max) {
 }
 
 /**
+ Returns only YES if two scalars are approximately equal, only within a difference of the value defined by INSK_EPSILON.
+ */
+static inline BOOL ScalarNearOther(CGFloat value, CGFloat other) {
+    if (value <= other + INSK_EPSILON && value >= other - INSK_EPSILON) {
+        return YES;
+    }
+    return NO;
+}
+
+/**
  Returns 1.0 if a floating point value is positive; -1.0 if it is negative.
  */
 static inline CGFloat ScalarSign(CGFloat value) {
@@ -269,8 +279,8 @@ static inline CGPoint CGPointNormalizedInSize(CGPoint point, CGSize size) {
  Returns true if two CGPoints are nearly equal within a variance, otherwise false.
  */
 static inline BOOL CGPointNearToPointWithVariance(CGPoint point1, CGPoint point2, CGFloat variance) {
-    if (point1.x - variance <= point2.x && point2.x <= point1.x + variance) {
-		if (point1.y - variance <= point2.y && point2.y <= point1.y + variance) {
+    if (point1.x <= point2.x + variance && point1.x >= point2.x - variance) {
+		if (point1.y <= point2.y + variance && point1.y >= point2.y - variance) {
 			return YES;
 		}
 	}

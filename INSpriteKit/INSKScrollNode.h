@@ -24,6 +24,22 @@
 #import <SpriteKit/SpriteKit.h>
 
 
+/**
+ The type of paging to use if any.
+ */
+typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
+    /// No paging to use, the default. The content will be left where the user lifted the finger.
+    INSKScrollNodePageModeNone = 0,
+    /// The page snaps accordingly to where the most of the actual content is inside,
+    /// so the user has to move the finger at least half a page size to get snapped to the next.
+    INSKScrollNodePageModeHalfPage,
+    /// The page snaps accordingly to the direction of the last touch move, i.e.
+    /// when dragged to the right and the finger lifted the page will snap to the next right page
+    /// regardless of the distance the finger moved.
+    INSKScrollNodePageModeDirection
+};
+
+
 @class INSKScrollNode;
 
 /**
@@ -58,15 +74,26 @@
  - Add subnodes to scrollContentNode at the appropriate positions.
  - Optionally set the clipContent flag if clipping is needed.
  
- Sublcasses of INSKScrollNode may want to override didScrollFromOffset:toOffset: to get informed about scroll movements.
- 
     INSKScrollNode *scrollNode = [INSKScrollNode scrollNodeWithSize:sizeOfScrollNode];
     scrollNode.position = positionOfScrollNode;
     scrollNode.scrollContentSize = sizeOfContent;
     scrollNode.scrollContentNode addChild:anySKNodeTreeToShowAsContent];
     [self addChild:scrollNode];
+
+ Sublcasses of INSKScrollNode may want to override didScrollFromOffset:toOffset: to get informed about scroll movements.
+
+ The content node's origin is defined as the upper left corner, so the scroll node's frame is right bottom of the node's position. Adding it directly to the scene node will not show the scroll content, because it will be just under the screen, instead set the position to something like
  
- The content node's origin is defined as the upper left corner, so content objects should have a position with a negative Y-axis.
+    scrollNode.position = CGPointMake(0, scene.size.height);
+    scrollNode.scrollContentSize = scene.size;
+    scrollNode.scrollBackgroundNode.color = [SKColor yellowColor]; // for debugging purposes makes the scroll node visible
+ 
+ Because the scroll content is under the origin all content objects added to scrollContentNode should therefore have a position with a negative value for the Y-axis.
+ 
+    SKSpriteNode *picture = [SKSpriteNode spriteNodeWithImageNamed:@"picture"];
+    picture.position = CGPoint(scene.size.width / 2, -scene.size.height / 2);
+    [scrollNode.scrollContentNode addChild:picture];
+ 
  */
 @interface INSKScrollNode : SKNode
 
@@ -139,16 +166,23 @@
 
 
 /**
- Defines the size of each page. Defaults to CGSizeZero, so paging is disabled.
+ Defines the size of each page. Defaults to CGSizeZero. The paging size is only used if pagingMode is enabled.
  
- To enable paging for the scroll node set width and/or height of the page size with a value greater than zero.
- After the scroll content has been dragged the content will snap according to the page's size.
+ To enable paging for the scroll node set width and/or height of the page size with a value greater than zero and pagingMode to any value other than INSKScrollNodePageModeNone.
+ After the scroll content has been dragged the content will snap according to the page's size and mode.
  A usual use case for paging should be having a page size of equal size to the scroll node's size itself:
  
     scrollNode.pageSize = scrollNode.scrollNodeSize;
  
  */
 @property (nonatomic, assign) CGSize pageSize;
+
+
+/**
+ The paging behavior to use. Defaults to INSKScrollNodePageModeNone so paging is disabled.
+ @see INSKScrollNodePageMode
+ */
+@property (nonatomic, assign) INSKScrollNodePageMode pagingMode;
 
 
 // ------------------------------------------------------------

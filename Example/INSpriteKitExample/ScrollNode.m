@@ -32,7 +32,8 @@
     // Additional set up
     scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
     scrollNode.clipContent = YES;
-    scrollNode.pageSize = CGSizeMake(100, 100);
+    scrollNode.pagingMode = INSKScrollNodePageModeNone;
+    scrollNode.pageSize = CGSizeMake(200, 200);
 
     // Set content size and position
     scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
