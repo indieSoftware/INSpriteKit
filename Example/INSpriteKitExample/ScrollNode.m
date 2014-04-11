@@ -32,11 +32,12 @@
     // Additional set up
     scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
     scrollNode.clipContent = YES;
-    scrollNode.pagingMode = INSKScrollNodePageModeNone;
+    scrollNode.pagingMode = INSKScrollNodePageModeDirection;
     scrollNode.pageSize = CGSizeMake(200, 200);
+    scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
+    NSLog(@"scrollNode has %dx%d pages", scrollNode.numberOfPagesX, scrollNode.numberOfPagesY);
 
     // Set content size and position
-    scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
     scrollNode.scrollContentPosition = CGPointMake(-(scrollNode.scrollContentSize.width - scrollNode.scrollNodeSize.width) / 2, (scrollNode.scrollContentSize.height - scrollNode.scrollNodeSize.height) / 2);
 
     // Add content to the scroll node
@@ -48,7 +49,11 @@
 }
 
 - (void)scrollNode:(INSKScrollNode *)scrollNode didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset {
-    NSLog(@"scrollNode scrolled to %.0fx%0.f", toOffset.x, toOffset.y);
+    NSLog(@"scrollNode scrolled to %.0fx%0.f at page %d,%d", toOffset.x, toOffset.y, scrollNode.currentPageX, scrollNode.currentPageY);
+}
+
+- (void)scrollNode:(INSKScrollNode *)scrollNode didFinishScrollingAtPosition:(CGPoint)offset {
+    NSLog(@"scrollNode finished scrolling at %.0fx%0.f on page %d,%d", offset.x, offset.y, scrollNode.currentPageX, scrollNode.currentPageY);
 }
 
 

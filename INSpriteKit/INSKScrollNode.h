@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
 };
 
 
+
 @class INSKScrollNode;
 
 /**
@@ -54,11 +55,27 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
 /**
  Optional delegate method which will be called when the content scroll node has been moved by the user.
  
+ This method is called for every touch move event.
+ 
  @param scrollNode The ISKScrollNode node which informs about the scrolling.
  @param fromOffset The scrollContentNode's starting position.
  @param toOffset The scrollContentNode's end position.
  */
 - (void)scrollNode:(INSKScrollNode *)scrollNode didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset;
+
+
+/**
+ Optional delegate method which will be called when the content scroll node has finished moving and the user has lifted all fingers.
+ 
+ This method is only called once when the last touch has been lifted.
+ If no paging or automated scrolling is enabled the method will be called right after the user has lifted the finger,
+ otherwise the method call is delayed until the scroll animation has finished.
+ 
+ @param scrollNode The ISKScrollNode node which informs about the scrolling.
+ @param offset The final scrollContentNode's position.
+ */
+- (void)scrollNode:(INSKScrollNode *)scrollNode didFinishScrollingAtPosition:(CGPoint)offset;
+
 
 @end
 
@@ -80,8 +97,6 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
     scrollNode.scrollContentNode addChild:anySKNodeTreeToShowAsContent];
     [self addChild:scrollNode];
 
- Sublcasses of INSKScrollNode may want to override didScrollFromOffset:toOffset: to get informed about scroll movements.
-
  The content node's origin is defined as the upper left corner, so the scroll node's frame is right bottom of the node's position. Adding it directly to the scene node will not show the scroll content, because it will be just under the screen, instead set the position to something like
  
     scrollNode.position = CGPointMake(0, scene.size.height);
@@ -97,6 +112,9 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  */
 @interface INSKScrollNode : SKNode
 
+// ------------------------------------------------------------
+#pragma mark - properties
+// ------------------------------------------------------------
 /// @name properties
 
 /**
@@ -214,6 +232,59 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
 
 
 // ------------------------------------------------------------
+#pragma mark - public interface
+// ------------------------------------------------------------
+/// @name Public interface
+
+/**
+ The total number of snappable pages on the X-axis.
+ 
+ Calculates 
+ 
+    ceil(scrollContentSize.width - scrollNodeSize.width) / self.pageSize.width
+ 
+ @return The number of pages. Always 0 if paging is disabled.
+ */
+- (NSUInteger)numberOfPagesX;
+
+
+/**
+ The total number of snappable pages on the Y-axis.
+ 
+ Calculates
+ 
+    ceil((scrollContentSize.height - scrollNodeSize.height) / self.pageSize.height)
+ 
+ @return The number of pages. Always 0 if paging is disabled.
+ */
+- (NSUInteger)numberOfPagesY;
+
+
+/**
+ The current page's index on the X-axis.
+ 
+ Calculates
+ 
+    round(-self.scrollContentNode.position.x / self.pageSize.width)
+ 
+ @return The page index beginning with 0. Always 0 if paging is disabled.
+ */
+- (NSUInteger)currentPageX;
+
+
+/**
+ The current page's index on the Y-axis.
+ 
+ Calculates
+ 
+    round(-self.scrollContentNode.position.y / self.pageSize.height)
+ 
+ @return The page index beginning with 0. Always 0 if paging is disabled.
+ */
+- (NSUInteger)currentPageY;
+
+
+// ------------------------------------------------------------
 #pragma mark - subclassing methods
 // ------------------------------------------------------------
 /// @name Methods for overriding by subclasses.
@@ -221,13 +292,24 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
 /**
  Will be called after the user scrolled the content node.
  
- Subclasses may overridde this to get informed, but should never be called manually.
+ Subclasses may override this method to get informed, but should never be called manually.
  This method informs the delegate about the movement so subclasses should call super.
  
  @param fromOffset The scrollContentNode's starting position.
  @param toOffset The scrollContentNode's end position.
  */
 - (void)didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset;
+
+
+/**
+ Will be called after the unser lifted all fingers and any paging scroll behavior has finished.
+ 
+ Subclasses may override this method to get informed, but should never be called manually.
+ This method informs the delegate about the end of movement so subclasses should call super.
+ 
+ @param offset The final scrollContentNode's position.
+ */
+- (void)didFinishScrollingAtPosition:(CGPoint)offset;
 
 
 @end

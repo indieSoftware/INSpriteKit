@@ -48,5 +48,9 @@
     [self runAction:[SKAction sequence:actions]];
 }
 
+- (void)runActions:(NSArray *)actions withKey:(NSString *)key {
+    [self runAction:[SKAction sequence:actions] withKey:key];
+}
+
 
 @end

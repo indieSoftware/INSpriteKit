@@ -59,8 +59,22 @@
  
     [self runAction:[SKAction sequence:actions]]
  
+ @param actions An array with the actions to make a sequence of.
  */
 - (void)runActions:(NSArray *)actions;
+
+
+/**
+ Runs a new action sequence with the given actions and a name.
+ 
+ Same as calling
+ 
+    [self runAction:[SKAction sequence:actions] withKey:key];
+ 
+ @param actions An array with the actions to make a sequence of.
+ @param key The key name of this added sequence.
+ */
+- (void)runActions:(NSArray *)actions withKey:(NSString *)key;
 
 
 @end
