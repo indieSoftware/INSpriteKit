@@ -38,6 +38,13 @@ it simply add the following line to your Podfile:
     pod "INSpriteKit"
 
 
+## Version
+
+Currently in work, no version released, yet!
+
+[ChangeLog](./CHANGELOG.md)
+
+
 ## License
 
 INSpriteKit is available under the MIT license. See the LICENSE file for more info.
