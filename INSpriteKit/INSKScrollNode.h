@@ -25,18 +25,30 @@
 
 
 /**
- The type of paging to use if any.
+ The type of deceleration to use if any, i.e. paging.
  */
-typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
-    /// No paging to use, the default. The content will be left where the user lifted the finger.
-    INSKScrollNodePageModeNone = 0,
-    /// The page snaps accordingly to where the most of the actual content is inside,
-    /// so the user has to move the finger at least half a page size to get snapped to the next.
-    INSKScrollNodePageModeHalfPage,
-    /// The page snaps accordingly to the direction of the last touch move, i.e.
-    /// when dragged to the right and the finger lifted the page will snap to the next right page
-    /// regardless of the distance the finger moved.
-    INSKScrollNodePageModeDirection
+typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
+    /**
+     No paging or any deceleration functions to use, the default.
+     The content will be left right there where the user lifted the finger, so scrolling abruptly stops.
+     */
+    INSKScrollNodeDecelerationModeNone = 0,
+    /**
+     The page snaps accordingly to where the most of the actual content is inside,
+     so the user has to move the finger at least half a page size to get snapped to the next.
+     */
+    INSKScrollNodeDecelerationModeHalfPage,
+    /**
+     The page snaps accordingly to the direction of the last touch move, i.e.
+     when dragged to the right and the finger lifted the page will snap to the next right page
+     regardless of the distance the finger moved.
+     */
+    INSKScrollNodeDecelerationModeDirection,
+    /**
+     The content uses a smooth deceleration.
+     The content will move a little bit in the direction the user moved it before it slowly stops.
+     */
+    INSKScrollNodeDecelerationModeDecelerate
 };
 
 
@@ -60,8 +72,9 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  @param scrollNode The ISKScrollNode node which informs about the scrolling.
  @param fromOffset The scrollContentNode's starting position.
  @param toOffset The scrollContentNode's end position.
+ @param velocity The scrollContentNode's velocity averaged.
  */
-- (void)scrollNode:(INSKScrollNode *)scrollNode didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset;
+- (void)scrollNode:(INSKScrollNode *)scrollNode didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset velocity:(CGPoint)velocity;
 
 
 /**
@@ -184,23 +197,33 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
 
 
 /**
- Defines the size of each page. Defaults to CGSizeZero. The paging size is only used if pagingMode is enabled.
+ The paging behavior to use. Defaults to INSKScrollNodeDecelerationModeNone so deceleration and paging is disabled.
+ @see INSKScrollNodeDecelerationMode
+ */
+@property (nonatomic, assign) INSKScrollNodeDecelerationMode decelerationMode;
+
+
+/**
+ Defines the size of each page. Defaults to CGSizeZero.
  
- To enable paging for the scroll node set width and/or height of the page size with a value greater than zero and pagingMode to any value other than INSKScrollNodePageModeNone.
- After the scroll content has been dragged the content will snap according to the page's size and mode.
+ To enable paging for the scroll node set width and/or height of the page size with a value greater than zero and decelerationMode to INSKScrollNodeDecelerationModeHalfPage or INSKScrollNodeDecelerationModeDirection.
+ After the scroll content has been dragged the content will snap according to the page's size and deceleration mode.
  A usual use case for paging should be having a page size of equal size to the scroll node's size itself:
  
     scrollNode.pageSize = scrollNode.scrollNodeSize;
  
+ @see decelerationMode
  */
 @property (nonatomic, assign) CGSize pageSize;
 
 
 /**
- The paging behavior to use. Defaults to INSKScrollNodePageModeNone so paging is disabled.
- @see INSKScrollNodePageMode
+ The deceleration in pixels per squared second. Defaults to 10'000.
+ 
+ This value is only used when the property decelerationMode is set to INSKScrollNodeDecelerationModeDecelerate.
+ @see decelerationMode
  */
-@property (nonatomic, assign) INSKScrollNodePageMode pagingMode;
+@property (nonatomic, assign) CGFloat deceleration;
 
 
 // ------------------------------------------------------------
@@ -243,7 +266,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  
     ceil(scrollContentSize.width - scrollNodeSize.width) / self.pageSize.width
  
- @return The number of pages. Always 0 if paging is disabled.
+ @return The number of pages. Always 0 if page width is 0.
  */
 - (NSUInteger)numberOfPagesX;
 
@@ -255,7 +278,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  
     ceil((scrollContentSize.height - scrollNodeSize.height) / self.pageSize.height)
  
- @return The number of pages. Always 0 if paging is disabled.
+ @return The number of pages. Always 0 if page height is 0.
  */
 - (NSUInteger)numberOfPagesY;
 
@@ -267,7 +290,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  
     round(-self.scrollContentNode.position.x / self.pageSize.width)
  
- @return The page index beginning with 0. Always 0 if paging is disabled.
+ @return The page index beginning with 0. Always 0 if page width is 0.
  */
 - (NSUInteger)currentPageX;
 
@@ -279,7 +302,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  
     round(-self.scrollContentNode.position.y / self.pageSize.height)
  
- @return The page index beginning with 0. Always 0 if paging is disabled.
+ @return The page index beginning with 0. Always 0 if page height is 0.
  */
 - (NSUInteger)currentPageY;
 
@@ -297,8 +320,9 @@ typedef NS_ENUM(NSInteger, INSKScrollNodePageMode) {
  
  @param fromOffset The scrollContentNode's starting position.
  @param toOffset The scrollContentNode's end position.
+ @param velocity The scrollContentNode's velocity averaged.
  */
-- (void)didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset;
+- (void)didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset velocity:(CGPoint)velocity;
 
 
 /**

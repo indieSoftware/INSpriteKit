@@ -225,7 +225,7 @@ static inline CGPoint CGPointNegate(CGPoint point) {
 
 /**
  Performs a linear interpolation between two CGPoint values.
- poin1 will be the start point and point2 the end point while t gives the percentag in the range of 0 to 1.
+ point1 will be the start point and point2 the end point while t gives the percentag in the range of 0 to 1.
  */
 static inline CGPoint CGPointLerp(CGPoint point1, CGPoint point2, CGFloat t) {
     return CGPointFromGLKVector2(GLKVector2Lerp(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2), t));
