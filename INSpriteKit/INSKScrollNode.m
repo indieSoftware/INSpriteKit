@@ -313,7 +313,6 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     // find touch location
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInNode:self.scene];
-    NSLog(@"moved");
     
     // ignore clipped touches
     if (self.clipContent) {
