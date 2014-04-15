@@ -28,20 +28,18 @@
  A button node for easy action handling.
  
  This class represents a button which can be enabled and disabled.
- The highlight state will be updated by the user's touch and correspondign selectors called.
- The INSKButtonNode instance can also be used as a toggle button with it's selected state which will also be automatically updated.
+ The highlight state will be updated by the user's touch and the correspondign selectors will be called.
+ The INSKButtonNode instance can also be used as a toggle button with a selected state which will also be automatically updated.
  After initializing a new instance assign SKNode objects to the node properties.
- They will be added and removed automatically upon the state changes of the button.
+ They will be added to and removed from the scene's tree automatically upon the state changes of the button.
  At least the nodeNormal and nodeHighlighted node should be set with a visual representation or the button will be invisible.
  It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the node properties.
  The nodeDisabled is only used if the enabled flag is manually set to NO.
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
  Register for target-selector callbacks to get informed about user input.
  
-    INSKButtonNode *button = [INSKButtonNode buttonNodeWithSize:buttonSize];
+    INSKButtonNode *button = [INSKButtonNode buttonNodeWithImageNamed:@"imageName"];
     button.position = buttonPosition;
-    button.nodeNormal = [SKSpriteNode spriteNodeWithImageNamed:@"buttonNormal"];
-    button.nodeHightlighted = [SKSpriteNode spriteNodeWithImageNamed:@"buttonHighlighted"];
     [button setTouchUpInsideTarget:self selector:@selector(buttonPressed:)];
     [self addChild:button];
  
@@ -62,7 +60,7 @@
 
 
 /**
- Flag indicationg whether the button is acutally pressed and thus highlighted.
+ Flag indicating whether the button is acutally pressed and thus highlighted.
  
  This flag automatically updates to the user input.
  If YES nodeHighlighted or nodeSelectedHighlighted will be shown.
@@ -73,8 +71,11 @@
 /**
  Flag indicating whether the toggle button is actually in the selected mode or not.
  
- Each touch lifting inside of the button will toggle this state automatically, but only if updateSelectedStateAutomatically is set to YES.
- If YES nodeSelectedNormal and nodeSelectedHighlighted will be used instead of nodeNormal and nodeHighlighted.
+ Each touch lifting inside of the button will toggle this state automatically, 
+ but only if updateSelectedStateAutomatically is set to YES.
+ As long as selected is YES nodeSelectedNormal and nodeSelectedHighlighted will be used 
+ instead of nodeNormal and nodeHighlighted.
+ 
  @see updateSelectedStateAutomatically
  */
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
@@ -84,6 +85,7 @@
  Activate to make the button automatically toggle its selected state. Defaults to NO.
  
  If set to YES the selected property will be updated automatically according to touch up events.
+ Has to be set to YES if the button should behave like a toggle button.
  */
 @property (nonatomic, assign) BOOL updateSelectedStateAutomatically;
 
@@ -140,11 +142,65 @@
  The size describes the touch area of the button.
  An instance of INSKButtonNode is also a SKSpriteNode so a background image or color may be set.
  However the button representation should be done with the other nodes the button contains of.
+ For a visible representation of the button the node properties should be set with SKSpriteNodes
+ otherwise the button will be invisible.
  
  @param size The size of the button.
  @return The initialized node.
  */
 - (instancetype)initWithSize:(CGSize)size;
+
+
+/**
+ Creates and returns a new instance of INSKButtonNode.
+ 
+ Calls initWithImageNamed:.
+ 
+ @param imageName The name of the image file to load for the normal representation.
+ @return A new button instance.
+ @see initWithImageNamed:
+ */
++ (instancetype)buttonNodeWithImageNamed:(NSString *)imageName;
+
+
+/**
+ Initializes a INSKButtonNode instance with the given image name.
+ 
+ A new button instance will be initialized by loading a SKSpriteNode with the image named 
+ and assigned to the nodeNormal and nodeHighlighted properties.
+ The button's size will be set with the size of the image.
+ 
+ @param imageName The name of the image file to load for a visual representation of the button.
+ @return The initialized node.
+ */
+- (instancetype)initWithImageNamed:(NSString *)imageName;
+
+
+/**
+ Creates and returns a new instance of INSKButtonNode.
+ 
+ Calls initWithImageNamed:highlightImageNamed:.
+ 
+ @param imageName The name of the image file to show in the normal state.
+ @param highlightImageName The name of the image to show in the highlighted state.
+ @return A new button instance.
+ @see initWithImageNamed:highlightImageNamed:
+ */
++ (instancetype)buttonNodeWithImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName;
+
+
+/**
+ Initializes a INSKButtonNode instance with the given image names.
+ 
+ A new button instance will be initialized by loading two SKSpriteNodes with the image named
+ and assigned to the nodeNormal and nodeHighlighted properties.
+ The button's size will be set with the size of the image used for the normal state.
+ 
+ @param imageName The name of the image file to show in the normal state.
+ @param highlightImageName The name of the image to show in the highlighted state.
+ @return The initialized node.
+ */
+- (instancetype)initWithImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName;
 
 
 // ------------------------------------------------------------

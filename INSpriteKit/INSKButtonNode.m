@@ -59,10 +59,36 @@
     return self;
 }
 
-- (instancetype)initWithImageNamed:(NSString *)name {
-    if ((self = [super initWithImageNamed:name])) {
-        [self initINSKButton];
-    }
++ (instancetype)buttonNodeWithImageNamed:(NSString *)imageName {
+    return [[self alloc] initWithImageNamed:imageName];
+}
+
+- (instancetype)initWithImageNamed:(NSString *)imageName {
+    self = [self initWithSize:CGSizeZero];
+    if (self == nil) return self;
+    
+    SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:imageName];
+    self.nodeNormal = spriteNode;
+    self.nodeHighlighted = spriteNode;
+    self.size = spriteNode.size;
+    
+    return self;
+}
+
++ (instancetype)buttonNodeWithImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName {
+    return [[self alloc] initWithImageNamed:imageName highlightImageNamed:highlightImageName];
+}
+
+- (instancetype)initWithImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName {
+    self = [self initWithSize:CGSizeZero];
+    if (self == nil) return self;
+    
+    SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:imageName];
+    self.nodeNormal = spriteNode;
+    self.size = spriteNode.size;
+    spriteNode = [SKSpriteNode spriteNodeWithImageNamed:highlightImageName];
+    self.nodeHighlighted = spriteNode;
+    
     return self;
 }
 
