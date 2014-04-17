@@ -33,7 +33,7 @@
  After initializing a new instance assign SKNode objects to the node properties.
  They will be added to and removed from the scene's tree automatically upon the state changes of the button.
  At least the nodeNormal and nodeHighlighted node should be set with a visual representation or the button will be invisible.
- It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the node properties.
+ It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the nodeXXX properties.
  The nodeDisabled is only used if the enabled flag is manually set to NO.
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
  Register for target-selector callbacks to get informed about user input.

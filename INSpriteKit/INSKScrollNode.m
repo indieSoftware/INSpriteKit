@@ -221,7 +221,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     if (self.pageSize.width > 0) {
         CGFloat translationX = (NSInteger)self.scrollContentNode.position.x % (NSInteger)self.pageSize.width;
         BOOL snappingOccured = NO;
-        if (self.decelerationMode == INSKScrollNodeDecelerationModeDirection) {
+        if (self.decelerationMode == INSKScrollNodeDecelerationModePagingDirection) {
             if (velocity.x < 0) {
                 translation.x = -self.pageSize.width - translationX;
                 snappingOccured = YES;
@@ -229,7 +229,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
                 translation.x = -translationX;
                 snappingOccured = YES;
             } else {
-                // use INSKScrollNodeDecelerationModeHalfPage behavior
+                // use INSKScrollNodeDecelerationModePagingHalfPage behavior
             }
         }
         if (!snappingOccured) {
@@ -244,7 +244,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     if (self.pageSize.height > 0) {
         CGFloat translationY = (NSInteger)self.scrollContentNode.position.y % (NSInteger)self.pageSize.height;
         BOOL snappingOccured = NO;
-        if (self.decelerationMode == INSKScrollNodeDecelerationModeDirection) {
+        if (self.decelerationMode == INSKScrollNodeDecelerationModePagingDirection) {
             if (velocity.y > 0) {
                 translation.y = self.pageSize.height - translationY;
                 snappingOccured = YES;
@@ -252,7 +252,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
                 translation.y = -translationY;
                 snappingOccured = YES;
             } else {
-                // use INSKScrollNodeDecelerationModeHalfPage behavior
+                // use INSKScrollNodeDecelerationModePagingHalfPage behavior
             }
         }
         if (!snappingOccured) {

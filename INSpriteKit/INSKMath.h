@@ -48,6 +48,11 @@
 #define M_180_PI    57.29577951308232286464772187173366547
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
+
 // ------------------------------------------------------------
 #pragma mark - CGPoint convertions
 // ------------------------------------------------------------
@@ -446,18 +451,40 @@ static inline CGPoint CGPointRotateByAngle(CGPoint point, CGPoint pivot, CGFloat
 // ------------------------------------------------------------
 /// @name random values
 
+
+/**
+ The maximum value of a returned random call. This is a 32 bit unsigned integer.
+*/
+#define IN_MAX_RANDOM 0xFFFFFFFFu
+
+
+/**
+ Returns a random 32 bit unsigned value. Uses arc4random().
+ */
+static inline NSUInteger RandomInteger(void) {
+    return arc4random();
+}
+
+/**
+ Returns a random 32 bit unsigned value within a given range inclusive.
+ Max has to be at most IN_MAX_RANDOM - 1.
+ */
+static inline NSUInteger RandomIntegerRange(NSUInteger min, NSUInteger max) {
+    return arc4random_uniform((u_int32_t)(max - min + 1)) + min;
+}
+
 /**
  Returns a random floating point number between 0.0 and 1.0, inclusive.
  */
 static inline CGFloat RandomFloat(void) {
-    return (CGFloat)arc4random() / 0xFFFFFFFFu;
+    return (CGFloat)arc4random() / IN_MAX_RANDOM;
 }
 
 /**
  Returns a random floating point number in the range [min..max], inclusive.
  */
 static inline CGFloat RandomFloatRange(CGFloat min, CGFloat max) {
-    return ((CGFloat)arc4random() / 0xFFFFFFFFu) * (max - min) + min;
+    return ((CGFloat)arc4random() / IN_MAX_RANDOM) * (max - min) + min;
 }
 
 /**
@@ -467,3 +494,49 @@ static inline CGFloat RandomSign(void) {
     return ((arc4random_uniform(2) == 0) ? 1.0 : -1.0);
 }
 
+/**
+ Returns a new array with randomly chosen elements removed from the given array.
+ 
+ @param array The array to choose elements from.
+ @param numberOfElements How many elements should be removed. If the number is equal or higher than the array has elements in it an empty array will be returned.
+ @return A new array with a subset of the given one.
+ */
+static inline NSArray *RandomElementsFromArrayRemoved(NSArray *array, NSUInteger numberOfElements) {
+    if (numberOfElements >= array.count) {
+        return [NSArray array];
+    } else if (numberOfElements == 0) {
+        return [NSArray arrayWithArray:array];
+    }
+    
+    NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
+    for (NSUInteger i = 0; i < numberOfElements; i++) {
+        [mutableArray removeObjectAtIndex:RandomIntegerRange(0, mutableArray.count - 1)];
+    }
+    return mutableArray;
+}
+
+/**
+ Returns a new array with randomly chosen elements from the given array.
+ 
+ @param array The array to choose elements from.
+ @param numberOfElements How many elements should be chosen. If the number is equal or higher than the array has elements in it a copy of the array will be returned.
+ @return A new array with a subset of the given one.
+ */
+static inline NSArray *RandomElementsFromArray(NSArray *array, NSUInteger numberOfElements) {
+    if (numberOfElements >= array.count) {
+        return [NSArray arrayWithArray:array];
+    } else if (numberOfElements == 0) {
+        return [NSArray array];
+    }
+    
+    NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
+    for (NSUInteger i = 0; i < array.count - numberOfElements; i++) {
+        [mutableArray removeObjectAtIndex:RandomIntegerRange(0, mutableArray.count - 1)];
+    }
+    return mutableArray;
+}
+    
+
+#ifdef __cplusplus
+}
+#endif

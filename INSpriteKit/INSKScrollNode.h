@@ -37,13 +37,13 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
      The page snaps accordingly to where the most of the actual content is inside,
      so the user has to move the finger at least half a page size to get snapped to the next.
      */
-    INSKScrollNodeDecelerationModeHalfPage,
+    INSKScrollNodeDecelerationModePagingHalfPage,
     /**
      The page snaps accordingly to the direction of the last touch move, i.e.
      when dragged to the right and the finger lifted the page will snap to the next right page
      regardless of the distance the finger moved.
      */
-    INSKScrollNodeDecelerationModeDirection,
+    INSKScrollNodeDecelerationModePagingDirection,
     /**
      The content uses a smooth deceleration.
      The content will move a little bit in the direction the user moved it before it slowly stops.
@@ -206,7 +206,7 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 /**
  Defines the size of each page. Defaults to CGSizeZero.
  
- To enable paging for the scroll node set width and/or height of the page size with a value greater than zero and decelerationMode to INSKScrollNodeDecelerationModeHalfPage or INSKScrollNodeDecelerationModeDirection.
+ To enable paging for the scroll node set width and/or height of the page size with a value greater than zero and decelerationMode to INSKScrollNodeDecelerationModePagingHalfPage or INSKScrollNodeDecelerationModePagingDirection.
  After the scroll content has been dragged the content will snap according to the page's size and deceleration mode.
  A usual use case for paging should be having a page size of equal size to the scroll node's size itself:
  
