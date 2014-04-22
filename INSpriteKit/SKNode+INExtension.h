@@ -57,7 +57,7 @@
  
  It's a shortcut for writing
  
-    [self runAction:[SKAction sequence:actions]]
+    [self runAction:[SKAction sequence:actions]];
  
  @param actions An array with the actions to make a sequence of.
  */

@@ -504,7 +504,8 @@ static inline CGFloat RandomSign(void) {
 static inline NSArray *RandomElementsFromArrayRemoved(NSArray *array, NSUInteger numberOfElements) {
     if (numberOfElements >= array.count) {
         return [NSArray array];
-    } else if (numberOfElements == 0) {
+    }
+    if (numberOfElements == 0) {
         return [NSArray arrayWithArray:array];
     }
     
@@ -525,7 +526,8 @@ static inline NSArray *RandomElementsFromArrayRemoved(NSArray *array, NSUInteger
 static inline NSArray *RandomElementsFromArray(NSArray *array, NSUInteger numberOfElements) {
     if (numberOfElements >= array.count) {
         return [NSArray arrayWithArray:array];
-    } else if (numberOfElements == 0) {
+    }
+    if (numberOfElements == 0) {
         return [NSArray array];
     }
     
