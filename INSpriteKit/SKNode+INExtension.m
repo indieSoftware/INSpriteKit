@@ -44,6 +44,17 @@
     }
 }
 
+- (void)changeParent:(SKNode *)parent {
+    if (self.parent == nil) {
+        [parent addChild:self];
+    } else {
+        CGPoint convertedPosition = [self.parent convertPoint:self.position toNode:parent];
+        [self removeFromParent];
+        [parent addChild:self];
+        self.position = convertedPosition;
+    }
+}
+
 - (void)runActions:(NSArray *)actions {
     [self runAction:[SKAction sequence:actions]];
 }

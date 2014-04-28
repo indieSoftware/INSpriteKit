@@ -53,6 +53,18 @@
 
 
 /**
+ Replaces the node's parent and converts its position.
+ 
+ Removes the node from the current parent and adds it to the new.
+ The node's position will be converted so the node's position in the global scene will remain.
+ The scale value is unaffected by this so has to be adopted manually if needed.
+ 
+ @param parent The new node's parent node to add this node to.
+ */
+- (void)changeParent:(SKNode *)parent;
+
+
+/**
  Runs a new action sequence with the given actions.
  
  It's a shortcut for writing
