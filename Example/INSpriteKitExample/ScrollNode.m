@@ -26,12 +26,15 @@
 
 @interface ScrollNode () <INSKScrollNodeDelegate>
 
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) INSKScrollNode *scrollNode;
+
 @end
 
 
 @implementation ScrollNode
 
--(id)initWithSize:(CGSize)size {
+- (id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
     if (self == nil) return self;
     
@@ -39,32 +42,83 @@
     self.anchorPoint = CGPointMake(0.5, 0.5);
 
     // Create scroll node
-    INSKScrollNode *scrollNode = [INSKScrollNode scrollNodeWithSize:CGSizeMake(500, 700)];
-    scrollNode.position = CGPointMake(-scrollNode.scrollNodeSize.width / 2, scrollNode.scrollNodeSize.height / 2);
-    scrollNode.scrollDelegate = self;
-    [self addChild:scrollNode];
+    self.scrollNode = [INSKScrollNode scrollNodeWithSize:CGSizeMake(500, 700)];
+    self.scrollNode.position = CGPointMake(-self.scrollNode.scrollNodeSize.width / 2, self.scrollNode.scrollNodeSize.height / 2);
+    self.scrollNode.scrollDelegate = self;
+    [self addChild:self.scrollNode];
 
     // Additional set up
-    scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
-    scrollNode.clipContent = YES;
-    scrollNode.decelerationMode = INSKScrollNodeDecelerationModeDecelerate;
-    scrollNode.pageSize = CGSizeMake(200, 200);
-    scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
-    NSLog(@"scrollNode has %dx%d pages", scrollNode.numberOfPagesX, scrollNode.numberOfPagesY);
+    self.scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
+    self.scrollNode.clipContent = YES;
+    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeDecelerate;
+    self.scrollNode.pageSize = CGSizeMake(200, 200);
+    self.scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
+    NSLog(@"scrollNode has %dx%d pages", self.scrollNode.numberOfPagesX, self.scrollNode.numberOfPagesY);
 
     // Set content size and position
-    scrollNode.scrollContentPosition = CGPointMake(-(scrollNode.scrollContentSize.width - scrollNode.scrollNodeSize.width) / 2, (scrollNode.scrollContentSize.height - scrollNode.scrollNodeSize.height) / 2);
+    self.scrollNode.scrollContentPosition = CGPointMake(-(self.scrollNode.scrollContentSize.width - self.scrollNode.scrollNodeSize.width) / 2, (self.scrollNode.scrollContentSize.height - self.scrollNode.scrollNodeSize.height) / 2);
 
     // Add content to the scroll node
     SKSpriteNode *spaceship = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
     spaceship.position = CGPointMake(500, -500);
-    [scrollNode.scrollContentNode addChild:spaceship];
+    [self.scrollNode.scrollContentNode addChild:spaceship];
+
+    // add info label
+    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    label.fontSize = 17;
+    label.text = @"Double tap for centering the space ship";
+    label.position = CGPointMake(0, self.scrollNode.scrollNodeSize.height / 2);
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeBottom;
+    [self addChild:label];
+    
+    // add toggle button
+    INSKButtonNode *toggleButton = [INSKButtonNode buttonNodeWithSize:CGSizeMake(200, 50)];
+    toggleButton.color = [SKColor lightGrayColor];
+    label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    label.fontSize = 17;
+    label.text = @"Scrolling enabled";
+    label.color = [SKColor greenColor];
+    label.colorBlendFactor = 1;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    toggleButton.nodeNormal = label;
+    toggleButton.nodeSelectedHighlighted = label;
+    label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    label.fontSize = 17;
+    label.text = @"Scrolling disabled";
+    label.color = [SKColor redColor];
+    label.colorBlendFactor = 1;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    toggleButton.nodeSelectedNormal = label;
+    toggleButton.nodeHighlighted = label;
+    toggleButton.updateSelectedStateAutomatically = YES;
+    toggleButton.position = CGPointMake(0, -self.scrollNode.scrollNodeSize.height / 2 - 70);
+    [toggleButton setTouchUpInsideTarget:self selector:@selector(toggleButtonPressed:)];
+    [self addChild:toggleButton];
+    
+    // add tap gesture recognizer
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPressGesture:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 2;
 
     return self;
 }
 
-- (void)scrollNode:(INSKScrollNode *)scrollNode didScrollFromOffset:(CGPoint)fromOffset toOffset:(CGPoint)toOffset velocity:(CGPoint)velocity {
-//    NSLog(@"scrollNode scrolled to %.0fx%0.f at page %d,%d", toOffset.x, toOffset.y, scrollNode.currentPageX, scrollNode.currentPageY);
+- (void)didMoveToView:(SKView *)view {
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)willMoveFromView:(SKView *)view {
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)handleTapPressGesture:(UITapGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) {
+        CGPoint contentCenterPosition = CGPointMake(-(self.scrollNode.scrollContentSize.width - self.scrollNode.scrollNodeSize.width) / 2, (self.scrollNode.scrollContentSize.height - self.scrollNode.scrollNodeSize.height) / 2);
+        [self.scrollNode setScrollContentPosition:contentCenterPosition animationDuration:0.5];
+    }
+}
+
+- (void)toggleButtonPressed:(INSKButtonNode *)button {
+    self.scrollNode.scrollingEnabled = !button.selected;
 }
 
 - (void)scrollNode:(INSKScrollNode *)scrollNode didFinishScrollingAtPosition:(CGPoint)offset {

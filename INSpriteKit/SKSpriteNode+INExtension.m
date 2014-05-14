@@ -22,12 +22,20 @@
 
 
 #import "SKSpriteNode+INExtension.h"
+#import "INSKMath.h"
 
 
 @implementation SKSpriteNode (INExtension)
 
 - (CGSize)sizeUnscaled {
     return CGSizeMake(self.size.width / self.xScale, self.size.height / self.yScale);
+}
+
+- (void)setPosition:(CGPoint)position forAnchor:(CGPoint)anchor {
+    CGPoint sizeAsPoint = CGPointFromSize(self.size);
+    CGPoint anchorTranslation = CGPointSubtract(self.anchorPoint, anchor);
+    CGPoint translation = CGPointMultiply(sizeAsPoint, anchorTranslation);
+    self.position = CGPointMake(position.x + translation.x, position.y - translation.y);
 }
 
 

@@ -31,7 +31,7 @@
 
 @implementation ButtonNode
 
--(id)initWithSize:(CGSize)size {
+- (id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
     if (self == nil) return self;
     

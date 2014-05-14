@@ -26,8 +26,8 @@
 #import "SKNode+INExtension.h"
 
 
-static NSString * const PagedContentMoveActionName = @"INSKScrollNodeMovePagedContent";
-static CGFloat const PagedContentMoveActionDuration = 0.3;
+static NSString * const ScrollContentMoveActionName = @"INSKScrollNodeMoveScrollContent";
+static CGFloat const ScrollContentMoveActionDuration = 0.3;
 static NSUInteger const MaxNumberOfVelocities = 5;
 
 
@@ -62,6 +62,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     self.deceleration = 10000;
     self.decelerationMode = INSKScrollNodeDecelerationModeNone;
     self.userInteractionEnabled = YES;
+    self.scrollingEnabled = YES;
     self.lastVelocities = [NSMutableArray arrayWithCapacity:MaxNumberOfVelocities];
 
     // create background node
@@ -126,6 +127,34 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     return self.scrollContentNode.position;
 }
 
+- (void)setScrollContentPosition:(CGPoint)scrollContentPosition animationDuration:(CGFloat)duration {
+    if (duration <= 0 || CGPointNearToPoint(scrollContentPosition, self.scrollContentPosition)) {
+        [self setScrollContentPosition:scrollContentPosition];
+        return;
+    }
+
+    // v(t) = a * t + v0; s(t) = (a/2) * t*t + v0 * t + s0
+    // v0 = v(t) - (a * t); sdiff = s(t) - s0; a = -2 * sdiff / t*t
+    CGPoint positionDifference = CGPointSubtract(scrollContentPosition, self.scrollContentPosition);
+    CGFloat differenceLength = CGPointLength(positionDifference);
+    CGPoint differenceNormalized = CGPointMultiplyScalar(positionDifference, 1.0 / differenceLength);
+    CGFloat deceleration = differenceLength * -2 / (duration * duration);
+    CGFloat velocity = deceleration * -duration;
+    
+    CGPoint startPosition = self.scrollContentNode.position;
+    
+    SKAction *move = [SKAction customActionWithDuration:duration actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        CGFloat distance = (deceleration / 2) * (elapsedTime * elapsedTime) + velocity * elapsedTime;
+        CGPoint translation = CGPointMake(distance * differenceNormalized.x, distance * differenceNormalized.y);
+        CGPoint currentPosition = CGPointAdd(startPosition, translation);
+        node.position = [self positionWithScrollLimitsApplyed:currentPosition];
+    }];
+    SKAction *callback = [SKAction runBlock:^{
+        [self didFinishScrollingAtPosition:self.scrollContentNode.position];
+    }];
+    [self.scrollContentNode runActions:@[move, callback] withKey:ScrollContentMoveActionName];
+}
+
 - (NSUInteger)numberOfPagesX {
     if (self.pageSize.width > 0) {
         return ceilf((self.scrollContentSize.width - self.scrollNodeSize.width) / self.pageSize.width);
@@ -184,7 +213,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)stopScrollAnimations {
-    [self.scrollContentNode removeActionForKey:PagedContentMoveActionName];
+    [self.scrollContentNode removeActionForKey:ScrollContentMoveActionName];
 }
 
 - (void)applyScrollOutWithVelocity:(CGPoint)velocity {
@@ -194,15 +223,21 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     }
     
     if (self.decelerationMode == INSKScrollNodeDecelerationModeDecelerate) {
+        // any velocity at all?
+        if (CGPointNearToPoint(velocity, CGPointZero)) {
+            return;
+        }
+        
+        // calculate and apply animation
         // v(t) = a * t + v0; s(t) = (a/2) * t*t + v0 * t + s0
         CGFloat velocityLength = CGPointLength(velocity);
         CGFloat time = velocityLength / self.deceleration;
-        CGPoint velocityNormalized = CGPointMultiplyScalar(velocity, 1.0f / velocityLength);
+        CGPoint velocityNormalized = CGPointMultiplyScalar(velocity, 1.0 / velocityLength);
         
         CGPoint startPosition = self.scrollContentNode.position;
         
         SKAction *move = [SKAction customActionWithDuration:time actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-            CGFloat distance = (-self.deceleration / 2) * (elapsedTime * elapsedTime) + velocityLength * elapsedTime;
+            CGFloat distance = -self.deceleration * elapsedTime * elapsedTime / 2 + velocityLength * elapsedTime;
             CGPoint translation = CGPointMake(distance * velocityNormalized.x, distance * velocityNormalized.y);
             CGPoint currentPosition = CGPointAdd(startPosition, translation);
             node.position = [self positionWithScrollLimitsApplyed:currentPosition];
@@ -210,7 +245,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
         SKAction *callback = [SKAction runBlock:^{
             [self didFinishScrollingAtPosition:self.scrollContentNode.position];
         }];
-        [self.scrollContentNode runActions:@[move, callback] withKey:PagedContentMoveActionName];
+        [self.scrollContentNode runActions:@[move, callback] withKey:ScrollContentMoveActionName];
 
         return;
     }
@@ -270,12 +305,12 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     
     // apply snap animation
     if (!CGPointNearToPoint(destinationPosition, self.scrollContentNode.position)) {
-        SKAction *move = [SKAction moveTo:destinationPosition duration:PagedContentMoveActionDuration];
+        SKAction *move = [SKAction moveTo:destinationPosition duration:ScrollContentMoveActionDuration];
         move.timingMode = SKActionTimingEaseOut;
         SKAction *callback = [SKAction runBlock:^{
             [self didFinishScrollingAtPosition:destinationPosition];
         }];
-        [self.scrollContentNode runActions:@[move, callback] withKey:PagedContentMoveActionName];
+        [self.scrollContentNode runActions:@[move, callback] withKey:ScrollContentMoveActionName];
     }
 }
 
@@ -292,7 +327,9 @@ static NSUInteger const MaxNumberOfVelocities = 5;
         CGPoint point = [value CGPointValue];
         velocity = CGPointAdd(velocity, point);
     }
-    velocity = CGPointDivideScalar(velocity, self.lastVelocities.count);
+    if (self.lastVelocities.count > 0) {
+        velocity = CGPointDivideScalar(velocity, self.lastVelocities.count);
+    }
     return velocity;
 }
 
@@ -300,6 +337,8 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 #pragma mark - touch events
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.scrollingEnabled) return;
+    
     if (event.allTouches.count == touches.count) {
         [self stopScrollAnimations];
 
@@ -310,6 +349,8 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.scrollingEnabled) return;
+
     // find touch location
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInNode:self.scene];
@@ -342,12 +383,16 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.scrollingEnabled) return;
+
     if (event.allTouches.count == touches.count) {
         [self applyScrollOutWithVelocity:[self getVelocity]];
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.scrollingEnabled) return;
+
     [self applyScrollOutWithVelocity:[self getVelocity]];
 }
 

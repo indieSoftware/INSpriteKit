@@ -93,6 +93,10 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 @end
 
 
+// ------------------------------------------------------------
+#pragma mark - Class interface
+// ------------------------------------------------------------
+
 
 /**
  A node with a scrolling ability.
@@ -160,6 +164,10 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
  Setting a new value with by this property also applies boundary checks afterwards 
  so the scrollContentNode may be repositioned if it otherwise would be outside of the visible frame.
  Update the scrollContentNode's position property directly if you don't want the boundary checks to be applied.
+ 
+    scrollNode.scrollContentNode.position = newPosition; // direct assigning, no boundary check
+    scrollNode.scrollContentPosition = newPosition; // assigning new position with cropped to the bounday
+    [scrollNode setScrollContentPosition:newPosition animationDuration:kAnimationDuration]; // same as the previous line, but with the movement animated
  */
 @property (nonatomic, assign) CGPoint scrollContentPosition;
 
@@ -226,6 +234,9 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 @property (nonatomic, assign) CGFloat deceleration;
 
 
+@property (nonatomic, assign, getter=isScrollingEnabled) BOOL scrollingEnabled;
+
+
 // ------------------------------------------------------------
 #pragma mark - init methods
 // ------------------------------------------------------------
@@ -258,6 +269,18 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 #pragma mark - public interface
 // ------------------------------------------------------------
 /// @name Public interface
+
+/**
+ Sets a new position for the content node with an animation.
+ 
+ The new position will be clipped by the scroll node's bounds, like assigning the position to scrollContentPosition.
+ By settings an animation duration of greater than 0 the content will scroll to the new position with a deceleration animation.
+ 
+ @param scrollContentPosition The new position for the scroll content node.
+ @param duration The animation duration in seconds.
+ @see scrollContentPosition
+ */
+- (void)setScrollContentPosition:(CGPoint)scrollContentPosition animationDuration:(CGFloat)duration;
 
 /**
  The total number of snappable pages on the X-axis.

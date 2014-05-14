@@ -1,7 +1,5 @@
 # INSpriteKit
 
-A little iOS SpriteKit library used in projects from the indie-Software company.
-
 [![CocoaDocs](http://cocoapod-badges.herokuapp.com/v/INSpriteKit/badge.png)](http://cocoadocs.org/docsets/INSpriteKit)
 
 This library consists of
