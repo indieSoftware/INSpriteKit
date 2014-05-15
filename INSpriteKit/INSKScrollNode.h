@@ -234,6 +234,12 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 @property (nonatomic, assign) CGFloat deceleration;
 
 
+/**
+ Enables the user input recognition for the scrolling behavior. Defaults to YES.
+ 
+ Set to NO when the user is not allowed to scroll the content.
+ Only touches are ignored, all methods still work so scrolling via method calls is still possible.
+ */
 @property (nonatomic, assign, getter=isScrollingEnabled) BOOL scrollingEnabled;
 
 
