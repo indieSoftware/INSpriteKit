@@ -49,4 +49,17 @@
 - (void)setPosition:(CGPoint)position forAnchor:(CGPoint)anchor;
 
 
+/**
+ Returns YES if the given position in the coordinate system of this sprite node is inside of the sprite node's size.
+ 
+ Normally a sprite node shows an image.
+ With this method you can determine easily if a touch point is inside of this image or not.
+ The anchor point and scale is taken into count.
+ 
+ @param position The position to check, has to be in the coordinate system of this sprite node.
+ @return YES if the position is inside of the node's image or size if no image is assigned. Otherwise returns NO.
+ */
+- (BOOL)isPositionInside:(CGPoint)position;
+
+
 @end
