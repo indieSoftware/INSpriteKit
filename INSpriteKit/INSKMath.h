@@ -306,65 +306,57 @@ static inline BOOL CGPointNearToPoint(CGPoint point1, CGPoint point2) {
 /// @name CGSize calculations
 
 /**
- Scales a CGSize to fit a destination size respecting the aspect ratio and returns the scale factor.
+ Scales a CGSize to fit a destination size respecting the aspect ratio and returns the scale factor. The new size will be smaller than the destination.
+ 
+ @param origSize The current size of an object which has to be scaled.
+ @param destSize The max size to which an object has to be scaled.
+ @return The scale factor to fit an object into respecting the aspect ratio.
  */
 static inline CGFloat CGSizeScaleFactorToSizeAspectFit(CGSize origSize, CGSize destSize) {
-    CGFloat ratioWidth = origSize.width / destSize.width;
-    CGFloat ratioHeight = origSize.height / destSize.height;
-    CGFloat ratio;
-    if (ratioWidth > 1.0 || ratioWidth > 1.0) {
-        ratio = MAX(ratioWidth, ratioHeight);
-    } else {
-        ratio = MIN(ratioWidth, ratioHeight);
-    }
-    return ratio;
+    CGFloat ratioWidth = destSize.width / origSize.width;
+    CGFloat ratioHeight = destSize.height / origSize.height;
+    return MIN(ratioWidth, ratioHeight);
 }
 
 /**
  Scales a CGSize to fit a destination size respecting the aspect ratio.
+ 
+ Uses CGSizeScaleFactorToSizeAspectFit(CGSize, CGSize) to determine the scale factor with which the size will be multiplied.
+
+ @param origSize The current size of an object which has to be scaled.
+ @param destSize The max size to which an object has to be scaled.
+ @return The scaled size .
  */
 static inline CGSize CGSizeScaledToSizeAspectFit(CGSize origSize, CGSize destSize) {
-    CGFloat ratioWidth = origSize.width / destSize.width;
-    CGFloat ratioHeight = origSize.height / destSize.height;
-    CGFloat ratio;
-    if (ratioWidth > 1.0 || ratioWidth > 1.0) {
-        ratio = MAX(ratioWidth, ratioHeight);
-        return CGSizeMake(origSize.width / ratio, origSize.height / ratio);
-    } else {
-        ratio = MIN(ratioWidth, ratioHeight);
-        return CGSizeMake(origSize.width * ratio, origSize.height * ratio);
-    }
+    CGFloat scaleFactor = CGSizeScaleFactorToSizeAspectFit(origSize, destSize);
+    return CGSizeMake(origSize.width * scaleFactor, origSize.height * scaleFactor);
 }
 
 /**
- Scales a CGSize to fill a destination size respecting the aspect ratio and returns the scale factor.
+ Scales a CGSize to fill a destination size respecting the aspect ratio and returns the scale factor. The new size will be greater than the destination.
+
+ @param origSize The current size of an object which has to be scaled.
+ @param destSize The max size to which an object has to be scaled.
+ @return The scale factor to fill an object into respecting the aspect ratio.
  */
 static inline CGFloat CGSizeScaleFactorToSizeAspectFill(CGSize origSize, CGSize destSize) {
-    CGFloat ratioWidth = origSize.width / destSize.width;
-    CGFloat ratioHeight = origSize.height / destSize.height;
-    CGFloat ratio;
-    if (ratioWidth > 1.0 || ratioWidth > 1.0) {
-        ratio = MIN(ratioWidth, ratioHeight);
-    } else {
-        ratio = MAX(ratioWidth, ratioHeight);
-    }
-    return ratio;
+    CGFloat ratioWidth = destSize.width / origSize.width;
+    CGFloat ratioHeight = destSize.height / origSize.height;
+    return MAX(ratioWidth, ratioHeight);
 }
 
 /**
  Scales a CGSize to fill a destination size respecting the aspect ratio.
+
+ Uses CGSizeScaleFactorToSizeAspectFill(CGSize, CGSize) to determine the scale factor with which the size will be multiplied.
+
+ @param origSize The current size of an object which has to be scaled.
+ @param destSize The max size to which an object has to be scaled.
+ @return The scaled size .
  */
 static inline CGSize CGSizeScaledToSizeAspectFill(CGSize origSize, CGSize destSize) {
-    CGFloat ratioWidth = origSize.width / destSize.width;
-    CGFloat ratioHeight = origSize.height / destSize.height;
-    CGFloat ratio;
-    if (ratioWidth > 1.0 || ratioWidth > 1.0) {
-        ratio = MIN(ratioWidth, ratioHeight);
-        return CGSizeMake(origSize.width / ratio, origSize.height / ratio);
-    } else {
-        ratio = MAX(ratioWidth, ratioHeight);
-        return CGSizeMake(origSize.width * ratio, origSize.height * ratio);
-    }
+    CGFloat scaleFactor = CGSizeScaleFactorToSizeAspectFill(origSize, destSize);
+    return CGSizeMake(origSize.width * scaleFactor, origSize.height * scaleFactor);
 }
 
 
@@ -445,99 +437,6 @@ static inline CGPoint CGPointRotateByAngle(CGPoint point, CGPoint pivot, CGFloat
 	return newPoint;
 }
 
-
-// ------------------------------------------------------------
-#pragma mark - random values
-// ------------------------------------------------------------
-/// @name random values
-
-
-/**
- The maximum value of a returned random call. This is a 32 bit unsigned integer.
-*/
-#define IN_MAX_RANDOM 0xFFFFFFFFu
-
-
-/**
- Returns a random 32 bit unsigned value. Uses arc4random().
- */
-static inline NSUInteger RandomInteger(void) {
-    return arc4random();
-}
-
-/**
- Returns a random 32 bit unsigned value within a given range inclusive.
- Max has to be at most IN_MAX_RANDOM - 1.
- */
-static inline NSUInteger RandomIntegerRange(NSUInteger min, NSUInteger max) {
-    return arc4random_uniform((u_int32_t)(max - min + 1)) + min;
-}
-
-/**
- Returns a random floating point number between 0.0 and 1.0, inclusive.
- */
-static inline CGFloat RandomFloat(void) {
-    return (CGFloat)arc4random() / IN_MAX_RANDOM;
-}
-
-/**
- Returns a random floating point number in the range [min..max], inclusive.
- */
-static inline CGFloat RandomFloatRange(CGFloat min, CGFloat max) {
-    return ((CGFloat)arc4random() / IN_MAX_RANDOM) * (max - min) + min;
-}
-
-/**
- Randomly returns either 1.0 or -1.0.
- */
-static inline CGFloat RandomSign(void) {
-    return ((arc4random_uniform(2) == 0) ? 1.0 : -1.0);
-}
-
-/**
- Returns a new array with randomly chosen elements removed from the given array.
- 
- @param array The array to choose elements from.
- @param numberOfElements How many elements should be removed. If the number is equal or higher than the array has elements in it an empty array will be returned.
- @return A new array with a subset of the given one.
- */
-static inline NSArray *RandomElementsFromArrayRemoved(NSArray *array, NSUInteger numberOfElements) {
-    if (numberOfElements >= array.count) {
-        return [NSArray array];
-    }
-    if (numberOfElements == 0) {
-        return [NSArray arrayWithArray:array];
-    }
-    
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
-    for (NSUInteger i = 0; i < numberOfElements; i++) {
-        [mutableArray removeObjectAtIndex:RandomIntegerRange(0, mutableArray.count - 1)];
-    }
-    return mutableArray;
-}
-
-/**
- Returns a new array with randomly chosen elements from the given array.
- 
- @param array The array to choose elements from.
- @param numberOfElements How many elements should be chosen. If the number is equal or higher than the array has elements in it a copy of the array will be returned.
- @return A new array with a subset of the given one.
- */
-static inline NSArray *RandomElementsFromArray(NSArray *array, NSUInteger numberOfElements) {
-    if (numberOfElements >= array.count) {
-        return [NSArray arrayWithArray:array];
-    }
-    if (numberOfElements == 0) {
-        return [NSArray array];
-    }
-    
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
-    for (NSUInteger i = 0; i < array.count - numberOfElements; i++) {
-        [mutableArray removeObjectAtIndex:RandomIntegerRange(0, mutableArray.count - 1)];
-    }
-    return mutableArray;
-}
-    
 
 #ifdef __cplusplus
 }

@@ -6,14 +6,14 @@ This library consists of
 - Some math functions often needed.
 - A UIScrollView adaption for Sprite Kit.
 - A UIButton adaption for Sprite Kit.
-- A tiled image node for SKSpriteNodes with huge images.
+- A tiled image node for SKSpriteNodes to use sprite images greater than 1024x1024 respectively 2048x2048 (be still careful with your memory).
 - Some categories to extend the Sprite Kit nodes.
 
 
 ## Examples
 
 To run the example project; clone the repo, and run `pod install` from the Example directory first.
-Then open the workspace file INSpriteKitExample.xcworkspace with Xcode and run the example.
+Then open the workspace file INSpriteKitExample.xcworkspace with Xcode and run the example or the tests.
 The example scenes are within the Scenes group in INSpriteKitExample, just go through them to see how to use the library.
 
 

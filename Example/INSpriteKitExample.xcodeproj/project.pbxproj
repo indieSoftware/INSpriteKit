@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2600637918FD201E00C438E9 /* indie_banner_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2600637818FD201E00C438E9 /* indie_banner_small.png */; };
+		2620CB96192616680092BF41 /* INSKMathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2620CB95192616680092BF41 /* INSKMathTests.m */; };
 		2688077518FC63E4005A8FC4 /* ButtonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2688077418FC63E4005A8FC4 /* ButtonNode.m */; };
 		268C9CB318F5B2C600B5CAE5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB218F5B2C600B5CAE5 /* Foundation.framework */; };
 		268C9CB518F5B2C600B5CAE5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB418F5B2C600B5CAE5 /* CoreGraphics.framework */; };
@@ -23,13 +24,13 @@
 		268C9CDA18F5B2C600B5CAE5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB218F5B2C600B5CAE5 /* Foundation.framework */; };
 		268C9CDB18F5B2C600B5CAE5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB618F5B2C600B5CAE5 /* UIKit.framework */; };
 		268C9CE318F5B2C600B5CAE5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CE118F5B2C600B5CAE5 /* InfoPlist.strings */; };
-		268C9CE518F5B2C600B5CAE5 /* INSpriteKitExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CE418F5B2C600B5CAE5 /* INSpriteKitExampleTests.m */; };
 		268C9CF118F5B41800B5CAE5 /* indie_banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CEF18F5B41800B5CAE5 /* indie_banner.jpg */; };
 		268C9CF618F5B4DF00B5CAE5 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */; };
 		268C9CFA18F5BA8800B5CAE5 /* Scenes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CF918F5BA8800B5CAE5 /* Scenes.plist */; };
 		268C9CFC18F5BBAC00B5CAE5 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */; };
 		268C9CFF18F5BC2100B5CAE5 /* ScrollNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CFE18F5BC2100B5CAE5 /* ScrollNode.m */; };
 		491EEF4D67F449BCA1AC3695 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2685CEE498864743889A487D /* libPods.a */; };
+		6C7015C0FB984DCF966E53AB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2685CEE498864743889A487D /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		2600637818FD201E00C438E9 /* indie_banner_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = indie_banner_small.png; sourceTree = "<group>"; };
+		2620CB95192616680092BF41 /* INSKMathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSKMathTests.m; sourceTree = "<group>"; };
 		2685CEE498864743889A487D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2688077318FC63E4005A8FC4 /* ButtonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonNode.h; sourceTree = "<group>"; };
 		2688077418FC63E4005A8FC4 /* ButtonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonNode.m; sourceTree = "<group>"; };
@@ -66,7 +68,6 @@
 		268C9CD818F5B2C600B5CAE5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		268C9CE018F5B2C600B5CAE5 /* INSpriteKitExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INSpriteKitExampleTests-Info.plist"; sourceTree = "<group>"; };
 		268C9CE218F5B2C600B5CAE5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		268C9CE418F5B2C600B5CAE5 /* INSpriteKitExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INSpriteKitExampleTests.m; sourceTree = "<group>"; };
 		268C9CEF18F5B41800B5CAE5 /* indie_banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = indie_banner.jpg; sourceTree = "<group>"; };
 		268C9CF418F5B4DF00B5CAE5 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
 		268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 				268C9CD918F5B2C600B5CAE5 /* XCTest.framework in Frameworks */,
 				268C9CDB18F5B2C600B5CAE5 /* UIKit.framework in Frameworks */,
 				268C9CDA18F5B2C600B5CAE5 /* Foundation.framework in Frameworks */,
+				6C7015C0FB984DCF966E53AB /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +163,7 @@
 		268C9CDE18F5B2C600B5CAE5 /* INSpriteKitExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				268C9CE418F5B2C600B5CAE5 /* INSpriteKitExampleTests.m */,
+				2620CB95192616680092BF41 /* INSKMathTests.m */,
 				268C9CDF18F5B2C600B5CAE5 /* Supporting Files */,
 			);
 			path = INSpriteKitExampleTests;
@@ -248,9 +250,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 268C9CEB18F5B2C600B5CAE5 /* Build configuration list for PBXNativeTarget "INSpriteKitExampleTests" */;
 			buildPhases = (
+				05C4A85CC45148DDBEAF86A3 /* Check Pods Manifest.lock */,
 				268C9CD318F5B2C600B5CAE5 /* Sources */,
 				268C9CD418F5B2C600B5CAE5 /* Frameworks */,
 				268C9CD518F5B2C600B5CAE5 /* Resources */,
+				3B7B790714FE404484482F9A /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -321,6 +325,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		05C4A85CC45148DDBEAF86A3 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3B7B790714FE404484482F9A /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		71E526BF521B4BAAA6DEF0E3 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -371,7 +405,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				268C9CE518F5B2C600B5CAE5 /* INSpriteKitExampleTests.m in Sources */,
+				2620CB96192616680092BF41 /* INSKMathTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,6 +551,7 @@
 		};
 		268C9CEC18F5B2C600B5CAE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2D223D0580745039691724E /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/INSpriteKitExample.app/INSpriteKitExample";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -539,6 +574,7 @@
 		};
 		268C9CED18F5B2C600B5CAE5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2D223D0580745039691724E /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/INSpriteKitExample.app/INSpriteKitExample";
 				FRAMEWORK_SEARCH_PATHS = (
