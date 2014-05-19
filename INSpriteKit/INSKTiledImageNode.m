@@ -35,56 +35,52 @@
 
 @implementation INSKTiledImageNode
 
-+ (instancetype)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
-    return [[self alloc] initWithImageNamed:imageName tileSize:tileSize];
++ (instancetype)tiledImageNode:(UIImage *)image tileSize:(CGSize)tileSize {
+    return [[self alloc] initWithImage:image tileSize:tileSize];
 }
 
-- (instancetype)initWithImageNamed:(NSString *)imageName tileSize:(CGSize)tileSize {
+- (instancetype)initWithImage:(UIImage *)image tileSize:(CGSize)tileSize {
     self = [super initWithColor:[SKColor blueColor] size:CGSizeZero];
     if (self == nil) return self;
 
-    // load image
-    NSAssert(imageName != nil, @"image file must be not nil");
-    UIImage *image = [UIImage imageNamed:imageName];
-    if (image == nil) {
-        return self;
-    }
     self.size = image.size;
     self.tileSize = tileSize;
-    
-    // calculate columns and rows
-    self.numberOfColumns = ceilf(self.size.width / tileSize.width);
-    self.numberOfRows = ceilf(self.size.height / tileSize.height);
-    CGSize croppedTileSize = CGSizeMake(self.size.width - ((self.numberOfColumns - 1) * tileSize.width), self.size.height - ((self.numberOfRows - 1) * tileSize.height));
-    
-    // create tiles from top left corner
-    CGImageRef imageRef = image.CGImage;
-    for (NSUInteger column = 0; column < self.numberOfColumns; column++) {
-        for (NSUInteger row = 0; row < self.numberOfRows; row++) {
-            // get tile texture
-            CGRect rect = CGRectMake(column * tileSize.width, row * tileSize.height, tileSize.width, tileSize.height);
-            if (column == self.numberOfColumns - 1) {
-                rect.size.width = croppedTileSize.width;
+
+    if (image != nil && tileSize.width > 0.f && tileSize.height > 0.f) {
+        // calculate columns and rows
+        self.numberOfColumns = ceilf(self.size.width / tileSize.width);
+        self.numberOfRows = ceilf(self.size.height / tileSize.height);
+        CGSize croppedTileSize = CGSizeMake(self.size.width - ((self.numberOfColumns - 1) * tileSize.width), self.size.height - ((self.numberOfRows - 1) * tileSize.height));
+        
+        // create tiles from top left corner
+        CGImageRef imageRef = image.CGImage;
+        for (NSUInteger column = 0; column < self.numberOfColumns; column++) {
+            for (NSUInteger row = 0; row < self.numberOfRows; row++) {
+                // get tile texture
+                CGRect rect = CGRectMake(column * tileSize.width, row * tileSize.height, tileSize.width, tileSize.height);
+                if (column == self.numberOfColumns - 1) {
+                    rect.size.width = croppedTileSize.width;
+                }
+                if (row == self.numberOfRows - 1) {
+                    rect.size.height = croppedTileSize.height;
+                }
+                CGImageRef tileImage = CGImageCreateWithImageInRect(imageRef, rect);
+                SKTexture *texture = [SKTexture textureWithCGImage:tileImage];
+                CGImageRelease(tileImage);
+                
+                // add tile node
+                SKSpriteNode *tileNode = [SKSpriteNode spriteNodeWithTexture:texture];
+                tileNode.anchorPoint = CGPointZero;
+                CGPoint position = CGPointMake(column * tileSize.width - self.size.width * self.anchorPoint.x, (self.numberOfRows - (row + 1)) * tileSize.height - self.size.height * self.anchorPoint.y);
+                if (row < self.numberOfRows - 1) {
+                    position.y = position.y - (tileSize.height - croppedTileSize.height);
+                }
+                tileNode.position = position;
+                [self addChild:tileNode];
             }
-            if (row == self.numberOfRows - 1) {
-                rect.size.height = croppedTileSize.height;
-            }
-            CGImageRef tileImage = CGImageCreateWithImageInRect(imageRef, rect);
-            SKTexture *texture = [SKTexture textureWithCGImage:tileImage];
-            CGImageRelease(tileImage);
-            
-            // add tile node
-            SKSpriteNode *tileNode = [SKSpriteNode spriteNodeWithTexture:texture];
-            tileNode.anchorPoint = CGPointZero;
-            CGPoint position = CGPointMake(column * tileSize.width - self.size.width * self.anchorPoint.x, (self.numberOfRows - (row + 1)) * tileSize.height - self.size.height * self.anchorPoint.y);
-            if (row < self.numberOfRows - 1) {
-                position.y = position.y - (tileSize.height - croppedTileSize.height);
-            }
-            tileNode.position = position;
-            [self addChild:tileNode];
         }
     }
-
+    
     return self;
 }
 

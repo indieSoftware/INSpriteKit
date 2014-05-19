@@ -70,25 +70,33 @@
 /**
  Creates and returns a new instance of INSKTiledImageNode.
  
- Calls initWithImageNamed:tileSize:.
+ Calls initWithImage:tileSize:.
  
- @param imageName The name of the image to load.
+ @param image The image.
  @param tileSize The size each tile should have at most.
  @return A new instance.
- @see initWithImageNamed:tileSize:
+ @see initWithImage:tileSize:
  */
-+ (instancetype)tiledImageNodeNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
++ (instancetype)tiledImageNode:(UIImage *)image tileSize:(CGSize)tileSize;
 
 
 /**
- Initializes a INSKTiledImageNode instance.
+ Initializes a INSKTiledImageNode instance with an already loaded image.
  
- The image will be loaded by UIImage's -imageNamed: method.
+ UIImage's -imageNamed: method uses the system cache so when loading big images without using the cache call something like:
  
- @param imageName The name of the image to load.
- @param tileSize The size each tile should have at most.
+    UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:nil]];
+    INSKTiledImageNode *node = [[INSKTiledImageNode alloc] initWithImage:image tileSize:tileSize];
+ 
+ When using images and the UIImage system cache then call something like:
+ 
+    UIImage *image = [UIImage imageNamed:imageName];
+    INSKTiledImageNode *node = [[INSKTiledImageNode alloc] initWithImage:image tileSize:tileSize];
+ 
+ @param image The image to use.
+ @param tileSize The size each tile should have at most. Width and height have to be each greater than zero.
  */
-- (instancetype)initWithImageNamed:(NSString *)imageName tileSize:(CGSize)tileSize;
+- (instancetype)initWithImage:(UIImage *)image tileSize:(CGSize)tileSize;
 
 
 @end
