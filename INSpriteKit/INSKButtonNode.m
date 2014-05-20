@@ -237,14 +237,14 @@
 #pragma mark - touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.isEnabled) {
+    if (self.enabled && !self.hidden) {
         [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
         self.highlighted = YES;
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.isEnabled) {
+    if (self.enabled && !self.hidden) {
         UITouch *touch = [touches anyObject];
         CGPoint touchPoint = [touch locationInNode:self.parent];
         
@@ -257,7 +257,7 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.isEnabled) {
+    if (self.enabled && !self.hidden) {
         UITouch *touch = [touches anyObject];
         CGPoint touchPoint = [touch locationInNode:self.parent];
         
