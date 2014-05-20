@@ -70,6 +70,8 @@
     SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:imageName];
     self.nodeNormal = spriteNode;
     self.nodeHighlighted = spriteNode;
+    self.nodeSelectedNormal = spriteNode;
+    self.nodeSelectedHighlighted = spriteNode;
     self.size = spriteNode.size;
     
     return self;
@@ -83,11 +85,13 @@
     self = [self initWithSize:CGSizeZero];
     if (self == nil) return self;
     
-    SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:imageName];
-    self.nodeNormal = spriteNode;
-    self.size = spriteNode.size;
-    spriteNode = [SKSpriteNode spriteNodeWithImageNamed:highlightImageName];
-    self.nodeHighlighted = spriteNode;
+    SKSpriteNode *normalSprite = [SKSpriteNode spriteNodeWithImageNamed:imageName];
+    SKSpriteNode *highlightedSprite = [SKSpriteNode spriteNodeWithImageNamed:highlightImageName];
+    self.size = normalSprite.size;
+    self.nodeNormal = normalSprite;
+    self.nodeHighlighted = highlightedSprite;
+    self.nodeSelectedNormal = highlightedSprite;
+    self.nodeSelectedHighlighted = normalSprite;
     
     return self;
 }
