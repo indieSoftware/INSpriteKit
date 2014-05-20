@@ -40,17 +40,29 @@
     
     INSKButtonNode *button;
     
-    // Create push button
-    button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small" highlightImageNamed:@"indie_banner.jpg"];
+    // Create push button with only one picture
+    button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, 200);
     button.name = @"push button";
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [self addChild:button];
-
     
+    // Create second push button with more control
+    UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner_small" ofType:@"png"]];
+    UIImage *imageHighlighted = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner" ofType:@"jpg"]];
+    button = [[INSKButtonNode alloc] initWithSize:image.size];
+    SKSpriteNode *buttonNormalRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:image]];
+    button.nodeNormal = buttonNormalRepresentation;
+    SKSpriteNode *buttonHighlightRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:imageHighlighted]];
+    button.nodeHighlighted = buttonHighlightRepresentation;
+    button.position = CGPointMake(0, 0);
+    button.name = @"push button 2";
+    [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    [self addChild:button];
+
     // Create toggle button
     button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
-    button.position = CGPointMake(0, 0);
+    button.position = CGPointMake(0, -200);
     button.name = @"toggle button";
     button.updateSelectedStateAutomatically = YES;
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];

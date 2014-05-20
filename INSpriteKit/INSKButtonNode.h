@@ -145,6 +145,17 @@
  For a visible representation of the button the node properties should be set with SKSpriteNodes
  otherwise the button will be invisible.
  
+ An example of how to create an INSKButtonNode instance with an image and a highlight state:
+ 
+    UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:nil]];
+    UIImage *imageHighlighted = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageHighlightedName ofType:nil]];
+    INSKButtonNode *button = [[INSKButtonNode alloc] initWithSize:image.size];
+    SKSpriteNode *buttonNormalRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:image]];
+    button.nodeNormal = buttonNormalRepresentation;
+    SKSpriteNode *buttonHighlightRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:imageHighlighted]];
+    button.nodeHighlighted = buttonHighlightRepresentation;
+    [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+
  @param size The size of the button.
  @return The initialized node.
  */
