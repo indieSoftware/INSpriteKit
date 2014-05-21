@@ -72,6 +72,7 @@
     self.nodeHighlighted = spriteNode;
     self.nodeSelectedNormal = spriteNode;
     self.nodeSelectedHighlighted = spriteNode;
+    self.nodeDisabled = spriteNode;
     self.size = spriteNode.size;
     
     return self;
@@ -92,6 +93,7 @@
     self.nodeHighlighted = highlightedSprite;
     self.nodeSelectedNormal = highlightedSprite;
     self.nodeSelectedHighlighted = normalSprite;
+    self.nodeDisabled = normalSprite;
     
     return self;
 }
