@@ -30,7 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Set scene title
+    // Set scene title.
     self.title = self.sceneName;
     
     // Configure the view.
@@ -46,6 +46,14 @@
     
     // Present the scene.
     [skView presentScene:scene];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    // Presenting a nil scene will call willMoveFromView: on the old scene.
+    SKView * skView = (SKView *)self.view;
+    [skView presentScene:nil];
 }
 
 
