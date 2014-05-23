@@ -27,6 +27,10 @@
 
 @interface INSKButtonNode ()
 
+// A subnode where the visible node*-representations are added to.
+@property (nonatomic, strong) SKNode *subnodeLayer;
+
+// The touch targets and their selectors.
 @property (nonatomic, assign, readwrite) SEL touchUpInsideSelector;
 @property (nonatomic, weak, readwrite) id touchUpInsideTarget;
 @property (nonatomic, assign, readwrite) SEL touchDownSelector;
@@ -46,16 +50,31 @@
 }
 
 - (instancetype)initWithSize:(CGSize)size {
-    if ((self = [super initWithColor:[SKColor clearColor] size:size])) {
-        [self initINSKButton];
-    }
+    self = [super initWithColor:[SKColor clearColor] size:size];
+    if (self == nil) return self;
+    
+    [self setupINSKButton];
+
     return self;
 }
 
++ (instancetype)buttonNodeWithColor:(SKColor *)color size:(CGSize)size {
+    return [[self alloc] initWithColor:color size:size];
+}
+
 - (instancetype)initWithColor:(SKColor *)color size:(CGSize)size {
-    if ((self = [super initWithColor:color size:size])) {
-        [self initINSKButton];
-    }
+    self = [self initWithSize:size];
+    if (self == nil) return self;
+    
+    SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithColor:color size:size];
+    spriteNode.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
+    _nodeNormal = spriteNode;
+    _nodeHighlighted = spriteNode;
+    _nodeSelectedNormal = spriteNode;
+    _nodeSelectedHighlighted = spriteNode;
+    _nodeDisabled = spriteNode;
+    [self addSubnodesAccordingState];
+
     return self;
 }
 
@@ -68,12 +87,14 @@
     if (self == nil) return self;
     
     SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:imageName];
-    self.nodeNormal = spriteNode;
-    self.nodeHighlighted = spriteNode;
-    self.nodeSelectedNormal = spriteNode;
-    self.nodeSelectedHighlighted = spriteNode;
-    self.nodeDisabled = spriteNode;
+    spriteNode.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
     self.size = spriteNode.size;
+    _nodeNormal = spriteNode;
+    _nodeHighlighted = spriteNode;
+    _nodeSelectedNormal = spriteNode;
+    _nodeSelectedHighlighted = spriteNode;
+    _nodeDisabled = spriteNode;
+    [self addSubnodesAccordingState];
     
     return self;
 }
@@ -87,38 +108,49 @@
     if (self == nil) return self;
     
     SKSpriteNode *normalSprite = [SKSpriteNode spriteNodeWithImageNamed:imageName];
+    normalSprite.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
     SKSpriteNode *highlightedSprite = [SKSpriteNode spriteNodeWithImageNamed:highlightImageName];
+    highlightedSprite.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
     self.size = normalSprite.size;
-    self.nodeNormal = normalSprite;
-    self.nodeHighlighted = highlightedSprite;
-    self.nodeSelectedNormal = highlightedSprite;
-    self.nodeSelectedHighlighted = normalSprite;
-    self.nodeDisabled = normalSprite;
+    _nodeNormal = normalSprite;
+    _nodeHighlighted = highlightedSprite;
+    _nodeSelectedNormal = highlightedSprite;
+    _nodeSelectedHighlighted = normalSprite;
+    _nodeDisabled = normalSprite;
+    [self addSubnodesAccordingState];
     
     return self;
 }
 
 - (instancetype)initWithTexture:(SKTexture *)texture {
-    if ((self = [super initWithTexture:texture])) {
-        [self initINSKButton];
-    }
+    self = [super initWithTexture:texture];
+    if (self == nil) return self;
+    
+    [self setupINSKButton];
+
     return self;
 }
 
 - (instancetype)initWithTexture:(SKTexture *)texture color:(SKColor *)color size:(CGSize)size {
-    if ((self = [super initWithTexture:texture color:color size:size])) {
-        [self initINSKButton];
-    }
+    self = [super initWithTexture:texture color:color size:size];
+    if (self == nil) return self;
+    
+    [self setupINSKButton];
+
     return self;
 }
 
-- (void)initINSKButton {
-    [self setUserInteractionEnabled:YES];
+- (void)setupINSKButton {
+    self.userInteractionEnabled = YES;
     
     _enabled = YES;
     _highlighted = NO;
     _selected = NO;
     self.updateSelectedStateAutomatically = NO;
+    
+    self.subnodeLayer = [SKNode node];
+    self.subnodeLayer.name = @"INSKButtonNodeSubnodeLayer"; // only for debugging
+    [self addChild:self.subnodeLayer];
 }
 
 
@@ -132,24 +164,24 @@
     [self.nodeSelectedHighlighted removeFromParent];
 }
 
-- (void)updateState {
+- (void)addSubnodesAccordingState {
     [self removeAllSubnodes];
-    if (self.isEnabled) {
-        if (self.isSelected) {
-            if (self.isHighlighted) {
-                [self addChildOrNil:self.nodeSelectedHighlighted];
+    if (self.enabled) {
+        if (self.selected) {
+            if (self.highlighted) {
+                [self.subnodeLayer addChildOrNil:self.nodeSelectedHighlighted];
             } else {
-                [self addChildOrNil:self.nodeSelectedNormal];
+                [self.subnodeLayer addChildOrNil:self.nodeSelectedNormal];
             }
         } else {
-            if (self.isHighlighted) {
-                [self addChildOrNil:self.nodeHighlighted];
+            if (self.highlighted) {
+                [self.subnodeLayer addChildOrNil:self.nodeHighlighted];
             } else {
-                [self addChildOrNil:self.nodeNormal];
+                [self.subnodeLayer addChildOrNil:self.nodeNormal];
             }
         }
     } else {
-        [self addChildOrNil:self.nodeDisabled];
+        [self.subnodeLayer addChildOrNil:self.nodeDisabled];
     }
 }
 
@@ -193,46 +225,46 @@
     if (_enabled == enabled) return;
     
     _enabled = enabled;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_highlighted == highlighted) return;
     
     _highlighted = highlighted;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setSelected:(BOOL)selected {
     if (_selected == selected) return;
     
     _selected = selected;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setNodeDisabled:(SKNode *)nodeDisabled {
     _nodeDisabled = nodeDisabled;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setNodeNormal:(SKNode *)nodeNormal {
     _nodeNormal = nodeNormal;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setNodeHighlighted:(SKNode *)nodeHighlighted {
     _nodeHighlighted = nodeHighlighted;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setNodeSelectedNormal:(SKNode *)nodeSelectedNormal {
     _nodeSelectedNormal = nodeSelectedNormal;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 - (void)setNodeSelectedHighlighted:(SKNode *)nodeSelectedHighlighted {
     _nodeSelectedHighlighted = nodeSelectedHighlighted;
-    [self updateState];
+    [self addSubnodesAccordingState];
 }
 
 
@@ -240,8 +272,8 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.enabled && !self.hidden) {
-        [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
         self.highlighted = YES;
+        [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
     }
 }
 
