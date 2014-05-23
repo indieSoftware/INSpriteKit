@@ -25,6 +25,7 @@
 
 #import "INSKButtonNode.h"
 #import "INSKScrollNode.h"
+#import "INSKView.h"
 #import "INSKTiledImageNode.h"
 
 #import "SKEmitterNode+INExtension.h"

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		2600637918FD201E00C438E9 /* indie_banner_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2600637818FD201E00C438E9 /* indie_banner_small.png */; };
 		2620CB96192616680092BF41 /* INSKMathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2620CB95192616680092BF41 /* INSKMathTests.m */; };
-		2688077518FC63E4005A8FC4 /* ButtonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2688077418FC63E4005A8FC4 /* ButtonNode.m */; };
+		2688077518FC63E4005A8FC4 /* ButtonNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 2688077418FC63E4005A8FC4 /* ButtonNodeScene.m */; };
 		268C9CB318F5B2C600B5CAE5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB218F5B2C600B5CAE5 /* Foundation.framework */; };
 		268C9CB518F5B2C600B5CAE5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB418F5B2C600B5CAE5 /* CoreGraphics.framework */; };
 		268C9CB718F5B2C600B5CAE5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB618F5B2C600B5CAE5 /* UIKit.framework */; };
@@ -28,7 +28,8 @@
 		268C9CF618F5B4DF00B5CAE5 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */; };
 		268C9CFA18F5BA8800B5CAE5 /* Scenes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CF918F5BA8800B5CAE5 /* Scenes.plist */; };
 		268C9CFC18F5BBAC00B5CAE5 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */; };
-		268C9CFF18F5BC2100B5CAE5 /* ScrollNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CFE18F5BC2100B5CAE5 /* ScrollNode.m */; };
+		268C9CFF18F5BC2100B5CAE5 /* ScrollNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CFE18F5BC2100B5CAE5 /* ScrollNodeScene.m */; };
+		269475AF192D184700DDBAA0 /* TouchHandlingScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 269475AE192D184700DDBAA0 /* TouchHandlingScene.m */; };
 		491EEF4D67F449BCA1AC3695 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2685CEE498864743889A487D /* libPods.a */; };
 		6C7015C0FB984DCF966E53AB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2685CEE498864743889A487D /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -47,8 +48,8 @@
 		2600637818FD201E00C438E9 /* indie_banner_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = indie_banner_small.png; sourceTree = "<group>"; };
 		2620CB95192616680092BF41 /* INSKMathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSKMathTests.m; sourceTree = "<group>"; };
 		2685CEE498864743889A487D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2688077318FC63E4005A8FC4 /* ButtonNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonNode.h; sourceTree = "<group>"; };
-		2688077418FC63E4005A8FC4 /* ButtonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonNode.m; sourceTree = "<group>"; };
+		2688077318FC63E4005A8FC4 /* ButtonNodeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonNodeScene.h; sourceTree = "<group>"; };
+		2688077418FC63E4005A8FC4 /* ButtonNodeScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonNodeScene.m; sourceTree = "<group>"; };
 		268C9CAF18F5B2C600B5CAE5 /* INSpriteKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INSpriteKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		268C9CB218F5B2C600B5CAE5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		268C9CB418F5B2C600B5CAE5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -73,8 +74,10 @@
 		268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		268C9CF918F5BA8800B5CAE5 /* Scenes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Scenes.plist; sourceTree = "<group>"; };
 		268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
-		268C9CFD18F5BC2100B5CAE5 /* ScrollNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollNode.h; sourceTree = "<group>"; };
-		268C9CFE18F5BC2100B5CAE5 /* ScrollNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollNode.m; sourceTree = "<group>"; };
+		268C9CFD18F5BC2100B5CAE5 /* ScrollNodeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollNodeScene.h; sourceTree = "<group>"; };
+		268C9CFE18F5BC2100B5CAE5 /* ScrollNodeScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollNodeScene.m; sourceTree = "<group>"; };
+		269475AD192D184700DDBAA0 /* TouchHandlingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHandlingScene.h; sourceTree = "<group>"; };
+		269475AE192D184700DDBAA0 /* TouchHandlingScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchHandlingScene.m; sourceTree = "<group>"; };
 		E2D223D0580745039691724E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				268C9CF818F5B57500B5CAE5 /* App Framework */,
-				268C9CF718F5B56A00B5CAE5 /* Scenes */,
+				268C9CF718F5B56A00B5CAE5 /* Example Scenes */,
 				268C9CF318F5B42B00B5CAE5 /* Images */,
 				268C9CBB18F5B2C600B5CAE5 /* Supporting Files */,
 			);
@@ -198,16 +201,18 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		268C9CF718F5B56A00B5CAE5 /* Scenes */ = {
+		268C9CF718F5B56A00B5CAE5 /* Example Scenes */ = {
 			isa = PBXGroup;
 			children = (
 				268C9CF918F5BA8800B5CAE5 /* Scenes.plist */,
-				268C9CFD18F5BC2100B5CAE5 /* ScrollNode.h */,
-				268C9CFE18F5BC2100B5CAE5 /* ScrollNode.m */,
-				2688077318FC63E4005A8FC4 /* ButtonNode.h */,
-				2688077418FC63E4005A8FC4 /* ButtonNode.m */,
+				268C9CFD18F5BC2100B5CAE5 /* ScrollNodeScene.h */,
+				268C9CFE18F5BC2100B5CAE5 /* ScrollNodeScene.m */,
+				2688077318FC63E4005A8FC4 /* ButtonNodeScene.h */,
+				2688077418FC63E4005A8FC4 /* ButtonNodeScene.m */,
+				269475AD192D184700DDBAA0 /* TouchHandlingScene.h */,
+				269475AE192D184700DDBAA0 /* TouchHandlingScene.m */,
 			);
-			name = Scenes;
+			name = "Example Scenes";
 			sourceTree = "<group>";
 		};
 		268C9CF818F5B57500B5CAE5 /* App Framework */ = {
@@ -392,11 +397,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269475AF192D184700DDBAA0 /* TouchHandlingScene.m in Sources */,
 				268C9CCB18F5B2C600B5CAE5 /* ViewController.m in Sources */,
 				268C9CC518F5B2C600B5CAE5 /* AppDelegate.m in Sources */,
 				268C9CF618F5B4DF00B5CAE5 /* TableViewController.m in Sources */,
-				2688077518FC63E4005A8FC4 /* ButtonNode.m in Sources */,
-				268C9CFF18F5BC2100B5CAE5 /* ScrollNode.m in Sources */,
+				2688077518FC63E4005A8FC4 /* ButtonNodeScene.m in Sources */,
+				268C9CFF18F5BC2100B5CAE5 /* ScrollNodeScene.m in Sources */,
 				268C9CC118F5B2C600B5CAE5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
