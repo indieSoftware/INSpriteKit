@@ -22,9 +22,21 @@
 
 
 #import "SKNode+INExtension.h"
+#import <objc/runtime.h>
+
+
+static const char *SKNodeINExtensionTouchPriorityKey = "SKNodeINExtensionTouchPriorityKey";
 
 
 @implementation SKNode (INExtension)
+
+- (NSInteger)touchPriority {
+    return [((NSNumber *)objc_getAssociatedObject(self, SKNodeINExtensionTouchPriorityKey)) integerValue];
+}
+
+- (void)setTouchPriority:(NSInteger)touchPriority {
+    objc_setAssociatedObject(self, SKNodeINExtensionTouchPriorityKey, @(touchPriority), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (void)bringToFront {
     SKNode *parent = self.parent;
@@ -41,6 +53,12 @@
 - (void)addChildOrNil:(SKNode *)node {
     if (node != nil) {
         [self addChild:node];
+    }
+}
+
+- (void)insertChildOrNil:(SKNode *)node atIndex:(NSInteger)index {
+    if (node != nil) {
+        [self insertChild:node atIndex:index];
     }
 }
 

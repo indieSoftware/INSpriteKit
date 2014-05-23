@@ -25,9 +25,22 @@
 
 @interface SKNode (INExtension)
 
+/**
+ The priority of this node to get touches. Defaults to 0.
+ 
+ The top visible node with the highest priority will receive the touches.
+ Normally the last rendered and top visible node will receive any touches,
+ but with setting a touch priority the node can receive the touches even when the node is under other nodes.
+ 
+ @warning For the touch delivery to work the Sprite Kit view has to be an instance of INSKView instead of SKView.
+ 
+ @see INSKView
+ */
+@property (nonatomic, assign) NSInteger touchPriority;
+
 
 /**
- Removes and re-adds the node to its parent so the node will be at top of all other parent's childen.
+ Removes and re-adds the node to its parent so the node will be at top of all other parent's childen in the tree.
  */
 - (void)bringToFront;
 
@@ -50,6 +63,21 @@
  @param node The node or nil to add as child.
  */
 - (void)addChildOrNil:(SKNode *)node;
+
+
+/**
+ Inserts a node as child to specific position, but may also be nil which will not result in an exception.
+ 
+ Same as
+ 
+    if (node != nil) {
+        [self insertChild:node atIndex:index];
+    }
+ 
+ @param node The node or nil to insert.
+ @param index The index where to insert the node.
+ */
+- (void)insertChildOrNil:(SKNode *)node atIndex:(NSInteger)index;
 
 
 /**
