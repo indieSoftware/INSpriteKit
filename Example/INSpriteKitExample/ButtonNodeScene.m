@@ -1,4 +1,4 @@
-// ButtonNode.m
+// ButtonNodeScene.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,15 +21,15 @@
 // THE SOFTWARE.
 
 
-#import "ButtonNode.h"
+#import "ButtonNodeScene.h"
 
 
-@interface ButtonNode ()
+@interface ButtonNodeScene ()
 
 @end
 
 
-@implementation ButtonNode
+@implementation ButtonNodeScene
 
 - (id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
@@ -40,14 +40,16 @@
     
     INSKButtonNode *button;
     
-    // Create push button with only one picture
+    
+    // Create "push button" with only one picture
     button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, 200);
     button.name = @"push button";
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [self addChild:button];
     
-    // Create second push button with more control
+    
+    // Create "push button 2" with more control
     UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner_small" ofType:@"png"]];
     UIImage *imageHighlighted = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner" ofType:@"jpg"]];
     button = [[INSKButtonNode alloc] initWithSize:image.size];
@@ -55,12 +57,22 @@
     button.nodeNormal = buttonNormalRepresentation;
     SKSpriteNode *buttonHighlightRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:imageHighlighted]];
     button.nodeHighlighted = buttonHighlightRepresentation;
+    SKSpriteNode *disabledRepresentation = [buttonNormalRepresentation copy];
+    disabledRepresentation.color = [SKColor grayColor];
+    disabledRepresentation.colorBlendFactor = 0.5;
+    button.nodeDisabled = disabledRepresentation;
     button.position = CGPointMake(0, 0);
     button.name = @"push button 2";
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [self addChild:button];
 
-    // Create toggle button
+    // A label as child of the button
+    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"A label added to a button";
+    [button addChild:label];
+    
+    
+    // Create "toggle button"
     button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, -200);
     button.name = @"toggle button";
@@ -87,12 +99,19 @@
     spriteNode.colorBlendFactor = 0.2;
     button.nodeSelectedHighlighted = spriteNode;
     
-    
     return self;
 }
 
 - (void)buttonTouchedUpInside:(INSKButtonNode *)button {
     NSLog(@"'%@' touched up inside", button.name);
+
+    // the toggle button enables/disables the other buttons
+    if ([button.name isEqualToString:@"toggle button"]) {
+        INSKButtonNode *buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"push button"];
+        buttonToDisable.enabled = !buttonToDisable.enabled;
+        buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"push button 2"];
+        buttonToDisable.enabled = !buttonToDisable.enabled;
+    }
 }
 
 

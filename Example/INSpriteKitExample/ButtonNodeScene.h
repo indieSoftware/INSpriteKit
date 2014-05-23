@@ -1,4 +1,4 @@
-// ScrollNode.h
+// ButtonNodeScene.h
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -23,6 +23,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface ScrollNode : SKScene
+@interface ButtonNodeScene : SKScene
 
 @end

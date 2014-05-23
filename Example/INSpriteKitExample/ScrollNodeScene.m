@@ -1,4 +1,4 @@
-// ScrollNode.m
+// ScrollNodeScene.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,10 +21,10 @@
 // THE SOFTWARE.
 
 
-#import "ScrollNode.h"
+#import "ScrollNodeScene.h"
 
 
-@interface ScrollNode () <INSKScrollNodeDelegate>
+@interface ScrollNodeScene () <INSKScrollNodeDelegate>
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic, strong) INSKScrollNode *scrollNode;
@@ -32,7 +32,7 @@
 @end
 
 
-@implementation ScrollNode
+@implementation ScrollNodeScene
 
 - (id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
@@ -53,7 +53,7 @@
     self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeDecelerate;
     self.scrollNode.pageSize = CGSizeMake(200, 200);
     self.scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
-    NSLog(@"scrollNode has %dx%d pages", self.scrollNode.numberOfPagesX, self.scrollNode.numberOfPagesY);
+    NSLog(@"scrollNode has %lux%lu pages", (unsigned long)self.scrollNode.numberOfPagesX, (unsigned long)self.scrollNode.numberOfPagesY);
 
     // Set content size and position
     self.scrollNode.scrollContentPosition = CGPointMake(-(self.scrollNode.scrollContentSize.width - self.scrollNode.scrollNodeSize.width) / 2, (self.scrollNode.scrollContentSize.height - self.scrollNode.scrollNodeSize.height) / 2);
@@ -122,7 +122,7 @@
 }
 
 - (void)scrollNode:(INSKScrollNode *)scrollNode didFinishScrollingAtPosition:(CGPoint)offset {
-    NSLog(@"scrollNode finished scrolling at %.0fx%0.f on page %d,%d", offset.x, offset.y, scrollNode.currentPageX, scrollNode.currentPageY);
+    NSLog(@"scrollNode finished scrolling at %.0fx%0.f on page %lu,%lu", offset.x, offset.y, (unsigned long)scrollNode.currentPageX, (unsigned long)scrollNode.currentPageY);
 }
 
 
