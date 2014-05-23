@@ -165,6 +165,32 @@
 /**
  Creates and returns a new instance of INSKButtonNode.
  
+ Calls initWithColor:size:.
+ 
+ @param color The node's color.
+ @param size The size of the button.
+ @return A new button instance.
+ @see initWithColor:size:
+ */
++ (instancetype)buttonNodeWithColor:(SKColor *)color size:(CGSize)size;
+
+
+/**
+ Initializes a INSKButtonNode instance with the given color and size.
+ 
+ The size describes the touch area of the button which will be visible by SKSpriteNodes in the given color.
+ See initWithSize: for more instructions.
+ 
+ @param size The size of the button.
+ @return The initialized node.
+ @see initWithSize:
+ */
+- (instancetype)initWithColor:(SKColor *)color size:(CGSize)size;
+
+
+/**
+ Creates and returns a new instance of INSKButtonNode.
+ 
  Calls initWithImageNamed:.
  
  @param imageName The name of the image file to load for the normal representation.
