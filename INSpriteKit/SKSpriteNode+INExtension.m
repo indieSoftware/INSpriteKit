@@ -38,18 +38,18 @@
     self.position = CGPointMake(position.x + translation.x, position.y - translation.y);
 }
 
-- (BOOL)isPositionInside:(CGPoint)position {
+- (BOOL)isPointInside:(CGPoint)point {
     CGSize size = self.sizeUnscaled;
-    if (position.x < -size.width * self.anchorPoint.x) {
+    if (point.x < -size.width * self.anchorPoint.x) {
         return NO;
     }
-    if (position.x > size.width - size.width * self.anchorPoint.x) {
+    if (point.x > size.width - size.width * self.anchorPoint.x) {
         return NO;
     }
-    if (position.y < -size.height * self.anchorPoint.y) {
+    if (point.y < -size.height * self.anchorPoint.y) {
         return NO;
     }
-    if (position.y > size.height - size.height * self.anchorPoint.y) {
+    if (point.y > size.height - size.height * self.anchorPoint.y) {
         return NO;
     }
     return YES;
