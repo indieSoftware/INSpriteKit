@@ -163,13 +163,18 @@
         [node touchesBegan:touches withEvent:event];
     }
     
+    // No scene at all, ignore all touches.
+    if (self.scene == nil) {
+        return;
+    }
+
     // Deliver touches to touched nodes.
     for (UITouch *touch in touches) {
-        // find new node for touch
+        // Find new node for touch.
         CGPoint touchLocation = [touch locationInNode:self.scene];
         SKNode *nodeForTouch = [self topInteractingNodeAtPosition:touchLocation];
         if (nodeForTouch == nil) {
-            // no node found for touch at the position, use the scene
+            // No node found for touch at the position, use the scene.
             nodeForTouch = self.scene;
         }
         
@@ -189,13 +194,17 @@
     
     // Deliver touches to touched nodes.
     for (UITouch *touch in touches) {
-        // get saved node for touch
+        // Get saved node for touch.
         NSValue *key = [NSValue valueWithCGPoint:[touch previousLocationInView:nil]];
         SKNode *nodeForTouch = [self.nodeForTouchMapping objectForKey:key];
         // Fallback because the touch with the same location may be returned.
         if (nodeForTouch == nil) {
             key = [NSValue valueWithCGPoint:[touch locationInView:nil]];
             nodeForTouch = [self.nodeForTouchMapping objectForKey:key];
+            if (nodeForTouch == nil) {
+                // Still no node found, maybe there is no scene so ignore touch.
+                continue;
+            }
         }
         
         // Update touch key.
@@ -215,13 +224,17 @@
     
     // Deliver touches to touched nodes.
     for (UITouch *touch in touches) {
-        // get saved node for touch
+        // Get saved node for touch.
         NSValue *key = [NSValue valueWithCGPoint:[touch previousLocationInView:nil]];
         SKNode *nodeForTouch = [self.nodeForTouchMapping objectForKey:key];
         // Fallback because the touch with the same location may be returned.
         if (nodeForTouch == nil) {
             key = [NSValue valueWithCGPoint:[touch locationInView:nil]];
             nodeForTouch = [self.nodeForTouchMapping objectForKey:key];
+            if (nodeForTouch == nil) {
+                // Still no node found, maybe there is no scene so ignore touch.
+                continue;
+            }
         }
         
         // Clean up touch mapping.
@@ -246,6 +259,10 @@
         if (nodeForTouch == nil) {
             key = [NSValue valueWithCGPoint:[touch locationInView:nil]];
             nodeForTouch = [self.nodeForTouchMapping objectForKey:key];
+            if (nodeForTouch == nil) {
+                // Still no node found, maybe there is no scene so ignore touch.
+                continue;
+            }
         }
         
         // Clean up touch mapping.
