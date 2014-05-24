@@ -24,7 +24,7 @@
 #import "ButtonNodeScene.h"
 
 
-@interface ButtonNodeScene ()
+@interface ButtonNodeScene () <INSKButtonNodeDelegate>
 
 @end
 
@@ -45,7 +45,7 @@
     button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, 200);
     button.name = @"push button";
-    [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    button.inskButtonNodeDelegate = self;
     [self addChild:button];
     
     
@@ -63,7 +63,7 @@
     button.nodeDisabled = disabledRepresentation;
     button.position = CGPointMake(0, 0);
     button.name = @"push button 2";
-    [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    button.inskButtonNodeDelegate = self;
     [self addChild:button];
 
     // A label as child of the button
@@ -78,6 +78,7 @@
     button.name = @"toggle button";
     button.updateSelectedStateAutomatically = YES;
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    button.inskButtonNodeDelegate = self;
     [self addChild:button];
     
     // clone the button's normal state and modify it for the highlight and selected states
@@ -102,9 +103,31 @@
     return self;
 }
 
-- (void)buttonTouchedUpInside:(INSKButtonNode *)button {
-    NSLog(@"'%@' touched up inside", button.name);
+- (void)buttonNode:(INSKButtonNode *)button touchUp:(BOOL)touchUp inside:(BOOL)touchInside {
+    if (touchUp) {
+        if (touchInside) {
+            NSLog(@"'%@' touched up inside", button.name);
+        } else {
+            NSLog(@"'%@' touched up outside", button.name);
+        }
+    } else {
+        NSLog(@"'%@' touched down", button.name);
+    }
+}
 
+- (void)buttonNode:(INSKButtonNode *)button touchMoveUpdatesHighlightState:(BOOL)isHighlighted {
+    if (isHighlighted) {
+        NSLog(@"'%@' highlights again", button.name);
+    } else {
+        NSLog(@"'%@' not highlighted anymore", button.name);
+    }
+}
+
+- (void)buttonNodeTouchCancelled:(INSKButtonNode *)button {
+    NSLog(@"'%@' has all touches get cancelled", button.name);
+}
+
+- (void)buttonTouchedUpInside:(INSKButtonNode *)button {
     // the toggle button enables/disables the other buttons
     if ([button.name isEqualToString:@"toggle button"]) {
         INSKButtonNode *buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"push button"];

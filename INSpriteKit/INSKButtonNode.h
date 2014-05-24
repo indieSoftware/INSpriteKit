@@ -24,6 +24,54 @@
 #import <SpriteKit/SpriteKit.h>
 
 
+@class INSKButtonNode;
+
+
+/**
+ The delegate protocol to inform about state changes of a INSKButtonNode according to touches.
+ All methods are optional.
+ */
+@protocol INSKButtonNodeDelegate <NSObject>
+
+@optional
+
+/**
+ Gets called when the first touch goes down on a button node or the last touch gets lifted.
+ 
+ @param button The button node on which the touch occured.
+ @param touchUp Is YES if the touch gets lifted, NO if the first touch gets pressed down.
+ @param touchInside YES if the touch occured inside of the button's touch area.
+ */
+- (void)buttonNode:(INSKButtonNode *)button touchUp:(BOOL)touchUp inside:(BOOL)touchInside;
+
+
+/**
+ Gets called when an event occures which calles all touches on the button, i.e. when a UIGestureRecognizer fires and cancels touches for others.
+ With this method any changes according to a touch down event can be undone because a touch up event will never be send.
+ 
+ @param button The corresponding button node.
+ */
+- (void)buttonNodeTouchCancelled:(INSKButtonNode *)button;
+
+
+/**
+ Gets called when a touch moved and the highlight state of the button updates because of the movement.
+ 
+ The highlight state will be true as long as at least one touch resists inside of the button.
+ When the last touch moves out of the button's touch area the highlight state gets NO and this method will be called.
+ As soon as a finger moves inside of the button's touch area again the highlight state changes to YES again and the method gets called again.
+ 
+ @param button The corresponding button node.
+ @param isHighlighted YES if the button is actually highlighted after the movement, which means there was no touch inside of the button, but a finger moved inside again. Otherwise NO so the last finger moved actually outside of the touch area.
+ */
+- (void)buttonNode:(INSKButtonNode *)button touchMoveUpdatesHighlightState:(BOOL)isHighlighted;
+
+
+@end
+
+
+
+
 /**
  A button node for easy action handling.
  
@@ -36,7 +84,7 @@
  It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the nodeXXX properties.
  The nodeDisabled is only used if the enabled flag is manually set to NO.
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
- Register for target-selector callbacks to get informed about user input.
+ Register for target-selector callbacks to get informed about user input or use the delegate protocol.
  
     INSKButtonNode *button = [INSKButtonNode buttonNodeWithImageNamed:@"imageName"];
     button.position = buttonPosition;
@@ -51,10 +99,20 @@
 // ------------------------------------------------------------
 
 /**
+ The delegate to inform about any button touch state changes.
+ 
+ The delegate will not be retained.
+ The delegate protocol is an alternative to the target-selector callbacks.
+ */
+@property (nonatomic, weak) id<INSKButtonNodeDelegate> inskButtonNodeDelegate;
+
+
+/**
  Flag indicating whether the button is enabled. Defaults to YES.
  
  Disable the button manually according to the logic.
  If set to NO the nodeDisabled will be shown and user input ignored.
+ If set to NO the highlighted flag will also be set to NO.
  */
 @property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 

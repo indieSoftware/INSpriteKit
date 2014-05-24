@@ -23,12 +23,18 @@
 
 #import "INSKButtonNode.h"
 #import "SKNode+INExtension.h"
+#import "SKSpriteNode+INExtension.h"
 
 
 @interface INSKButtonNode ()
 
 // A subnode where the visible node*-representations are added to.
 @property (nonatomic, strong) SKNode *subnodeLayer;
+
+// The number of touches this button is tracking.
+@property (nonatomic, assign) NSUInteger numberOfTouches;
+// The number of touches this button is tracking and are currently inside of it's frame.
+@property (nonatomic, assign) NSUInteger numberOfTouchesInside;
 
 // The touch targets and their selectors.
 @property (nonatomic, assign, readwrite) SEL touchUpInsideSelector;
@@ -73,7 +79,7 @@
     _nodeSelectedNormal = spriteNode;
     _nodeSelectedHighlighted = spriteNode;
     _nodeDisabled = spriteNode;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 
     return self;
 }
@@ -94,7 +100,7 @@
     _nodeSelectedNormal = spriteNode;
     _nodeSelectedHighlighted = spriteNode;
     _nodeDisabled = spriteNode;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
     
     return self;
 }
@@ -117,7 +123,7 @@
     _nodeSelectedNormal = highlightedSprite;
     _nodeSelectedHighlighted = normalSprite;
     _nodeDisabled = normalSprite;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
     
     return self;
 }
@@ -147,6 +153,8 @@
     _highlighted = NO;
     _selected = NO;
     self.updateSelectedStateAutomatically = NO;
+    self.numberOfTouches = 0;
+    self.numberOfTouchesInside = 0;
     
     self.subnodeLayer = [SKNode node];
     self.subnodeLayer.name = @"INSKButtonNodeSubnodeLayer"; // only for debugging
@@ -164,7 +172,7 @@
     [self.nodeSelectedHighlighted removeFromParent];
 }
 
-- (void)addSubnodesAccordingState {
+- (void)updateSubnodes {
     [self removeAllSubnodes];
     if (self.enabled) {
         if (self.selected) {
@@ -186,7 +194,7 @@
 }
 
 - (void)informTarget:(id)target withSelector:(SEL)selector {
-    // a replacement for performSelector:withObject:
+    // A replacement for performSelector:withObject:
     NSMethodSignature *methodSig = [[target class] instanceMethodSignatureForSelector:selector];
     if (methodSig != nil) {
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
@@ -225,86 +233,153 @@
     if (_enabled == enabled) return;
     
     _enabled = enabled;
-    [self addSubnodesAccordingState];
+    if (!enabled) {
+        _highlighted = NO;
+    }
+    [self updateSubnodes];
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_highlighted == highlighted) return;
     
     _highlighted = highlighted;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setSelected:(BOOL)selected {
     if (_selected == selected) return;
     
     _selected = selected;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setNodeDisabled:(SKNode *)nodeDisabled {
     _nodeDisabled = nodeDisabled;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setNodeNormal:(SKNode *)nodeNormal {
     _nodeNormal = nodeNormal;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setNodeHighlighted:(SKNode *)nodeHighlighted {
     _nodeHighlighted = nodeHighlighted;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setNodeSelectedNormal:(SKNode *)nodeSelectedNormal {
     _nodeSelectedNormal = nodeSelectedNormal;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 - (void)setNodeSelectedHighlighted:(SKNode *)nodeSelectedHighlighted {
     _nodeSelectedHighlighted = nodeSelectedHighlighted;
-    [self addSubnodesAccordingState];
+    [self updateSubnodes];
 }
 
 
 #pragma mark - touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.enabled && !self.hidden) {
+    // Update detected touches
+    self.numberOfTouches += touches.count;
+    for (UITouch *touch in touches) {
+        CGPoint touchPoint = [touch locationInNode:self];
+        if ([self isPointInside:touchPoint]) {
+            self.numberOfTouchesInside++;
+        }
+    }
+
+    // Update state for first touch only
+    if (self.enabled && self.numberOfTouches == touches.count && self.numberOfTouchesInside > 0) {
         self.highlighted = YES;
+        if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+            [self.inskButtonNodeDelegate buttonNode:self touchUp:NO inside:YES];
+        }
         [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.enabled && !self.hidden) {
-        UITouch *touch = [touches anyObject];
-        CGPoint touchPoint = [touch locationInNode:self.parent];
-        
-        if (CGRectContainsPoint(self.frame, touchPoint)) {
+    // Update detected touches
+    for (UITouch *touch in touches) {
+        CGPoint oldTouchPoint = [touch previousLocationInNode:self];
+        CGPoint newTouchPoint = [touch locationInNode:self];
+        BOOL wasInside = [self isPointInside:oldTouchPoint];
+        BOOL isInside = [self isPointInside:newTouchPoint];
+        if (wasInside && !isInside) {
+            self.numberOfTouchesInside--;
+        } else if (!wasInside && isInside) {
+            self.numberOfTouchesInside++;
+        }
+    }
+    
+    // Update state
+    if (self.enabled) {
+        BOOL oldHighlightedState = self.highlighted;
+        if (self.numberOfTouchesInside > 0) {
             self.highlighted = YES;
         } else {
             self.highlighted = NO;
+        }
+        if (oldHighlightedState != self.highlighted) {
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchMoveUpdatesHighlightState:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchMoveUpdatesHighlightState:self.highlighted];
+            }
         }
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.enabled && !self.hidden) {
-        UITouch *touch = [touches anyObject];
-        CGPoint touchPoint = [touch locationInNode:self.parent];
-        
+    // Update detected touches
+    BOOL lastTouchWasInside = self.numberOfTouchesInside > 0;
+    self.numberOfTouches -= touches.count;
+    for (UITouch *touch in touches) {
+        CGPoint touchPoint = [touch locationInNode:self];
+        if ([self isPointInside:touchPoint]) {
+            self.numberOfTouchesInside--;
+        }
+    }
+    
+    // Update state for last touch only
+    if (self.enabled && self.numberOfTouches == 0) {
         self.highlighted = NO;
-        if (CGRectContainsPoint(self.frame, touchPoint)) {
+        if (lastTouchWasInside) {
             if (self.updateSelectedStateAutomatically) {
                 self.selected = !self.selected;
             }
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchUp:YES inside:YES];
+            }
             [self informTarget:self.touchUpInsideTarget withSelector:self.touchUpInsideSelector];
+        } else {
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchUp:YES inside:NO];
+            }
         }
         [self informTarget:self.touchUpTarget withSelector:self.touchUpSelector];
     }
 }
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    // Update detected touches
+    self.numberOfTouches -= touches.count;
+    for (UITouch *touch in touches) {
+        CGPoint touchPoint = [touch locationInNode:self];
+        if ([self isPointInside:touchPoint]) {
+            self.numberOfTouchesInside--;
+        }
+    }
+
+    if (self.enabled) {
+        self.highlighted = NO;
+        if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNodeTouchCancelled:)]) {
+            [self.inskButtonNodeDelegate buttonNodeTouchCancelled:self];
+        }
+    }
+}
+
 
 @end
 

@@ -17,7 +17,7 @@ This library consists of
 ### INSKButtonNode: A UIButton adaption for Sprite Kit
 - Has full support for touch and state handling.
 - Set different visual representations for the states disabled, normal, highlighted, selected and selected+highlighted.
-- Get called back when the button is being pressed, released and released inside of its frame.
+- Get called back when the button is being pressed, released and released inside of its frame or use a delegate to get informed.
 
 ### INSKView: A SKView replacement for a better touch delivery
 - Replaces Sprite Kit's touch delivery system with its own to respect a SKNode's `userInteractionEnabled` property.
@@ -31,7 +31,7 @@ This library consists of
 ### Some categories
 - SKNode: `bringToFront` and `sendToBack` for manipulating the tree order.
 - SKNode: `changeParent:` replaces the node's parent and converts its position.
-- SKSpriteNode: `isPositionInside:` checks if a position is inside of the sprite node.
+- SKSpriteNode: `isPointInside:` checks if a position point is inside of the sprite node.
 - SKEmitterNode: `emitterLife` calculates an emitter's total life time.
 - SKEmitterNode: `runActionToRemoveWhenFinished` adds an action which will remove the emitter if finished emitting.
 - ... and some more additionals.
