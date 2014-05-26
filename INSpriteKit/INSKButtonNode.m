@@ -235,24 +235,6 @@
 }
 
 
-#pragma mark - setting target-selector pairs
-
-- (void)setTouchUpInsideTarget:(id)target selector:(SEL)selector {
-    self.touchUpInsideTarget = target;
-    self.touchUpInsideSelector = selector;
-}
-
-- (void)setTouchDownTarget:(id)target selector:(SEL)selector {
-    self.touchDownTarget = target;
-    self.touchDownSelector = selector;
-}
-
-- (void)setTouchUpTarget:(id)target selector:(SEL)selector {
-    self.touchUpTarget = target;
-    self.touchUpSelector = selector;
-}
-
-
 #pragma mark - properties
 
 - (void)setEnabled:(BOOL)enabled {
@@ -302,6 +284,49 @@
 - (void)setNodeSelectedHighlighted:(SKNode *)nodeSelectedHighlighted {
     _nodeSelectedHighlighted = nodeSelectedHighlighted;
     [self updateSubnodes];
+}
+
+
+#pragma mark - public methods
+
++ (BOOL)buttonWillHandleTouchForLocation:(CGPoint)location inScene:(SKScene *)scene {
+    NSArray *nodesOnLocation = [scene nodesAtPoint:location];
+    for (SKNode *node in nodesOnLocation) {
+        // node has to be button
+        if (![node isKindOfClass:self]) {
+            continue;
+        }
+        
+        // button has to be enabled for touches
+        INSKButtonNode *button = (INSKButtonNode *)node;
+        if (!button.userInteractionEnabled || !button.enabled || button.hidden || button.alpha == 0.0) {
+            continue;
+        }
+        
+        // button found
+        return YES;
+    }
+    
+    // no button found
+    return NO;
+}
+
+
+#pragma mark - setting target-selector pairs
+
+- (void)setTouchUpInsideTarget:(id)target selector:(SEL)selector {
+    self.touchUpInsideTarget = target;
+    self.touchUpInsideSelector = selector;
+}
+
+- (void)setTouchDownTarget:(id)target selector:(SEL)selector {
+    self.touchDownTarget = target;
+    self.touchDownSelector = selector;
+}
+
+- (void)setTouchUpTarget:(id)target selector:(SEL)selector {
+    self.touchUpTarget = target;
+    self.touchUpSelector = selector;
 }
 
 

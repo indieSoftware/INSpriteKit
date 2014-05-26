@@ -95,90 +95,6 @@
 @interface INSKButtonNode : SKSpriteNode
 
 // ------------------------------------------------------------
-#pragma mark - Properties
-// ------------------------------------------------------------
-
-/**
- The delegate to inform about any button touch state changes.
- 
- The delegate will not be retained.
- The delegate protocol is an alternative to the target-selector callbacks.
- */
-@property (nonatomic, weak) id<INSKButtonNodeDelegate> inskButtonNodeDelegate;
-
-
-/**
- Flag indicating whether the button is enabled. Defaults to YES.
- 
- Disable the button manually according to the logic.
- If set to NO the nodeDisabled will be shown and user input ignored.
- If set to NO the highlighted flag will also be set to NO.
- */
-@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
-
-
-/**
- Flag indicating whether the button is acutally pressed and thus highlighted.
- 
- This flag automatically updates to the user input.
- If YES nodeHighlighted or nodeSelectedHighlighted will be shown.
- */
-@property (nonatomic, assign, getter=isHighlighted) BOOL highlighted;
-
-
-/**
- Flag indicating whether the toggle button is actually in the selected mode or not.
- 
- Each touch lifting inside of the button will toggle this state automatically, 
- but only if updateSelectedStateAutomatically is set to YES.
- As long as selected is YES nodeSelectedNormal and nodeSelectedHighlighted will be used 
- instead of nodeNormal and nodeHighlighted.
- 
- @see updateSelectedStateAutomatically
- */
-@property (nonatomic, assign, getter=isSelected) BOOL selected;
-
-
-/**
- Activate to make the button automatically toggle its selected state. Defaults to NO.
- 
- If set to YES the selected property will be updated automatically according to touch up events.
- Has to be set to YES if the button should behave like a toggle button.
- */
-@property (nonatomic, assign) BOOL updateSelectedStateAutomatically;
-
-
-/**
- The node to show when the button's enabled property is set to NO.
- */
-@property (nonatomic, strong) SKNode *nodeDisabled;
-
-
-/**
- The node to show when the button's enabled property is set to YES, no touch occured and the selected state is NO.
- */
-@property (nonatomic, strong) SKNode *nodeNormal;
-
-
-/**
- The node to show when the button's enabled property is set to YES, a touch occured and the selected state is NO.
- */
-@property (nonatomic, strong) SKNode *nodeHighlighted;
-
-
-/**
- The node to show when the button's enabled property is set to YES, no touch occured and the selected state is YES.
- */
-@property (nonatomic, strong) SKNode *nodeSelectedNormal;
-
-
-/**
- The node to show when the button's enabled property is set to YES, a touch occured and the selected state is YES.
- */
-@property (nonatomic, strong) SKNode *nodeSelectedHighlighted;
-
-
-// ------------------------------------------------------------
 #pragma mark - Initializer
 // ------------------------------------------------------------
 
@@ -324,6 +240,101 @@
  @return The initialized node.
  */
 - (instancetype)initWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName;
+
+
+// ------------------------------------------------------------
+#pragma mark - class methods
+// ------------------------------------------------------------
+/// @name Class methods
+
+/**
+ 
+ */
++ (BOOL)buttonWillHandleTouchForLocation:(CGPoint)location inScene:(SKScene *)scene;
+
+
+// ------------------------------------------------------------
+#pragma mark - Properties
+// ------------------------------------------------------------
+
+/**
+ The delegate to inform about any button touch state changes.
+ 
+ The delegate will not be retained.
+ The delegate protocol is an alternative to the target-selector callbacks.
+ */
+@property (nonatomic, weak) id<INSKButtonNodeDelegate> inskButtonNodeDelegate;
+
+
+/**
+ Flag indicating whether the button is enabled. Defaults to YES.
+ 
+ Disable the button manually according to the logic.
+ If set to NO the nodeDisabled will be shown and user input ignored.
+ If set to NO the highlighted flag will also be set to NO.
+ */
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
+
+
+/**
+ Flag indicating whether the button is acutally pressed and thus highlighted.
+ 
+ This flag automatically updates to the user input.
+ If YES nodeHighlighted or nodeSelectedHighlighted will be shown.
+ */
+@property (nonatomic, assign, getter=isHighlighted) BOOL highlighted;
+
+
+/**
+ Flag indicating whether the toggle button is actually in the selected mode or not.
+ 
+ Each touch lifting inside of the button will toggle this state automatically,
+ but only if updateSelectedStateAutomatically is set to YES.
+ As long as selected is YES nodeSelectedNormal and nodeSelectedHighlighted will be used
+ instead of nodeNormal and nodeHighlighted.
+ 
+ @see updateSelectedStateAutomatically
+ */
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
+
+
+/**
+ Activate to make the button automatically toggle its selected state. Defaults to NO.
+ 
+ If set to YES the selected property will be updated automatically according to touch up events.
+ Has to be set to YES if the button should behave like a toggle button.
+ */
+@property (nonatomic, assign) BOOL updateSelectedStateAutomatically;
+
+
+/**
+ The node to show when the button's enabled property is set to NO.
+ */
+@property (nonatomic, strong) SKNode *nodeDisabled;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, no touch occured and the selected state is NO.
+ */
+@property (nonatomic, strong) SKNode *nodeNormal;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, a touch occured and the selected state is NO.
+ */
+@property (nonatomic, strong) SKNode *nodeHighlighted;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, no touch occured and the selected state is YES.
+ */
+@property (nonatomic, strong) SKNode *nodeSelectedNormal;
+
+
+/**
+ The node to show when the button's enabled property is set to YES, a touch occured and the selected state is YES.
+ */
+@property (nonatomic, strong) SKNode *nodeSelectedHighlighted;
 
 
 // ------------------------------------------------------------

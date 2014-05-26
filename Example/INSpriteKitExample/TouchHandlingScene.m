@@ -162,14 +162,19 @@
     label.position = CGPointMake(0, (self.size.height/2)-730);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The green sprite gets scaled by the total number of touches plus those on the scene's background.";
+    label.text = @"The green sprite gets scaled by the total number of touches plus those on the scene's background";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-760);
+    [layer addChild:label];
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"and will change its color when the touch goes down over a button instance.";
+    label.fontSize = 14;
+    label.position = CGPointMake(0, (self.size.height/2)-790);
     [layer addChild:label];
     
     // Create a button under a UIKit button
     button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
-    button.position = CGPointMake(-100, (self.size.height/2)-850);
+    button.position = CGPointMake(-100, (self.size.height/2)-880);
     button.name = @"button3";
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
@@ -179,7 +184,7 @@
     
     // Create sprite node for the touch observer and background touch visualization
     spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:0.6] size:CGSizeMake(50, 50)];
-    spriteNode.position = CGPointMake(250, (self.size.height/2)-875);
+    spriteNode.position = CGPointMake(250, (self.size.height/2)-905);
     [self addChild:spriteNode];
     self.globalTouchVisualization = spriteNode;
 
@@ -217,6 +222,17 @@
     // first for the observer, second for the scene when touching the background.
     self.globalTouchesActive += touches.count;
     [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
+    
+    // Check whether the touch will go down over a button
+    BOOL buttonWillBeTouched = NO;
+    for (UITouch *touch in touches) {
+        CGPoint location = [touch locationInNode:self];
+        buttonWillBeTouched = [INSKButtonNode buttonWillHandleTouchForLocation:location inScene:self];
+        if (buttonWillBeTouched) break;
+    }
+    if (buttonWillBeTouched) {
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:1 alpha:0.6];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -225,6 +241,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     self.globalTouchesActive -= touches.count;
     [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
+    self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:0 alpha:0.6];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
