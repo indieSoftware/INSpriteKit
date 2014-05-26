@@ -261,8 +261,7 @@
 /**
  Initializes a INSKButtonNode instance with the given image name.
  
- A new button instance will be initialized by loading a SKSpriteNode with the image named 
- and assigned to the nodeNormal and nodeHighlighted properties.
+ A new button instance will be initialized by loading a SKSpriteNode with the image named and assigned to the node properties.
  The button's size will be set with the size of the image.
  
  @param imageName The name of the image file to load for a visual representation of the button.
@@ -287,8 +286,7 @@
 /**
  Initializes a INSKButtonNode instance with the given image names.
  
- A new button instance will be initialized by loading two SKSpriteNodes with the image named
- and assigned to the nodeNormal and nodeHighlighted properties.
+ A new button instance will be initialized by loading SKSpriteNodes with the image named and assigned to the node properties.
  The button's size will be set with the size of the image used for the normal state.
  
  @param imageName The name of the image file to show in the normal state.
@@ -296,6 +294,36 @@
  @return The initialized node.
  */
 - (instancetype)initWithImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName;
+
+
+/**
+ Creates and returns a new instance of INSKButtonNode in toggle mode.
+ 
+ Calls initWithToggleImageNamed:highlightImageNamed:selectedImageNamed:selectedHighlightImageNamed:.
+ 
+ @param imageName The name of the image file to show in the normal state.
+ @param highlightImageName The name of the image to show in the highlighted state.
+ @param selectedImageName The name of the image file to show in the normal selected state.
+ @param selectedHighlightImageName The name of the image to show in the highlighted and selected state.
+ @return A new button instance.
+ @see initWithToggleImageNamed:highlightImageNamed:selectedImageNamed:selectedHighlightImageNamed:
+ */
++ (instancetype)buttonNodeWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName;
+
+
+/**
+ Initializes a INSKButtonNode instance in toggle mode, which means it has selected states and updateSelectedStateAutomatically is set to YES.
+ 
+ A new button instance will be initialized by loading SKSpriteNodes with the image named and assigned to the node properties.
+ The button's size will be set with the size of the image used for the normal state.
+ 
+ @param imageName The name of the image file to show in the normal state.
+ @param highlightImageName The name of the image to show in the highlighted state.
+ @param selectedImageName The name of the image file to show in the normal selected state.
+ @param selectedHighlightImageName The name of the image to show in the highlighted and selected state.
+ @return The initialized node.
+ */
+- (instancetype)initWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName;
 
 
 // ------------------------------------------------------------

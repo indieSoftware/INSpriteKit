@@ -146,6 +146,32 @@
     return self;
 }
 
++ (instancetype)buttonNodeWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName {
+    return [[self alloc] initWithToggleImageNamed:imageName highlightImageNamed:highlightImageName selectedImageNamed:selectedImageName selectedHighlightImageNamed:selectedHighlightImageName];
+}
+
+- (instancetype)initWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName {
+    self = [self initWithSize:CGSizeZero];
+    if (self == nil) return self;
+    
+    _nodeNormal = [SKSpriteNode spriteNodeWithImageNamed:imageName];
+    _nodeNormal.name = @"INSKButtonNodeDefaultRepresentationNormal"; // only for debugging
+    _nodeHighlighted = [SKSpriteNode spriteNodeWithImageNamed:highlightImageName];
+    _nodeHighlighted.name = @"INSKButtonNodeDefaultRepresentationHighlighted"; // only for debugging
+    _nodeSelectedNormal = [SKSpriteNode spriteNodeWithImageNamed:selectedImageName];
+    _nodeSelectedNormal.name = @"INSKButtonNodeDefaultRepresentationSelected"; // only for debugging
+    _nodeSelectedHighlighted = [SKSpriteNode spriteNodeWithImageNamed:selectedHighlightImageName];
+    _nodeSelectedHighlighted.name = @"INSKButtonNodeDefaultRepresentationSelectedHighlighted"; // only for debugging
+    _nodeDisabled = _nodeNormal;
+
+    self.size = ((SKSpriteNode *)_nodeNormal).size;
+    self.updateSelectedStateAutomatically = YES;
+
+    [self updateSubnodes];
+
+    return self;
+}
+
 - (void)setupINSKButton {
     self.userInteractionEnabled = YES;
     

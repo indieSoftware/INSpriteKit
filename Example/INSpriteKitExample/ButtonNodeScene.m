@@ -73,32 +73,23 @@
     
     
     // Create "toggle button"
-    button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
+    button = [INSKButtonNode buttonNodeWithToggleImageNamed:@"indie_banner_small" highlightImageNamed:@"indie_banner_small" selectedImageNamed:@"indie_banner_small" selectedHighlightImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, -200);
     button.name = @"toggle button";
-    button.updateSelectedStateAutomatically = YES;
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     button.inskButtonNodeDelegate = self;
     [self addChild:button];
     
-    // clone the button's normal state and modify it for the highlight and selected states
-    SKSpriteNode *spriteNode = [button.nodeNormal copy];
-    [spriteNode setScale:0.9];
-    spriteNode.color = [SKColor colorWithRed:1 green:0 blue:0 alpha:1];
-    spriteNode.colorBlendFactor = 0.2;
-    button.nodeHighlighted = spriteNode;
+    ((SKSpriteNode *)button.nodeHighlighted).color = [SKColor colorWithRed:1 green:0 blue:0 alpha:1];
+    ((SKSpriteNode *)button.nodeHighlighted).colorBlendFactor = 0.2;
 
-    spriteNode = [button.nodeNormal copy];
-    [spriteNode setScale:1.1];
-    spriteNode.color = [SKColor colorWithRed:1 green:0 blue:0 alpha:1];
-    spriteNode.colorBlendFactor = 0.2;
-    button.nodeSelectedNormal = spriteNode;
+    [((SKSpriteNode *)button.nodeSelectedNormal) setScale:1.1];
+    ((SKSpriteNode *)button.nodeSelectedNormal).color = [SKColor colorWithRed:0 green:1 blue:0 alpha:1];
+    ((SKSpriteNode *)button.nodeSelectedNormal).colorBlendFactor = 0.2;
 
-    spriteNode = [button.nodeNormal copy];
-    [spriteNode setScale:0.9];
-    spriteNode.color = [SKColor colorWithRed:0 green:0 blue:0 alpha:1];
-    spriteNode.colorBlendFactor = 0.2;
-    button.nodeSelectedHighlighted = spriteNode;
+    [((SKSpriteNode *)button.nodeSelectedHighlighted) setScale:0.9];
+    ((SKSpriteNode *)button.nodeSelectedHighlighted).color = [SKColor colorWithRed:0 green:0 blue:1 alpha:1];
+    ((SKSpriteNode *)button.nodeSelectedHighlighted).colorBlendFactor = 0.2;
     
     return self;
 }
