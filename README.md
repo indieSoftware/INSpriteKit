@@ -20,9 +20,9 @@ This library consists of
 - Get called back when the button is being pressed, released and released inside of its frame or use a delegate to get informed.
 
 ### INSKView: A SKView replacement for a better touch delivery
-- Replaces Sprite Kit's touch delivery system with its own to respect a SKNode's `userInteractionEnabled` property.
-- SKNode may use `touchPriority` to get touches even when not on top of all other nodes.
-- Add global touch observing nodes which get informed about touch events regardless of their position and visibility state. Nodes may also get touches this way when not on the scene tree.
+- Replaces Sprite Kit's touch delivery system with its own to respect a SKNode's `userInteractionEnabled` property and to workaround some touch detection bugs in Sprite Kit.
+- SKNodes may use `touchPriority` to get touches even when not on top of all other nodes.
+- Add global touch observing nodes which get informed about touch events regardless of their position and visibility state. Nodes may also get touches this way even when not on the scene tree.
 
 ### A tiled image node for huge sprites
 - INSKTiledImageNode can present images which are otherwise too huge for being used as a texture.
