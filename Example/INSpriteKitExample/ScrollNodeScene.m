@@ -48,8 +48,10 @@
     [self addChild:self.scrollNode];
 
     // Additional set up
-    self.scrollNode.scrollBackgroundNode.color = [SKColor yellowColor];
-    self.scrollNode.clipContent = YES;
+    self.scrollNode.scrollBackgroundNode.color = [SKColor blueColor];
+//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeNone;
+//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingHalfPage;
+//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingDirection;
     self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeDecelerate;
     self.scrollNode.pageSize = CGSizeMake(200, 200);
     self.scrollNode.scrollContentSize = CGSizeMake(1000, 1000);
@@ -59,11 +61,21 @@
     self.scrollNode.scrollContentPosition = CGPointMake(-(self.scrollNode.scrollContentSize.width - self.scrollNode.scrollNodeSize.width) / 2, (self.scrollNode.scrollContentSize.height - self.scrollNode.scrollNodeSize.height) / 2);
 
     // Add content to the scroll node
+    SKSpriteNode *background = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:0.2] size:self.scrollNode.scrollContentSize];
+    background.position = CGPointMake(background.size.width/2, -background.size.height/2);
+    [self.scrollNode.scrollContentNode addChild:background];
     SKSpriteNode *spaceship = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
     spaceship.position = CGPointMake(500, -500);
     [self.scrollNode.scrollContentNode addChild:spaceship];
+    
+    // Create custom crop node, but don't activate clipping, yet
+    SKSpriteNode *cropMask = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(self.scrollNode.scrollNodeSize.width*2/3, self.scrollNode.scrollNodeSize.height*2/3)];
+    SKCropNode *cropNode = [[SKCropNode alloc] init];
+    [cropNode setMaskNode:cropMask];
+    cropNode.position = CGPointMake(self.scrollNode.scrollNodeSize.width/2, -self.scrollNode.scrollNodeSize.height/2);
+    self.scrollNode.contentCropNode = cropNode;
 
-    // add info label
+    // Add info label
     SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
     label.fontSize = 17;
     label.text = @"Double tap for centering the space ship";
@@ -71,7 +83,7 @@
     label.verticalAlignmentMode = SKLabelVerticalAlignmentModeBottom;
     [self addChild:label];
     
-    // add toggle button
+    // Add toggle disable button
     INSKButtonNode *toggleButton = [INSKButtonNode buttonNodeWithSize:CGSizeMake(200, 50)];
     toggleButton.color = [SKColor lightGrayColor];
     label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
@@ -91,11 +103,35 @@
     toggleButton.nodeSelectedNormal = label;
     toggleButton.nodeHighlighted = label;
     toggleButton.updateSelectedStateAutomatically = YES;
-    toggleButton.position = CGPointMake(0, -self.scrollNode.scrollNodeSize.height / 2 - 70);
-    [toggleButton setTouchUpInsideTarget:self selector:@selector(toggleButtonPressed:)];
+    toggleButton.position = CGPointMake(-150, -self.scrollNode.scrollNodeSize.height / 2 - 70);
+    [toggleButton setTouchUpInsideTarget:self selector:@selector(toggleButtonEnablePressed:)];
     [self addChild:toggleButton];
     
-    // add tap gesture recognizer
+    // Add toggle clipping button
+    toggleButton = [INSKButtonNode buttonNodeWithSize:CGSizeMake(200, 50)];
+    toggleButton.color = [SKColor lightGrayColor];
+    label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    label.fontSize = 17;
+    label.text = @"Cropping disabled";
+    label.color = [SKColor redColor];
+    label.colorBlendFactor = 1;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    toggleButton.nodeNormal = label;
+    toggleButton.nodeSelectedHighlighted = label;
+    label = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    label.fontSize = 17;
+    label.text = @"Cropping enabled";
+    label.color = [SKColor greenColor];
+    label.colorBlendFactor = 1;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    toggleButton.nodeSelectedNormal = label;
+    toggleButton.nodeHighlighted = label;
+    toggleButton.updateSelectedStateAutomatically = YES;
+    toggleButton.position = CGPointMake(150, -self.scrollNode.scrollNodeSize.height / 2 - 70);
+    [toggleButton setTouchUpInsideTarget:self selector:@selector(toggleButtonCropPressed:)];
+    [self addChild:toggleButton];
+    
+    // Add tap gesture recognizer
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPressGesture:)];
     self.tapGestureRecognizer.numberOfTapsRequired = 2;
 
@@ -117,8 +153,12 @@
     }
 }
 
-- (void)toggleButtonPressed:(INSKButtonNode *)button {
+- (void)toggleButtonEnablePressed:(INSKButtonNode *)button {
     self.scrollNode.scrollingEnabled = !button.selected;
+}
+
+- (void)toggleButtonCropPressed:(INSKButtonNode *)button {
+    self.scrollNode.clipContent = button.selected;
 }
 
 - (void)scrollNode:(INSKScrollNode *)scrollNode didFinishScrollingAtPosition:(CGPoint)offset {

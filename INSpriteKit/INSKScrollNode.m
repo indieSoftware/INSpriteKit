@@ -35,10 +35,9 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 
 @property (nonatomic, strong, readwrite) SKSpriteNode *scrollBackgroundNode;
 @property (nonatomic, strong, readwrite) SKNode *scrollContentNode;
-@property (nonatomic, strong) SKCropNode *cropNode;
 
 @property (nonatomic, assign) NSTimeInterval lastTouchTimestamp;
-@property (nonatomic, strong) NSMutableArray *lastVelocities;
+@property (nonatomic, strong) NSMutableArray *lastVelocities; // for avegate calculations
 
 @end
 
@@ -55,15 +54,15 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     self = [super init];
     if (self == nil) return self;
 
-    self.scrollNodeSize = scrollNodeSize;
-    self.scrollContentSize = CGSizeZero;
-    self.clipContent = NO;
+    _scrollNodeSize = scrollNodeSize;
+    _scrollContentSize = CGSizeZero;
     self.pageSize = CGSizeZero;
     self.deceleration = 10000;
     self.decelerationMode = INSKScrollNodeDecelerationModeNone;
     self.userInteractionEnabled = YES;
     self.scrollingEnabled = YES;
     self.lastVelocities = [NSMutableArray arrayWithCapacity:MaxNumberOfVelocities];
+    _clipContent = NO;
 
     // create background node
     self.scrollBackgroundNode = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:self.scrollNodeSize];
@@ -73,40 +72,48 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     // create scroll content node
     self.scrollContentNode = [SKNode node];
     [self addChild:self.scrollContentNode];
-    
+
     return self;
 }
 
 - (void)setClipContent:(BOOL)clipContent {
+    if (_clipContent == clipContent) {
+        return;
+    }
     _clipContent = clipContent;
     
-    // remove old crop node
-    if (self.cropNode != nil) {
-        [self.scrollContentNode removeFromParent];
-        [self addChild:self.scrollContentNode];
-        
-        [self.cropNode removeFromParent];
-        self.cropNode = nil;
-    }
-
-    // add crop node
-    if (clipContent) {
-        self.cropNode = [SKCropNode node];
-        [self addChild:self.cropNode];
-        
-        [self.scrollContentNode removeFromParent];
-        [self.cropNode addChild:self.scrollContentNode];
+    // Create crop node if needed
+    if (_clipContent && self.contentCropNode == nil) {
         SKSpriteNode *maskNode = [SKSpriteNode spriteNodeWithColor:[SKColor blackColor] size:self.scrollBackgroundNode.size];
         maskNode.anchorPoint = CGPointMake(0.0, 1.0);
-        self.cropNode.maskNode = maskNode;
+        SKCropNode *cropNode = [SKCropNode node];
+        cropNode.maskNode = maskNode;
+        self.contentCropNode = cropNode;
     }
+    
+    // Add content and crop node
+    [self stopScrollAnimations];
+    if (_clipContent) {
+        [self addChild:self.contentCropNode];
+        [self.scrollContentNode changeParent:self.contentCropNode];
+    } else {
+        [self.scrollContentNode changeParent:self];
+        [self.contentCropNode removeFromParent];
+    }
+}
+
+- (void)setContentCropNode:(SKCropNode *)contentCropNode {
+    BOOL oldClipFlag = self.clipContent;
+    self.clipContent = NO;
+    _contentCropNode = contentCropNode;
+    self.clipContent = oldClipFlag;
 }
 
 - (void)setScrollNodeSize:(CGSize)scrollNodeSize {
     _scrollNodeSize = scrollNodeSize;
     self.scrollBackgroundNode.size = scrollNodeSize;
-    if (self.cropNode != nil) {
-        ((SKSpriteNode *)self.cropNode.maskNode).size = scrollNodeSize;
+    if (self.contentCropNode != nil) {
+        ((SKSpriteNode *)self.contentCropNode.maskNode).size = scrollNodeSize;
     }
 }
 
@@ -118,13 +125,20 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)setScrollContentPosition:(CGPoint)scrollContentPosition {
+    if (self.scrollContentNode.parent != self) {
+        scrollContentPosition = [self convertPoint:scrollContentPosition toNode:self.scrollContentNode.parent];
+    }
     self.scrollContentNode.position = scrollContentPosition;
     [self stopScrollAnimations];
     [self applyScrollLimits];
 }
 
 - (CGPoint)scrollContentPosition {
-    return self.scrollContentNode.position;
+    CGPoint position = self.scrollContentNode.position;
+    if (self.scrollContentNode.parent != self) {
+        return [self convertPoint:position fromNode:self.scrollContentNode.parent];
+    }
+    return position;
 }
 
 - (void)setScrollContentPosition:(CGPoint)scrollContentPosition animationDuration:(CGFloat)duration {
@@ -141,16 +155,20 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     CGFloat deceleration = differenceLength * -2 / (duration * duration);
     CGFloat velocity = deceleration * -duration;
     
-    CGPoint startPosition = self.scrollContentNode.position;
+    CGPoint startPosition = self.scrollContentPosition;
     
     SKAction *move = [SKAction customActionWithDuration:duration actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         CGFloat distance = (deceleration / 2) * (elapsedTime * elapsedTime) + velocity * elapsedTime;
         CGPoint translation = CGPointMake(distance * differenceNormalized.x, distance * differenceNormalized.y);
         CGPoint currentPosition = CGPointAdd(startPosition, translation);
-        node.position = [self positionWithScrollLimitsApplyed:currentPosition];
+        currentPosition = [self positionWithScrollLimitsApplyed:currentPosition];
+        if (node.parent != self) {
+            currentPosition = [self convertPoint:currentPosition toNode:node.parent];
+        }
+        node.position = currentPosition;
     }];
     SKAction *callback = [SKAction runBlock:^{
-        [self didFinishScrollingAtPosition:self.scrollContentNode.position];
+        [self didFinishScrollingAtPosition:self.scrollContentPosition];
     }];
     [self.scrollContentNode runActions:@[move, callback] withKey:ScrollContentMoveActionName];
 }
@@ -171,14 +189,14 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 
 - (NSUInteger)currentPageX {
     if (self.pageSize.width > 0) {
-        return roundf(-self.scrollContentNode.position.x / self.pageSize.width);
+        return roundf(-self.scrollContentPosition.x / self.pageSize.width);
     }
     return 0;
 }
 
 - (NSUInteger)currentPageY {
     if (self.pageSize.height > 0) {
-        return roundf(self.scrollContentNode.position.y / self.pageSize.height);
+        return roundf(self.scrollContentPosition.y / self.pageSize.height);
     }
     return 0;
 }
@@ -186,8 +204,10 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 
 #pragma mark - private methods
 
+// Position has to be in the coordinate system of self (INSKScrollNode).
+// Get the position via scrollContentPosition or convert manually if the crop node is active.
 - (CGPoint)positionWithScrollLimitsApplyed:(CGPoint)position {
-    // limit scrolling horizontally
+    // Limit scrolling horizontally
     if (self.scrollContentSize.width <= self.scrollNodeSize.width) {
         position = CGPointMake(0, position.y);
     } else  if (position.x > 0.0) {
@@ -196,7 +216,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
         position = CGPointMake(-(self.scrollContentSize.width - self.scrollNodeSize.width), position.y);
     }
     
-    // limit scrolling vertically
+    // Limit scrolling vertically
     if (self.scrollContentSize.height <= self.scrollNodeSize.height) {
         position = CGPointMake(position.x, 0);
     } else if (position.y < 0.0) {
@@ -209,7 +229,11 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)applyScrollLimits {
-    self.scrollContentNode.position = [self positionWithScrollLimitsApplyed:self.scrollContentNode.position];
+    CGPoint currentPosition = [self positionWithScrollLimitsApplyed:self.scrollContentPosition];
+    if (self.scrollContentNode.parent != self) {
+        currentPosition = [self convertPoint:currentPosition toNode:self.scrollContentNode.parent];
+    }
+    self.scrollContentNode.position = currentPosition;
 }
 
 - (void)stopScrollAnimations {
@@ -218,43 +242,47 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 
 - (void)applyScrollOutWithVelocity:(CGPoint)velocity {
     if (self.decelerationMode == INSKScrollNodeDecelerationModeNone) {
-        [self didFinishScrollingAtPosition:self.scrollContentNode.position];
+        [self didFinishScrollingAtPosition:self.scrollContentPosition];
         return;
     }
     
     if (self.decelerationMode == INSKScrollNodeDecelerationModeDecelerate) {
-        // any velocity at all?
+        // Any velocity at all?
         if (CGPointNearToPoint(velocity, CGPointZero)) {
             return;
         }
         
-        // calculate and apply animation
+        // Calculate and apply animation
         // v(t) = a * t + v0; s(t) = (a/2) * t*t + v0 * t + s0
         CGFloat velocityLength = CGPointLength(velocity);
         CGFloat time = velocityLength / self.deceleration;
         CGPoint velocityNormalized = CGPointMultiplyScalar(velocity, 1.0 / velocityLength);
         
-        CGPoint startPosition = self.scrollContentNode.position;
+        CGPoint startPosition = self.scrollContentPosition;
         
         SKAction *move = [SKAction customActionWithDuration:time actionBlock:^(SKNode *node, CGFloat elapsedTime) {
             CGFloat distance = -self.deceleration * elapsedTime * elapsedTime / 2 + velocityLength * elapsedTime;
             CGPoint translation = CGPointMake(distance * velocityNormalized.x, distance * velocityNormalized.y);
             CGPoint currentPosition = CGPointAdd(startPosition, translation);
-            node.position = [self positionWithScrollLimitsApplyed:currentPosition];
+            currentPosition = [self positionWithScrollLimitsApplyed:currentPosition];
+            if (node.parent != self) {
+                currentPosition = [self convertPoint:currentPosition toNode:node.parent];
+            }
+            node.position = currentPosition;
         }];
         SKAction *callback = [SKAction runBlock:^{
-            [self didFinishScrollingAtPosition:self.scrollContentNode.position];
+            [self didFinishScrollingAtPosition:self.scrollContentPosition];
         }];
         [self.scrollContentNode runActions:@[move, callback] withKey:ScrollContentMoveActionName];
 
         return;
     }
     
-    // calculate translation for page snapping
+    // Calculate translation for page snapping
     CGPoint translation = CGPointZero;
     
     if (self.pageSize.width > 0) {
-        CGFloat translationX = (NSInteger)self.scrollContentNode.position.x % (NSInteger)self.pageSize.width;
+        CGFloat translationX = (NSInteger)self.scrollContentPosition.x % (NSInteger)self.pageSize.width;
         BOOL snappingOccured = NO;
         if (self.decelerationMode == INSKScrollNodeDecelerationModePagingDirection) {
             if (velocity.x < 0) {
@@ -264,7 +292,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
                 translation.x = -translationX;
                 snappingOccured = YES;
             } else {
-                // use INSKScrollNodeDecelerationModePagingHalfPage behavior
+                // Use INSKScrollNodeDecelerationModePagingHalfPage behavior
             }
         }
         if (!snappingOccured) {
@@ -277,7 +305,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     }
     
     if (self.pageSize.height > 0) {
-        CGFloat translationY = (NSInteger)self.scrollContentNode.position.y % (NSInteger)self.pageSize.height;
+        CGFloat translationY = (NSInteger)self.scrollContentPosition.y % (NSInteger)self.pageSize.height;
         BOOL snappingOccured = NO;
         if (self.decelerationMode == INSKScrollNodeDecelerationModePagingDirection) {
             if (velocity.y > 0) {
@@ -287,7 +315,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
                 translation.y = -translationY;
                 snappingOccured = YES;
             } else {
-                // use INSKScrollNodeDecelerationModePagingHalfPage behavior
+                // Use INSKScrollNodeDecelerationModePagingHalfPage behavior
             }
         }
         if (!snappingOccured) {
@@ -299,12 +327,12 @@ static NSUInteger const MaxNumberOfVelocities = 5;
         }
     }
 
-    // apply scroll bounds for destination position
-    CGPoint destinationPosition = CGPointAdd(self.scrollContentNode.position, translation);
+    // Apply scroll bounds for destination position
+    CGPoint destinationPosition = CGPointAdd(self.scrollContentPosition, translation);
     destinationPosition = [self positionWithScrollLimitsApplyed:destinationPosition];
     
-    // apply snap animation
-    if (!CGPointNearToPoint(destinationPosition, self.scrollContentNode.position)) {
+    // Apply snap animation
+    if (!CGPointNearToPoint(destinationPosition, self.scrollContentPosition)) {
         SKAction *move = [SKAction moveTo:destinationPosition duration:ScrollContentMoveActionDuration];
         move.timingMode = SKActionTimingEaseOut;
         SKAction *callback = [SKAction runBlock:^{
@@ -314,14 +342,14 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     }
 }
 
-- (void)addVelocity:(CGPoint)velocity {
+- (void)addVelocityToAverage:(CGPoint)velocity {
     if (self.lastVelocities.count == MaxNumberOfVelocities) {
         [self.lastVelocities removeObjectAtIndex:0];
     }
     [self.lastVelocities addObject:[NSValue valueWithCGPoint:velocity]];
 }
 
-- (CGPoint)getVelocity {
+- (CGPoint)getAveragedVelocity {
     CGPoint velocity = CGPointZero;
     for (NSValue *value in self.lastVelocities) {
         CGPoint point = [value CGPointValue];
@@ -351,11 +379,11 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!self.scrollingEnabled) return;
 
-    // find touch location
+    // Find touch location
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInNode:self.scene];
     
-    // ignore clipped touches
+    // Ignore touches outside of scroll node if clipping is on
     if (self.clipContent) {
         CGPoint locationInBounds = [self.scene convertPoint:location toNode:self];
         CGRect frame = CGRectMake(0, 0, self.scrollNodeSize.width, -self.scrollNodeSize.height);
@@ -364,36 +392,36 @@ static NSUInteger const MaxNumberOfVelocities = 5;
         }
     }
     
-    // calculate and apply translation
+    // Calculate and apply translation
     CGPoint lastLocation = [touch previousLocationInNode:self.scene];
     CGPoint translation = CGPointSubtract(location, lastLocation);
     CGPoint oldPosition = self.scrollContentNode.position;
     self.scrollContentNode.position = CGPointAdd(self.scrollContentNode.position, translation);
 
-    // calculate velocity
+    // Calculate velocity
     NSTimeInterval timeDifferecne = touch.timestamp - self.lastTouchTimestamp;
     self.lastTouchTimestamp = touch.timestamp;
     CGPoint scrollVelocity = CGPointDivideScalar(translation, timeDifferecne);
-    [self addVelocity:scrollVelocity];
+    [self addVelocityToAverage:scrollVelocity];
 
     [self applyScrollLimits];
     
-    // inform subclasses and delegate
-    [self didScrollFromOffset:oldPosition toOffset:self.scrollContentNode.position velocity:[self getVelocity]];
+    // Inform subclasses and delegate
+    [self didScrollFromOffset:oldPosition toOffset:self.scrollContentPosition velocity:[self getAveragedVelocity]];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!self.scrollingEnabled) return;
 
     if (event.allTouches.count == touches.count) {
-        [self applyScrollOutWithVelocity:[self getVelocity]];
+        [self applyScrollOutWithVelocity:[self getAveragedVelocity]];
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!self.scrollingEnabled) return;
 
-    [self applyScrollOutWithVelocity:[self getVelocity]];
+    [self applyScrollOutWithVelocity:[self getAveragedVelocity]];
 }
 
 

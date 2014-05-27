@@ -199,9 +199,25 @@ typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
 /**
  Clips the visible part of the scroll node. Defaults to NO.
  
- If set to YES the content will be clipped to the bounds of the scroll node, otherwise it may be visible beneath it's bounds.
+ If set to YES the content will be clipped according the contentCropNode.
+ If no contentCropNode is set a default one with the size of the scroll node will be created to clip the content at the scroll node's borders.
+ If clipContent is false the content will be visible beneath the scroll node's bounds.
+ The content dragging touches will be ignored when outside of the scroll node's bounds if clipContent is set to YES, otherwise the user can drag the visible content even beneath the borders.
  */
 @property (nonatomic, assign) BOOL clipContent;
+
+
+/**
+ The crop node to use for clipping the content if clipContent is true.
+ 
+ When clipContent is set to YES this node will be used for cropping the content, otherwise it is not used.
+ This node defaults to nil.
+ If clipContent is set to NO and the crop node is still nil a new crop node will be created with the size of the scroll node and positioned according so the content will be cropped at the scroll node's borders.
+ A custom crop node can be assigned, but take into count that the scroll node's position is the top left corner, so set a position for the contentCropNode accordingly.
+ 
+ @see clipContent
+ */
+@property (nonatomic, strong) SKCropNode *contentCropNode;
 
 
 /**
