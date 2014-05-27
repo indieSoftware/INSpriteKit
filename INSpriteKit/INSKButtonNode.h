@@ -243,17 +243,6 @@
 
 
 // ------------------------------------------------------------
-#pragma mark - class methods
-// ------------------------------------------------------------
-/// @name Class methods
-
-/**
- 
- */
-+ (BOOL)buttonWillHandleTouchForLocation:(CGPoint)location inScene:(SKScene *)scene;
-
-
-// ------------------------------------------------------------
 #pragma mark - Properties
 // ------------------------------------------------------------
 
@@ -270,8 +259,9 @@
  Flag indicating whether the button is enabled. Defaults to YES.
  
  Disable the button manually according to the logic.
- If set to NO the nodeDisabled will be shown and user input ignored.
- If set to NO the highlighted flag will also be set to NO.
+ If set to NO the nodeDisabled will be shown and user input ignored due to userInteractionEnabled set to NO.
+ The highlighted flag will also be set to NO automatically.
+ If set to YES the visual representation will be restored and user input no longer ignored because userInteractionEnabled will be set to YES.
  */
 @property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
