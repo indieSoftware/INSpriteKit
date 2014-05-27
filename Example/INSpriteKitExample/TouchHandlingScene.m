@@ -109,12 +109,12 @@
     
     // Info output
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The red and green buttons are overlapped by a white SKSpriteNode which does not accept any interactions.";
+    label.text = @"The red and green buttons are overlapped by a white non-interacting SKSpriteNode and a disabled blue button.";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-430);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"With a normal SKView the button under the sprite will not receive any touches, but with INSKView it will.";
+    label.text = @"With a normal SKView a overlapped button will not receive any touches, but with INSKView it will.";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-460);
     [layer addChild:label];
@@ -144,9 +144,21 @@
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [layerGreen addChild:button];
     
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:0.6] size:CGSizeMake(200, 100)];
+    button.position = CGPointMake(-75, (self.size.height/2)-600);
+    button.name = @"button2 blue";
+    button.nodeHighlighted = [button.nodeNormal copy];
+    [button.nodeHighlighted setScale:1.2];
+    [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    button.enabled = NO;
+    // Add the blue button to the green layer instead of the red so the non interacting green layer node will overlap the whole red area.
+    // With a SKView this will prevent the red button to receive any touches because they will be swallowed by the layer node.
+    [layerGreen addChild:button];
+    
     // The overlappoing sprite
     spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:0.6] size:CGSizeMake(200, 100)];
-    spriteNode.position = CGPointMake(0, (self.size.height/2)-600);
+    spriteNode.name = @"layer2 sprite white";
+    spriteNode.position = CGPointMake(75, (self.size.height/2)-600);
     [layer addChild:spriteNode];
     
     
@@ -204,8 +216,11 @@
     
     // Add the scene node as global touch observer.
     // Comment out for letting the global sprite only scale when pressing on the scene's background
-    INSKView *touchView = (INSKView *)self.view;
-    [touchView addTouchObservingNode:self];
+    // or change the class name of the view to SKView to compare with the default Sprite Kit behavior.
+    if ([self.view isKindOfClass:[INSKView class]]) {
+        INSKView *touchView = (INSKView *)self.view;
+        [touchView addTouchObservingNode:self];
+    }
 }
 
 - (void)willMoveFromView:(SKView *)view {
@@ -227,7 +242,10 @@
     BOOL buttonWillBeTouched = NO;
     for (UITouch *touch in touches) {
         CGPoint location = [touch locationInNode:self];
-        buttonWillBeTouched = [INSKButtonNode buttonWillHandleTouchForLocation:location inScene:self];
+        // Check for class before casting, because the view class may be changed to SKView in the storyboard.
+        if ([self.view isKindOfClass:[INSKView class]]) {
+            buttonWillBeTouched = [[((INSKView *)self.view) topInteractingNodeAtPosition:location] isKindOfClass:[INSKButtonNode class]];
+        }
         if (buttonWillBeTouched) break;
     }
     if (buttonWillBeTouched) {
