@@ -74,4 +74,18 @@
 - (void)removeTouchObservingNode:(SKNode *)node;
 
 
+/**
+ Returns the node which will receives touches occuring at a specified position.
+ 
+ INSKView uses this method to retrieve the interacting node which should handle a touch.
+ If no node could be found by this method INSKView will deliver the touches to the scene.
+ The method can be used to check wheter a touch at a position will be handled by a node or not.
+ This can be handy when mixing touches for UIKit and Sprite Kit, i.e. when a UIGestureRecognizer wants to see if a touch would be otherwise on a INSKButtonNode.
+ 
+ @param position The position in the scene coordinate system.
+ @return The node which will receive any touches at the given position or nil if there is none.
+ */
+- (SKNode *)topInteractingNodeAtPosition:(CGPoint)position;
+
+
 @end

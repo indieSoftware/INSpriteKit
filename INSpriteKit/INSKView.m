@@ -66,6 +66,31 @@
 
 #pragma mark - private methods
 
+- (NSString *)treeOrderTagForNode:(SKNode *)node {
+    // Walks the tree up to the root which is the scene and collects the index for each subnode.
+    // Each subnode's index will be printed as a hexadecimal value with 4 digits.
+    // Returns the empty string for the scene itself.
+    NSString *tag = @"";
+    SKNode *currentNode = node;
+    while (currentNode.parent != nil) {
+        NSUInteger index = [currentNode.parent.children indexOfObject:currentNode];
+        tag = [NSString stringWithFormat:@"%04lx%@", (unsigned long)index, tag];
+        currentNode = currentNode.parent;
+    }
+    return tag;
+}
+
+
+#pragma mark - public methods
+
+- (void)addTouchObservingNode:(SKNode *)node {
+    [self.touchObservingNodes addObject:node];
+}
+
+- (void)removeTouchObservingNode:(SKNode *)node {
+    [self.touchObservingNodes removeObject:node];
+}
+
 - (SKNode *)topInteractingNodeAtPosition:(CGPoint)position {
     NSArray *nodesAtPosition = [self.scene nodesAtPoint:position];
     SKNode *nodeForTouch = nil;
@@ -84,7 +109,7 @@
             nodeForTouchTag = nil;
             continue;
         }
-            
+        
         // The highest touch priority has always priority.
         NSInteger nodePriority = node.touchPriority;
         if (nodePriority > nodeForTouchPriority) {
@@ -127,31 +152,6 @@
         }
     }
     return nodeForTouch;
-}
-
-- (NSString *)treeOrderTagForNode:(SKNode *)node {
-    // Walks the tree up to the root which is the scene and collects the index for each subnode.
-    // Each subnode's index will be printed as a hexadecimal value with 4 digits.
-    // Returns the empty string for the scene itself.
-    NSString *tag = @"";
-    SKNode *currentNode = node;
-    while (currentNode.parent != nil) {
-        NSUInteger index = [currentNode.parent.children indexOfObject:currentNode];
-        tag = [NSString stringWithFormat:@"%04lx%@", (unsigned long)index, tag];
-        currentNode = currentNode.parent;
-    }
-    return tag;
-}
-
-
-#pragma mark - public methods
-
-- (void)addTouchObservingNode:(SKNode *)node {
-    [self.touchObservingNodes addObject:node];
-}
-
-- (void)removeTouchObservingNode:(SKNode *)node {
-    [self.touchObservingNodes removeObject:node];
 }
 
 
