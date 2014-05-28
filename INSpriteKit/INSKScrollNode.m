@@ -83,18 +83,18 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     _clipContent = clipContent;
     
     // Create crop node if needed
-    if (_clipContent && self.contentCropNode == nil) {
+    if (_clipContent && _contentCropNode == nil) {
         SKSpriteNode *maskNode = [SKSpriteNode spriteNodeWithColor:[SKColor blackColor] size:self.scrollBackgroundNode.size];
         maskNode.anchorPoint = CGPointMake(0.0, 1.0);
         SKCropNode *cropNode = [SKCropNode node];
         cropNode.maskNode = maskNode;
-        self.contentCropNode = cropNode;
+        _contentCropNode = cropNode;
     }
     
     // Add content and crop node
     [self stopScrollAnimations];
     if (_clipContent) {
-        [self addChild:self.contentCropNode];
+        [self.contentCropNode changeParent:self];
         [self.scrollContentNode changeParent:self.contentCropNode];
     } else {
         [self.scrollContentNode changeParent:self];
@@ -103,9 +103,12 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 - (void)setContentCropNode:(SKCropNode *)contentCropNode {
+    // First disable clipping so the old crop node will be disabled
     BOOL oldClipFlag = self.clipContent;
     self.clipContent = NO;
+    // Exchange the crop node, which also may be nil
     _contentCropNode = contentCropNode;
+    // Restore the clipping flag to add the content to the new crop node and create a default one if nil
     self.clipContent = oldClipFlag;
 }
 
