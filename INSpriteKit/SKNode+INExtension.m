@@ -65,6 +65,8 @@ static const char *SKNodeINExtensionTouchPriorityKey = "SKNodeINExtensionTouchPr
 - (void)changeParent:(SKNode *)parent {
     if (self.parent == nil) {
         [parent addChild:self];
+    } else if (self.parent == parent) {
+        // Already child of the parent, so do nothing
     } else {
         CGPoint convertedPosition = [self.parent convertPoint:self.position toNode:parent];
         [self removeFromParent];
