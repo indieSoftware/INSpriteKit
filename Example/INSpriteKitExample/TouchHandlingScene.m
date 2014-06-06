@@ -224,8 +224,10 @@
 }
 
 - (void)willMoveFromView:(SKView *)view {
-    INSKView *touchView = (INSKView *)self.view;
-    [touchView removeTouchObservingNode:self];
+    if ([self.view isKindOfClass:[INSKView class]]) {
+        INSKView *touchView = (INSKView *)self.view;
+        [touchView removeTouchObservingNode:self];
+    }
 }
 
 - (void)buttonTouchedUpInside:(INSKButtonNode *)button {
