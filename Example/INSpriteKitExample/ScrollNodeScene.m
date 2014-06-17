@@ -49,9 +49,9 @@
 
     // Additional set up
     self.scrollNode.scrollBackgroundNode.color = [SKColor blueColor];
-//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeNone;
-//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingHalfPage;
-//    self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingDirection;
+    //self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeNone;
+    //self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingHalfPage;
+    //self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModePagingDirection;
     self.scrollNode.decelerationMode = INSKScrollNodeDecelerationModeDecelerate;
     self.scrollNode.pageSize = CGSizeMake(200, 200);
     self.scrollNode.scrollContentSize = CGSizeMake(1000, 1000);

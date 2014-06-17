@@ -38,6 +38,7 @@
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
     skView.showsDrawCount = YES;
+    skView.ignoresSiblingOrder = NO;
     
     // Create and configure the scene.
     Class sceneClass = [[NSBundle mainBundle] classNamed:self.sceneName];

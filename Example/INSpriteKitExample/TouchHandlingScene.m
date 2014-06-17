@@ -24,6 +24,9 @@
 #import "TouchHandlingScene.h"
 
 
+static CGFloat const ButtonAlpha = 0.7;
+
+
 @interface TouchHandlingScene ()
 
 @property (nonatomic, strong) SKSpriteNode *globalTouchVisualization;
@@ -47,7 +50,8 @@
     SKLabelNode *label;
     SKSpriteNode *spriteNode;
     SKNode *layer; // layers are not needed and are only used for debugging purposes
-
+    SKNode *sublayer;
+    
 
     // Layer 1
     layer = [SKNode node];
@@ -67,39 +71,59 @@
     [layer addChild:label];
     
     // Create overlapping buttons
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(-75, (self.size.height/2)-240);
     button.name = @"button1 red";
     button.touchPriority = 1;
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
-    [layer addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+    sublayer = [SKNode node];
+    sublayer.position = button.position;
+    button.position = CGPointZero;
+    [sublayer addChild:button];
+    [layer addChild:sublayer];
+    
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(75, (self.size.height/2)-240);
     button.name = @"button1 green";
     button.zPosition = 1;
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
-    [layer addChild:button];
-    
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:1 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+
+    sublayer = [SKNode node];
+    sublayer.position = button.position;
+    button.position = CGPointZero;
+    [sublayer addChild:button];
+    [layer addChild:sublayer];
+
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:1 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(0, (self.size.height/2)-270);
     button.name = @"button1 yellow";
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
-    [layer addChild:button];
+
+    sublayer = [SKNode node];
+    sublayer.position = button.position;
+    button.position = CGPointZero;
+    [sublayer addChild:button];
+    [layer addChild:sublayer];
     
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(75, (self.size.height/2)-300);
     button.name = @"button1 blue";
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
-    [layer addChild:button];
+    
+    sublayer = [SKNode node];
+    sublayer.position = button.position;
+    button.position = CGPointZero;
+    [sublayer addChild:button];
+    [layer addChild:sublayer];
     
     
     // Layer 2
@@ -128,7 +152,7 @@
     [layer addChild:layerGreen];
     
     // Create a button under a SKSpriteNodes and another deeper in the tree
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(-75, (self.size.height/2)-550);
     button.name = @"button2 red";
     button.nodeHighlighted = [button.nodeNormal copy];
@@ -136,7 +160,7 @@
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [layerRed addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(75, (self.size.height/2)-550);
     button.name = @"button2 green";
     button.nodeHighlighted = [button.nodeNormal copy];
@@ -144,7 +168,7 @@
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [layerGreen addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(-75, (self.size.height/2)-600);
     button.name = @"button2 blue";
     button.nodeHighlighted = [button.nodeNormal copy];
@@ -185,7 +209,7 @@
     [layer addChild:label];
     
     // Create a button under a UIKit button
-    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:0.6] size:CGSizeMake(200, 100)];
+    button = [INSKButtonNode buttonNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     button.position = CGPointMake(-100, (self.size.height/2)-880);
     button.name = @"button3";
     button.nodeHighlighted = [button.nodeNormal copy];
@@ -195,7 +219,7 @@
     
     
     // Create sprite node for the touch observer and background touch visualization
-    spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:0.6] size:CGSizeMake(50, 50)];
+    spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha] size:CGSizeMake(50, 50)];
     spriteNode.position = CGPointMake(250, (self.size.height/2)-905);
     [self addChild:spriteNode];
     self.globalTouchVisualization = spriteNode;
@@ -211,7 +235,7 @@
     [uikitButton setTitle:@"UIKit button" forState:UIControlStateNormal];
     [uikitButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [uikitButton setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
-    uikitButton.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.6];
+    uikitButton.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:ButtonAlpha];
     [view addSubview:uikitButton];
     
     // Add the scene node as global touch observer.
@@ -251,7 +275,7 @@
         if (buttonWillBeTouched) break;
     }
     if (buttonWillBeTouched) {
-        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:1 alpha:0.6];
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:1 alpha:ButtonAlpha];
     }
 }
 
@@ -261,7 +285,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     self.globalTouchesActive -= touches.count;
     [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
-    self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:0 alpha:0.6];
+    self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
