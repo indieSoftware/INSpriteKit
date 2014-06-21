@@ -39,15 +39,35 @@
     self.anchorPoint = CGPointMake(0.5, 0.5);
     
     INSKButtonNode *button;
+    SKLabelNode *label;
+
     
+    // Label for the first button
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"A simple push button (with support for the right mouse button on OS X).";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, 280);
+    [self addChild:label];
     
-    // Create "push button" with only one picture
+    // Create "push button" with only one picture, but add a darkened copy for the highlight state
     button = [INSKButtonNode buttonNodeWithImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, 200);
     button.name = @"push button";
+    button.nodeHighlighted = button.nodeNormal.copy;
+    ((SKSpriteNode *)button.nodeHighlighted).color = [SKColor blackColor];
+    ((SKSpriteNode *)button.nodeHighlighted).colorBlendFactor = 0.2;
     button.inskButtonNodeDelegate = self;
     [self addChild:button];
+    // add support for all buttons to this button on OS X
+    button.supportedMouseButtons = INSKMouseButtonLeft | INSKMouseButtonRight | INSKMouseButtonOther;
     
+
+    // Label for the second button
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"A normal push button with a second sprite for the highlight state.";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, 80);
+    [self addChild:label];
     
     // Create "push button 2" with more control
     UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner_small" ofType:@"png"]];
@@ -66,30 +86,29 @@
     button.inskButtonNodeDelegate = self;
     [self addChild:button];
 
-    // A label as child of the button
-    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"A label added to a button";
-    [button addChild:label];
     
-    
+    // Label for the third button
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"A toggle button which toggles the enable state of the button above.";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, -120);
+    [self addChild:label];
+
     // Create "toggle button"
     button = [INSKButtonNode buttonNodeWithToggleImageNamed:@"indie_banner_small" highlightImageNamed:@"indie_banner_small" selectedImageNamed:@"indie_banner_small" selectedHighlightImageNamed:@"indie_banner_small"];
     button.position = CGPointMake(0, -200);
     button.name = @"toggle button";
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     button.inskButtonNodeDelegate = self;
-    [self addChild:button];
-    
     ((SKSpriteNode *)button.nodeHighlighted).color = [SKColor colorWithRed:1 green:0 blue:0 alpha:1];
     ((SKSpriteNode *)button.nodeHighlighted).colorBlendFactor = 0.2;
-
     [((SKSpriteNode *)button.nodeSelectedNormal) setScale:1.1];
     ((SKSpriteNode *)button.nodeSelectedNormal).color = [SKColor colorWithRed:0 green:1 blue:0 alpha:1];
     ((SKSpriteNode *)button.nodeSelectedNormal).colorBlendFactor = 0.2;
-
     [((SKSpriteNode *)button.nodeSelectedHighlighted) setScale:0.9];
     ((SKSpriteNode *)button.nodeSelectedHighlighted).color = [SKColor colorWithRed:0 green:0 blue:1 alpha:1];
     ((SKSpriteNode *)button.nodeSelectedHighlighted).colorBlendFactor = 0.2;
+    [self addChild:button];
     
     return self;
 }

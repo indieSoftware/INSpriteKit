@@ -1,4 +1,4 @@
-// INSpriteKit.h
+// INSKOSBridge.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,17 +21,49 @@
 // THE SOFTWARE.
 
 
-// import manually if needed to use OS X and iOS code in the same project
-//#import "INSKOSBridge.h"
+#import "INSKOSBridge.h"
 
-#import "INSKTypes.h"
-#import "INSKMath.h"
+#if TARGET_OS_IPHONE
 
-#import "INSKButtonNode.h"
-#import "INSKScrollNode.h"
-#import "INSKView.h"
-#import "INSKTiledImageNode.h"
+@implementation NSValue (Bridge)
 
-#import "SKEmitterNode+INExtension.h"
-#import "SKNode+INExtension.h"
-#import "SKSpriteNode+INExtension.h"
++ (NSValue *)valueWithPoint:(CGPoint)point {
+    return [self valueWithCGPoint:point];
+}
+
+- (CGPoint)pointValue {
+    return [self CGPointValue];
+}
+
+@end
+
+
+#else // OS X
+
+@implementation NSImage (Bridge)
+
+- (CGImageRef)CGImage {
+    return [self CGImageForProposedRect:nil context:nil hints:nil];
+}
+
++ (UIImage *)imageWithContentsOfFile:(NSString *)path {
+    return [[self alloc] initWithContentsOfFile:path];
+}
+
+@end
+
+
+@implementation NSValue (Bridge)
+
++ (NSValue *)valueWithCGPoint:(CGPoint)point {
+    return [self valueWithPoint:point];
+}
+
+- (CGPoint)CGPointValue {
+    return [self pointValue];
+}
+
+@end
+
+
+#endif

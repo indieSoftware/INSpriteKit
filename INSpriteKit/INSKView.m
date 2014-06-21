@@ -23,12 +23,17 @@
 
 #import "INSKView.h"
 #import "SKNode+INExtension.h"
+#import "SKSpriteNode+INExtension.h"
 
 
 @interface INSKView ()
 
-// A dictionary with touch locations as keys and the top node which handles the touch as value.
+// A dictionary with touch locations as keys and the top node which handles the touch as value. iOS only.
 @property (nonatomic, strong) NSMutableDictionary *nodeForTouchMapping;
+// The node which currently is attached to a mouse event. OS X only.
+@property (nonatomic, weak) SKNode *nodeForMouseEvent;
+// The number of actually pressed buttons. OS X only.
+@property (nonatomic, assign) NSInteger numberOfMouseButtonsPressed;
 
 // A list of nodes which want to receive each touch regardless of their position.
 @property (nonatomic, strong) NSMutableSet *touchObservingNodes;
@@ -61,6 +66,7 @@
 - (void)setupINSKView {
     self.nodeForTouchMapping = [NSMutableDictionary dictionary];
     self.touchObservingNodes = [NSMutableSet set];
+    self.deliverRightMouseButtonEventsToScene = YES;
 }
 
 
@@ -92,6 +98,10 @@
 }
 
 - (SKNode *)topInteractingNodeAtPosition:(CGPoint)position {
+    return [self topInteractingNodeAtPosition:position withSupportedMouseButton:INSKMouseButtonAll];
+}
+
+- (SKNode *)topInteractingNodeAtPosition:(CGPoint)position withSupportedMouseButton:(INSKMouseButton)mouseButton {
     NSArray *nodesAtPosition = [self.scene nodesAtPoint:position];
     SKNode *nodeForTouch = nil;
     NSInteger nodeForTouchPriority = 0;
@@ -100,6 +110,21 @@
         // Only nodes which are enabled for touches, not hidden and not fully transparent should receive touches.
         if (!node.userInteractionEnabled || node.hidden || node.alpha == 0.0) {
             continue;
+        }
+
+#if !TARGET_OS_IPHONE
+        // Only accept nodes which support the mouse buttons, but only on OS X.
+        if (!(node.supportedMouseButtons & mouseButton)) {
+            continue;
+        }
+#endif
+        
+        // For sprite nodes only accept touches inside of the texture.
+        if ([node isKindOfClass:[SKSpriteNode class]]) {
+            CGPoint positionInNode = [node.scene convertPoint:position toNode:node];
+            if (![(SKSpriteNode *)node isPointInside:positionInNode]) {
+                continue;
+            }
         }
         
         // Use first node found.
@@ -137,6 +162,7 @@
         
         // The rendering order in the tree has to descide, the last rendered object receives the touch.
         NSString *nodeTag = [self treeOrderTagForNode:node];
+        // The tag is lazily created, so create it now if not yet done.
         if (nodeForTouchTag == nil) {
             nodeForTouchTag = [self treeOrderTagForNode:nodeForTouch];
         }
@@ -155,6 +181,7 @@
 }
 
 
+#if TARGET_OS_IPHONE
 #pragma mark - touches
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -271,6 +298,204 @@
         [nodeForTouch touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
     }
 }
+
+#else // OSX
+#pragma mark - mouse events
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node mouseDown:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed++;
+    
+    // No scene at all, ignore all events.
+    if (self.scene == nil) {
+        return;
+    }
+    
+    if (self.numberOfMouseButtonsPressed == 1) {
+        // Find node for event.
+        CGPoint positionInScene = [theEvent locationInNode:self.scene];
+        SKNode *nodeForEvent = [self topInteractingNodeAtPosition:positionInScene withSupportedMouseButton:INSKMouseButtonLeft];
+        if (nodeForEvent == nil) {
+            // No node found for event at the position, use the scene.
+            nodeForEvent = self.scene;
+        }
+        
+        // save found node for event processing
+        self.nodeForMouseEvent = nodeForEvent;
+    }
+    
+    // deliver touch to node
+    [self.nodeForMouseEvent mouseDown:theEvent];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node rightMouseDown:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed++;
+
+    // Support AppKit's defaults behavior
+    if (!self.deliverRightMouseButtonEventsToScene) {
+        [super rightMouseDown:theEvent];
+        return;
+    }
+    
+    // No scene at all, ignore all events.
+    if (self.scene == nil) {
+        return;
+    }
+    
+    if (self.numberOfMouseButtonsPressed == 1) {
+        // Find node for event.
+        CGPoint positionInScene = [theEvent locationInNode:self.scene];
+        SKNode *nodeForEvent = [self topInteractingNodeAtPosition:positionInScene withSupportedMouseButton:INSKMouseButtonRight];
+        if (nodeForEvent == nil) {
+            // No node found for event at the position, use the scene.
+            nodeForEvent = self.scene;
+        }
+        
+        // save found node for event processing
+        self.nodeForMouseEvent = nodeForEvent;
+    }
+    
+    // deliver touch to node
+    [self.nodeForMouseEvent rightMouseDown:theEvent];
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node otherMouseDown:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed++;
+
+    // No scene at all, ignore all events.
+    if (self.scene == nil) {
+        return;
+    }
+    
+    if (self.numberOfMouseButtonsPressed == 1) {
+        // Find node for event.
+        CGPoint positionInScene = [theEvent locationInNode:self.scene];
+        SKNode *nodeForEvent = [self topInteractingNodeAtPosition:positionInScene withSupportedMouseButton:INSKMouseButtonOther];
+        if (nodeForEvent == nil) {
+            // No node found for event at the position, use the scene.
+            nodeForEvent = self.scene;
+        }
+        
+        // save found node for event processing
+        self.nodeForMouseEvent = nodeForEvent;
+    }
+    
+    // deliver touch to node
+    [self.nodeForMouseEvent otherMouseDown:theEvent];
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node mouseDragged:theEvent];
+    }
+    
+    // Deliver event to active node.
+    [self.nodeForMouseEvent mouseDragged:theEvent];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node rightMouseDragged:theEvent];
+    }
+    
+    // Support AppKit's defaults behavior
+    if (!self.deliverRightMouseButtonEventsToScene) {
+        [super rightMouseDragged:theEvent];
+        return;
+    }
+    
+    // Deliver event to active node.
+    [self.nodeForMouseEvent rightMouseDragged:theEvent];
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node otherMouseDragged:theEvent];
+    }
+    
+    // Deliver event to active node.
+    [self.nodeForMouseEvent otherMouseDragged:theEvent];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node mouseUp:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed--;
+    if (self.numberOfMouseButtonsPressed < 0) {
+        self.numberOfMouseButtonsPressed = 0;
+    } else {
+        // Deliver event to active node.
+        [self.nodeForMouseEvent mouseUp:theEvent];
+    }
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node rightMouseUp:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed--;
+    
+    // Support AppKit's defaults behavior
+    if (!self.deliverRightMouseButtonEventsToScene) {
+        [super rightMouseUp:theEvent];
+        return;
+    }
+
+    // Deliver event to active node.
+    if (self.numberOfMouseButtonsPressed < 0) {
+        self.numberOfMouseButtonsPressed = 0;
+    } else {
+        // Deliver event to active node.
+        [self.nodeForMouseEvent rightMouseUp:theEvent];
+    }
+}
+
+- (void)otherMouseUp:(NSEvent *)theEvent {
+    // Deliver mouse event to all observers.
+    for (SKNode *node in self.touchObservingNodes) {
+        [node otherMouseUp:theEvent];
+    }
+    
+    // Track mouse events
+    self.numberOfMouseButtonsPressed--;
+    
+    // Deliver event to active node.
+    if (self.numberOfMouseButtonsPressed < 0) {
+        self.numberOfMouseButtonsPressed = 0;
+    } else {
+        // Deliver event to active node.
+        [self.nodeForMouseEvent otherMouseUp:theEvent];
+    }
+}
+
+#endif // OS X
 
 
 @end

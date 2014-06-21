@@ -1,4 +1,4 @@
-// INSpriteKit.h
+// ViewController.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,17 +21,45 @@
 // THE SOFTWARE.
 
 
-// import manually if needed to use OS X and iOS code in the same project
-//#import "INSKOSBridge.h"
+#import "ViewController.h"
+#import <SpriteKit/SpriteKit.h>
 
-#import "INSKTypes.h"
-#import "INSKMath.h"
 
-#import "INSKButtonNode.h"
-#import "INSKScrollNode.h"
-#import "INSKView.h"
-#import "INSKTiledImageNode.h"
+@implementation ViewController
 
-#import "SKEmitterNode+INExtension.h"
-#import "SKNode+INExtension.h"
-#import "SKSpriteNode+INExtension.h"
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Set scene title.
+    self.title = self.sceneName;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    // Configure the view.
+    SKView *skView = (SKView *)self.view;
+    skView.showsFPS = YES;
+    skView.showsNodeCount = YES;
+    skView.showsDrawCount = YES;
+    skView.ignoresSiblingOrder = NO;
+    
+    // Create and configure the scene.
+    Class sceneClass = [[NSBundle mainBundle] classNamed:self.sceneName];
+    SKScene *scene = [sceneClass sceneWithSize:skView.bounds.size];
+    scene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    // Present the scene.
+    [skView presentScene:scene];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    // Presenting a nil scene will call willMoveFromView: on the old scene.
+    SKView * skView = (SKView *)self.view;
+    [skView presentScene:nil];
+}
+
+
+@end

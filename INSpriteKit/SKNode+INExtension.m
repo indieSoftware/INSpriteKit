@@ -26,6 +26,7 @@
 
 
 static const char *SKNodeINExtensionTouchPriorityKey = "SKNodeINExtensionTouchPriorityKey";
+static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtensionSupportedMouseButtonKey";
 
 
 @implementation SKNode (INExtension)
@@ -36,6 +37,19 @@ static const char *SKNodeINExtensionTouchPriorityKey = "SKNodeINExtensionTouchPr
 
 - (void)setTouchPriority:(NSInteger)touchPriority {
     objc_setAssociatedObject(self, SKNodeINExtensionTouchPriorityKey, @(touchPriority), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (INSKMouseButton)supportedMouseButtons {
+    NSNumber *number = ((NSNumber *)objc_getAssociatedObject(self, SKNodeINExtensionSupportedMouseButtonKey));
+    INSKMouseButton returnValue = INSKMouseButtonLeft;
+    if (number != nil) {
+        returnValue = [number integerValue];
+    }
+    return returnValue;
+}
+
+- (void)setSupportedMouseButtons:(INSKMouseButton)supportedMouseButtons {
+    objc_setAssociatedObject(self, SKNodeINExtensionSupportedMouseButtonKey, @(supportedMouseButtons), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)bringToFront {

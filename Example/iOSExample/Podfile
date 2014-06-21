@@ -1,5 +1,5 @@
 platform :ios, '7.0'
 
-pod "INSpriteKit", :path => "../"
+pod "INSpriteKit", :path => "../../"
 
 link_with 'INSpriteKitExample', 'INSpriteKitExampleTests'

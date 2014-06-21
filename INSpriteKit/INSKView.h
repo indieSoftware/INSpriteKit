@@ -22,12 +22,13 @@
 
 
 #import <SpriteKit/SpriteKit.h>
+#import "INSKTypes.h"
 
 
 /**
- A SKView replacement which has a workaround for a touch delivery bug in iOS 7. At plus it adds behavior for global touch observers.
+ A SKView replacement which has a workaround for touch delivery bugs in Sprite Kit. At plus it adds behavior for global touch observers.
  
- On iOS 7 [SKNode userInteractionEnabled] is ignored, but should be respected
+ On iOS 7 and OS X 10.9 [SKNode userInteractionEnabled] is ignored, but should be respected
  otherwise a sprite or label over a touch respecting node will swallow all touches instead of ignoring
  and delivering them to the node beneath which should handle the touch instead.
 
@@ -37,6 +38,13 @@
  The zPosition has a direct impact on the rendering order and is also respected when delivering touches.
  At plus the touch receiving order may be manipulated directly with the [SKNode touchPriority] property.
  The node with the highest touchPriority will get the touch even when other nodes are rendered over this one.
+ 
+ SKView also uses children of nodes for determining the one who should receive a touch.
+ This will result in unexpected behavior, but not so with INSKView.
+ On SKView, when adding a sprite node as a child to a button the button receives touches inside of an extended frame which includes both the child's and the button's frame.
+ So the button will trigger even when the touch is outside.
+ Rotating a node will also extend the frame, so a rotated button has a bigger frame and touching the corners of the frame even when outside of the button's visual representation will trigger touch delivery to this button.
+ On INSKView the rotated sprite node texture will be used for touch detection so the touch has to be inside of the visual representation of the button to trigger.
  
  To use the INSKView and the touch delivering mechanism just replace the class name in the storyboard or nib file
  with 'INSKView' or instantiate a INSKView object manually. No additional set up is needed.
@@ -75,17 +83,41 @@
 
 
 /**
- Returns the node which will receives touches occuring at a specified position.
+ Returns the node which will receives touches/mouse clicks occuring at a specified position.
  
- INSKView uses this method to retrieve the interacting node which should handle a touch.
- If no node could be found by this method INSKView will deliver the touches to the scene.
- The method can be used to check wheter a touch at a position will be handled by a node or not.
- This can be handy when mixing touches for UIKit and Sprite Kit, i.e. when a UIGestureRecognizer wants to see if a touch would be otherwise on a INSKButtonNode.
+ This method may also be called on OS X, in which case any interacting node will be returned.
+ In fact this method calls topInteractingNodeAtPosition:withSupportedMouseButton: with INSKMouseButtonAll for the mouseButton value.
  
  @param position The position in the scene coordinate system.
- @return The node which will receive any touches at the given position or nil if there is none.
+ @return The node which will receive any touches/mouse clicks at the given position or nil if there is none.
  */
 - (SKNode *)topInteractingNodeAtPosition:(CGPoint)position;
+
+
+/**
+ Returns the node which will receives touches/clicks occuring at a specified position and for a specific mouse button.
+ This method may also be called on iOS for touches where the mouse button value is ignored.
+ 
+ INSKView uses this method to retrieve the interacting node which should handle a touch/mouse event.
+ If no node could be found by this method nil is returned and INSKView will deliver the touches to the scene.
+ The method can be used to check wheter a touch/click at a position will be handled by a node or not.
+ This can be handy when mixing touches for UIKit/AppKit and Sprite Kit, i.e. when a UIGestureRecognizer wants to see if a touch would be otherwise on a INSKButtonNode.
+ 
+ @param position The position in the scene coordinate system.
+ @param mouseButton A specific mouse button which has to be supported by the node or INSKMouseButtonAll for any interacting node. If the value is 0 no node will match and nil will be returned. However, on iOS the value will be ignored and any interacting node will match.
+ @return The interacting node for a touch/click at a given position or nil if there is none found.
+ */
+- (SKNode *)topInteractingNodeAtPosition:(CGPoint)position withSupportedMouseButton:(INSKMouseButton)mouseButton;
+
+
+/**
+ Flag to deliver right mouse button events to the scene and their nodes. OS X only. Defaults to YES.
+ 
+ AppKit uses the right button for presenting context menus and therefore SKView does not deliver right mouse clicks to the scene.
+ To support SKView's default behavior and use a context menu set this property to NO.
+ INSKView bypasses this behavior with setting the property to YES so right mouse button clicks can be processed in games defaultly.
+ */
+@property (nonatomic, assign) BOOL deliverRightMouseButtonEventsToScene;
 
 
 @end

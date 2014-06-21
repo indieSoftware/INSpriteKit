@@ -22,6 +22,8 @@
 
 
 #import <SpriteKit/SpriteKit.h>
+#import "INSKTypes.h"
+
 
 @interface SKNode (INExtension)
 
@@ -37,6 +39,21 @@
  @see INSKView
  */
 @property (nonatomic, assign) NSInteger touchPriority;
+
+
+/**
+ A bit mask to define the mouse buttons which this node should accept. OS X only.
+ Defaults to INSKMouseButtonLeft so only left mouse buttons are used for hit detections.
+ 
+ Take into count, that when setting to a mask which includes the right mouse button
+ the right mouse button can only be detected when the view delivers it which an SKView instance does not per default,
+ but INSKView does. However, an INSKView instance is needed in any case for this property to work.
+
+ @warning For the mouse button support to work the Sprite Kit view has to be an instance of INSKView instead of SKView.
+ 
+ @see INSKView
+ */
+@property (nonatomic, assign) INSKMouseButton supportedMouseButtons;
 
 
 /**

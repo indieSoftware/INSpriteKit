@@ -1,4 +1,4 @@
-// INSpriteKit.h
+// AppDelegate.m
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,17 +21,26 @@
 // THE SOFTWARE.
 
 
-// import manually if needed to use OS X and iOS code in the same project
-//#import "INSKOSBridge.h"
+#import "AppDelegate.h"
+#import "WindowController.h"
 
-#import "INSKTypes.h"
-#import "INSKMath.h"
 
-#import "INSKButtonNode.h"
-#import "INSKScrollNode.h"
-#import "INSKView.h"
-#import "INSKTiledImageNode.h"
+@interface AppDelegate ()
 
-#import "SKEmitterNode+INExtension.h"
-#import "SKNode+INExtension.h"
-#import "SKSpriteNode+INExtension.h"
+@property (nonatomic, strong) WindowController *windowController;
+
+@end
+
+
+@implementation AppDelegate
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    self.windowController = [[WindowController alloc] initWithWindowNibName:@"WindowController"];
+    [self.windowController showWindow:self];
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+    return YES;
+}
+
+@end

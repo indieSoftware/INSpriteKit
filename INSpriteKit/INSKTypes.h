@@ -1,4 +1,4 @@
-// INSpriteKit.h
+// INSKTypes.h
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,17 +21,17 @@
 // THE SOFTWARE.
 
 
-// import manually if needed to use OS X and iOS code in the same project
-//#import "INSKOSBridge.h"
+/**
+ Flags to indicate the mouse buttons on OS X. Only used by the INSKView on an OS X target.
+ */
+typedef NS_OPTIONS(NSUInteger, INSKMouseButton) {
+    /// The left button.
+    INSKMouseButtonLeft = 1 << 0,
+    /// The right button.
+    INSKMouseButtonRight = 1 << 1,
+    /// All buttons, except left and right.
+    INSKMouseButtonOther = 1 << 2,
+    /// All buttons, inclusive left and right, same as OR-ing all other values.
+    INSKMouseButtonAll = INSKMouseButtonLeft | INSKMouseButtonRight | INSKMouseButtonOther
+};
 
-#import "INSKTypes.h"
-#import "INSKMath.h"
-
-#import "INSKButtonNode.h"
-#import "INSKScrollNode.h"
-#import "INSKView.h"
-#import "INSKTiledImageNode.h"
-
-#import "SKEmitterNode+INExtension.h"
-#import "SKNode+INExtension.h"
-#import "SKSpriteNode+INExtension.h"

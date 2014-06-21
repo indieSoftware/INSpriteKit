@@ -22,6 +22,7 @@
 
 
 #import <SpriteKit/SpriteKit.h>
+#import "INSKTypes.h"
 
 
 @class INSKButtonNode;

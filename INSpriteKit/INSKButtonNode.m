@@ -35,6 +35,8 @@
 @property (nonatomic, assign) NSUInteger numberOfTouches;
 // The number of touches this button is tracking and are currently inside of it's frame.
 @property (nonatomic, assign) NSUInteger numberOfTouchesInside;
+// The last mouse event's position. OS X only.
+@property (nonatomic, assign) CGPoint positionOfLastMouseEvent;
 
 // The touch targets and their selectors.
 @property (nonatomic, assign, readwrite) SEL touchUpInsideSelector;
@@ -306,6 +308,7 @@
 }
 
 
+#if TARGET_OS_IPHONE
 #pragma mark - touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -319,10 +322,11 @@
     }
 
     // Update state for first touch only
-    if (self.enabled && self.numberOfTouches == touches.count && self.numberOfTouchesInside > 0) {
-        self.highlighted = YES;
+    if (self.enabled && self.numberOfTouches == touches.count) {
+        BOOL touchInside = self.numberOfTouchesInside > 0;
+        self.highlighted = touchInside;
         if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
-            [self.inskButtonNodeDelegate buttonNode:self touchUp:NO inside:YES];
+            [self.inskButtonNodeDelegate buttonNode:self touchUp:NO inside:touchInside];
         }
         [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
     }
@@ -406,6 +410,122 @@
         }
     }
 }
+
+#else // OSX
+#pragma mark - mouse events
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)processMouseDown:(NSEvent *)theEvent {
+    // Update detected touches
+    self.numberOfTouches++;
+    self.positionOfLastMouseEvent = [theEvent locationInNode:self];
+    if ([self isPointInside:self.positionOfLastMouseEvent]) {
+        self.numberOfTouchesInside = 1;
+    } else {
+        self.numberOfTouchesInside = 0;
+    }
+
+    // Update state for first touch only
+    if (self.enabled && self.numberOfTouches == 1) {
+        BOOL touchInside = self.numberOfTouchesInside > 0;
+        self.highlighted = touchInside;
+        if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+            [self.inskButtonNodeDelegate buttonNode:self touchUp:NO inside:touchInside];
+        }
+        [self informTarget:self.touchDownTarget withSelector:self.touchDownSelector];
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)processMouseDragged:(NSEvent *)theEvent {
+    // Update detected touches
+    self.positionOfLastMouseEvent = [theEvent locationInNode:self];
+    if ([self isPointInside:self.positionOfLastMouseEvent]) {
+        self.numberOfTouchesInside = 1;
+    } else {
+        self.numberOfTouchesInside = 0;
+    }
+    
+    // Update state
+    if (self.enabled) {
+        BOOL oldHighlightedState = self.highlighted;
+        if (self.numberOfTouchesInside > 0) {
+            self.highlighted = YES;
+        } else {
+            self.highlighted = NO;
+        }
+        if (oldHighlightedState != self.highlighted) {
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchMoveUpdatesHighlightState:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchMoveUpdatesHighlightState:self.highlighted];
+            }
+        }
+    }
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)otherMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)processMouseUp:(NSEvent *)theEvent {
+    // Update detected touches
+    BOOL lastTouchWasInside = self.numberOfTouchesInside > 0;
+    self.numberOfTouches--;
+    if (self.numberOfTouches == 0) {
+        self.numberOfTouchesInside = 0;
+    }
+    self.positionOfLastMouseEvent = [theEvent locationInNode:self];
+    
+    // Update state for last touch only
+    if (self.enabled && self.numberOfTouches == 0) {
+        self.highlighted = NO;
+        if (lastTouchWasInside) {
+            if (self.updateSelectedStateAutomatically) {
+                self.selected = !self.selected;
+            }
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchUp:YES inside:YES];
+            }
+            [self informTarget:self.touchUpInsideTarget withSelector:self.touchUpInsideSelector];
+        } else {
+            if ([self.inskButtonNodeDelegate respondsToSelector:@selector(buttonNode:touchUp:inside:)]) {
+                [self.inskButtonNodeDelegate buttonNode:self touchUp:YES inside:NO];
+            }
+        }
+        [self informTarget:self.touchUpTarget withSelector:self.touchUpSelector];
+    }
+}
+
+#endif // OS X
 
 
 @end

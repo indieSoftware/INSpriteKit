@@ -22,6 +22,7 @@
 
 
 #import "INSKScrollNode.h"
+#import "INSKOSBridge.h"
 #import "INSKMath.h"
 #import "SKNode+INExtension.h"
 
@@ -37,7 +38,12 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 @property (nonatomic, strong, readwrite) SKNode *scrollContentNode;
 
 @property (nonatomic, assign) NSTimeInterval lastTouchTimestamp;
-@property (nonatomic, strong) NSMutableArray *lastVelocities; // for avegate calculations
+@property (nonatomic, strong) NSMutableArray *lastVelocities; // NSValue of CGPoint for avegate calculations
+
+// The number of mouse buttons this node is currently tracking. OS X only.
+@property (nonatomic, assign) NSUInteger numberOfMouseButtonsPressed;
+// The last mouse event's position. OS X only.
+@property (nonatomic, assign) CGPoint positionOfLastMouseEvent;
 
 @end
 
@@ -63,6 +69,8 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     self.scrollingEnabled = YES;
     self.lastVelocities = [NSMutableArray arrayWithCapacity:MaxNumberOfVelocities];
     _clipContent = NO;
+    
+    self.numberOfMouseButtonsPressed = 0;
 
     // create background node
     self.scrollBackgroundNode = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:self.scrollNodeSize];
@@ -349,7 +357,8 @@ static NSUInteger const MaxNumberOfVelocities = 5;
     if (self.lastVelocities.count == MaxNumberOfVelocities) {
         [self.lastVelocities removeObjectAtIndex:0];
     }
-    [self.lastVelocities addObject:[NSValue valueWithCGPoint:velocity]];
+    NSValue *value = [NSValue valueWithCGPoint:velocity];
+    [self.lastVelocities addObject:value];
 }
 
 - (CGPoint)getAveragedVelocity {
@@ -365,6 +374,7 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 }
 
 
+#if TARGET_OS_IPHONE
 #pragma mark - touch events
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -426,6 +436,107 @@ static NSUInteger const MaxNumberOfVelocities = 5;
 
     [self applyScrollOutWithVelocity:[self getAveragedVelocity]];
 }
+
+#else // OSX
+#pragma mark - mouse events
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent];
+}
+
+- (void)processMouseDown:(NSEvent *)theEvent {
+    // Track total number of mouse buttons
+    self.numberOfMouseButtonsPressed++;
+
+    if (!self.scrollingEnabled) return;
+
+    // Start dragging only for the first pressed button
+    if (self.numberOfMouseButtonsPressed == 1) {
+        [self stopScrollAnimations];
+        
+        self.lastTouchTimestamp = theEvent.timestamp;
+        self.positionOfLastMouseEvent = [theEvent locationInNode:self];
+        [self.lastVelocities removeAllObjects];
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent {
+    [self processMouseDragged:theEvent];
+}
+
+- (void)processMouseDragged:(NSEvent *)theEvent {
+    if (!self.scrollingEnabled) return;
+    
+    // Ignore touches outside of scroll node if clipping is on
+    CGPoint location = [theEvent locationInNode:self];
+    if (self.clipContent) {
+        CGRect frame = CGRectMake(0, 0, self.scrollNodeSize.width, -self.scrollNodeSize.height);
+        if (!CGRectContainsPoint(frame, location)) {
+            return;
+        }
+    }
+    
+    // Calculate and apply translation
+    CGPoint lastLocation = self.positionOfLastMouseEvent;
+    CGPoint translation = CGPointSubtract(location, lastLocation);
+    CGPoint oldPosition = self.scrollContentNode.position;
+    self.scrollContentNode.position = CGPointAdd(self.scrollContentNode.position, translation);
+
+    // Calculate velocity
+    NSTimeInterval timeDifferecne = theEvent.timestamp - self.lastTouchTimestamp;
+    CGPoint scrollVelocity = CGPointDivideScalar(translation, timeDifferecne);
+    [self addVelocityToAverage:scrollVelocity];
+
+    self.lastTouchTimestamp = theEvent.timestamp;
+    self.positionOfLastMouseEvent = location;
+
+    [self applyScrollLimits];
+    
+    // Inform subclasses and delegate
+    [self didScrollFromOffset:oldPosition toOffset:self.scrollContentPosition velocity:[self getAveragedVelocity]];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)otherMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent];
+}
+
+- (void)processMouseUp:(NSEvent *)theEvent {
+    // Track total number of mouse buttons
+    self.numberOfMouseButtonsPressed--;
+
+    if (!self.scrollingEnabled) return;
+    
+    // Apply deceleration only when the last button has been lifted
+    if (self.numberOfMouseButtonsPressed == 0) {
+        [self applyScrollOutWithVelocity:[self getAveragedVelocity]];
+    }
+}
+
+#endif
 
 
 #pragma mark - methods to override

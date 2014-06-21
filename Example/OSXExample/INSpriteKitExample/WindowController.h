@@ -1,4 +1,4 @@
-// INSpriteKit.h
+// WindowController.h
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,17 +21,8 @@
 // THE SOFTWARE.
 
 
-// import manually if needed to use OS X and iOS code in the same project
-//#import "INSKOSBridge.h"
+#import <Cocoa/Cocoa.h>
 
-#import "INSKTypes.h"
-#import "INSKMath.h"
+@interface WindowController : NSWindowController
 
-#import "INSKButtonNode.h"
-#import "INSKScrollNode.h"
-#import "INSKView.h"
-#import "INSKTiledImageNode.h"
-
-#import "SKEmitterNode+INExtension.h"
-#import "SKNode+INExtension.h"
-#import "SKSpriteNode+INExtension.h"
+@end

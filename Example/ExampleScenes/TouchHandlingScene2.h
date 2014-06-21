@@ -1,4 +1,4 @@
-// ViewController.m
+// TouchHandlingScene2.h
 //
 // Copyright (c) 2014 Sven Korset
 //
@@ -21,41 +21,8 @@
 // THE SOFTWARE.
 
 
-#import "ViewController.h"
 #import <SpriteKit/SpriteKit.h>
 
-
-@implementation ViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // Set scene title.
-    self.title = self.sceneName;
-    
-    // Configure the view.
-    SKView * skView = (SKView *)self.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
-    skView.showsDrawCount = YES;
-    skView.ignoresSiblingOrder = NO;
-    
-    // Create and configure the scene.
-    Class sceneClass = [[NSBundle mainBundle] classNamed:self.sceneName];
-    SKScene *scene = [sceneClass sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene.
-    [skView presentScene:scene];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    // Presenting a nil scene will call willMoveFromView: on the old scene.
-    SKView * skView = (SKView *)self.view;
-    [skView presentScene:nil];
-}
-
+@interface TouchHandlingScene2 : SKScene
 
 @end

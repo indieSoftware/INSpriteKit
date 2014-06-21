@@ -2,8 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<string>ScrollNodeScene</string>
 	<string>ButtonNodeScene</string>
+	<string>ScrollNodeScene</string>
 	<string>TouchHandlingScene</string>
+	<string>TouchHandlingScene2</string>
 </array>
 </plist>

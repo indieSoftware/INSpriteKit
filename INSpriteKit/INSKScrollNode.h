@@ -22,10 +22,11 @@
 
 
 #import <SpriteKit/SpriteKit.h>
+#import "INSKTypes.h"
 
 
 /**
- The type of deceleration to use if any, i.e. paging.
+ The type of deceleration to use if any. Use a paging mode to support paging.
  */
 typedef NS_ENUM(NSInteger, INSKScrollNodeDecelerationMode) {
     /**

@@ -22,6 +22,7 @@
 
 
 #import <SpriteKit/SpriteKit.h>
+#import "INSKOSBridge.h"
 
 
 /**

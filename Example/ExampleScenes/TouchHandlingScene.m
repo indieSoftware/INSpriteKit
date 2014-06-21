@@ -62,10 +62,15 @@ static CGFloat const ButtonAlpha = 0.7;
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"The red button has a higher touch priority, the green button has a higher zPosition,";
     label.fontSize = 14;
-    label.position = CGPointMake(0, (self.size.height/2)-100);
+    label.position = CGPointMake(0, (self.size.height/2)-70);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"the blue button is added at last to the tree so they all receive touches before the yellow button.";
+    label.fontSize = 14;
+    label.position = CGPointMake(0, (self.size.height/2)-100);
+    [layer addChild:label];
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"On OS X the yellow button also reacts on right mouse button clicks and thus solely.";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-130);
     [layer addChild:label];
@@ -105,6 +110,8 @@ static CGFloat const ButtonAlpha = 0.7;
     button.nodeHighlighted = [button.nodeNormal copy];
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
+    // Let the yellow button also react on right mouse click events
+    button.supportedMouseButtons = INSKMouseButtonLeft | INSKMouseButtonRight;
 
     sublayer = [SKNode node];
     sublayer.position = button.position;
@@ -179,8 +186,8 @@ static CGFloat const ButtonAlpha = 0.7;
     // With a SKView this will prevent the red button to receive any touches because they will be swallowed by the layer node.
     [layerGreen addChild:button];
     
-    // The overlappoing sprite
-    spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:0.6] size:CGSizeMake(200, 100)];
+    // The overlapping sprite
+    spriteNode = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
     spriteNode.name = @"layer2 sprite white";
     spriteNode.position = CGPointMake(75, (self.size.height/2)-600);
     [layer addChild:spriteNode];
@@ -193,17 +200,17 @@ static CGFloat const ButtonAlpha = 0.7;
     
     // Info output
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Make sure UIKit still works and a UIButton does not pass touches to Sprite Kit.";
+    label.text = @"Make sure UIKit/AppKit still works and a UIButton/NSButton still receives touches.";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-730);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The green sprite gets scaled by the total number of touches plus those on the scene's background";
+    label.text = @"The green sprite gets scaled by the total number of touches on nodes plus those on the scene's background";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-760);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"and will change its color when the touch goes down over a button instance.";
+    label.text = @"and will change its color when the touch goes down over a INSKButton instance.";
     label.fontSize = 14;
     label.position = CGPointMake(0, (self.size.height/2)-790);
     [layer addChild:label];
@@ -216,6 +223,8 @@ static CGFloat const ButtonAlpha = 0.7;
     [button.nodeHighlighted setScale:1.2];
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
     [layer addChild:button];
+    // support right mouse clicks on OS X for this button
+    button.supportedMouseButtons = INSKMouseButtonLeft | INSKMouseButtonRight;
     
     
     // Create sprite node for the touch observer and background touch visualization
@@ -229,25 +238,44 @@ static CGFloat const ButtonAlpha = 0.7;
 }
 
 - (void)didMoveToView:(SKView *)view {
+#if TARGET_OS_IPHONE
     // Add a UIKit button over a INSKButtonNode
-    UIButton *uikitButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    uikitButton.frame = CGRectMake((self.size.width/2)-100, 850, 200, 100);
-    [uikitButton setTitle:@"UIKit button" forState:UIControlStateNormal];
-    [uikitButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [uikitButton setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
-    uikitButton.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:ButtonAlpha];
-    [view addSubview:uikitButton];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.tag = 1;
+    button.frame = CGRectMake((self.size.width/2)-100, 850, 200, 100);
+    [button setTitle:@"UIKit Button" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
+    button.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:ButtonAlpha];
+    [view addSubview:button];
+#else // OS X
+    // Add a AppKit button over a INSKButtonNode
+    view.wantsLayer = YES; // activate layers if not yet done otherwise the button will be behind the scene
+    NSButton *button = [[NSButton alloc] initWithFrame:CGRectMake(230, 50, 120, 60)];
+    button.tag = 1;
+    [button setButtonType:NSMomentaryPushInButton];
+    NSString *buttonTitle = @"AppKit Button";
+    NSMutableParagraphStyle *centredStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [centredStyle setAlignment:NSCenterTextAlignment];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:buttonTitle attributes:@{NSForegroundColorAttributeName: [NSColor colorWithSRGBRed:0 green:0 blue:0 alpha:1], NSParagraphStyleAttributeName: centredStyle}];
+    [button setAttributedTitle:attributedString];
+    [button.cell setBackgroundColor:[NSColor colorWithSRGBRed:1 green:1 blue:1 alpha:ButtonAlpha]];
+    [view addSubview:button];
+#endif // OS X
     
     // Add the scene node as global touch observer.
     // Comment out for letting the global sprite only scale when pressing on the scene's background
     // or change the class name of the view to SKView to compare with the default Sprite Kit behavior.
-    if ([self.view isKindOfClass:[INSKView class]]) {
-        INSKView *touchView = (INSKView *)self.view;
-        [touchView addTouchObservingNode:self];
+    if ([view isKindOfClass:[INSKView class]]) {
+        [(INSKView *)view addTouchObservingNode:self];
     }
 }
 
 - (void)willMoveFromView:(SKView *)view {
+    // Remove the button from the view, may be a UIButton or a NSButton
+    id subview = [view viewWithTag:1];
+    [subview removeFromSuperview];
+    
     if ([self.view isKindOfClass:[INSKView class]]) {
         INSKView *touchView = (INSKView *)self.view;
         [touchView removeTouchObservingNode:self];
@@ -258,6 +286,8 @@ static CGFloat const ButtonAlpha = 0.7;
     NSLog(@"'%@' pressed", button.name);
 }
 
+
+#if TARGET_OS_IPHONE
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // When added as a global touch observer all touch methods may be called twice
     // first for the observer, second for the scene when touching the background.
@@ -292,6 +322,80 @@ static CGFloat const ButtonAlpha = 0.7;
     self.globalTouchesActive -= touches.count;
     [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
 }
+
+#else // OS X
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent forMouseButton:INSKMouseButtonLeft];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent forMouseButton:INSKMouseButtonRight];
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent {
+    [self processMouseDown:theEvent forMouseButton:INSKMouseButtonOther];
+}
+
+- (void)processMouseDown:(NSEvent *)theEvent forMouseButton:(INSKMouseButton)buttonType {
+    // When added as a global touch observer all touch methods may be called twice
+    // first for the observer, second for the scene when touching the background.
+    self.globalTouchesActive++;
+    [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
+    
+    // Check whether the touch will go down over a button
+    BOOL buttonWillBeTouched = NO;
+    CGPoint location = [theEvent locationInNode:self];
+    // Check for class before casting, because the view class may be changed to SKView in the storyboard.
+    if ([self.view isKindOfClass:[INSKView class]]) {
+        buttonWillBeTouched = [[((INSKView *)self.view) topInteractingNodeAtPosition:location withSupportedMouseButton:INSKMouseButtonAll] isKindOfClass:[INSKButtonNode class]];
+    }
+    if (buttonWillBeTouched) {
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:1 alpha:ButtonAlpha];
+    } else {
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha];
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent {
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent forMouseButton:INSKMouseButtonLeft];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent forMouseButton:INSKMouseButtonRight];
+}
+
+- (void)otherMouseUp:(NSEvent *)theEvent {
+    [self processMouseUp:theEvent forMouseButton:INSKMouseButtonOther];
+}
+
+- (void)processMouseUp:(NSEvent *)theEvent forMouseButton:(INSKMouseButton)buttonType {
+    self.globalTouchesActive--;
+    [self.globalTouchVisualization setScale:1 + self.globalTouchesActive * 0.1];
+    // Check whether the touch will go down over a button
+    BOOL buttonWillBeTouched = NO;
+    CGPoint location = [theEvent locationInNode:self];
+    // Check for class before casting, because the view class may be changed to SKView in the storyboard.
+    if ([self.view isKindOfClass:[INSKView class]]) {
+        buttonWillBeTouched = [[((INSKView *)self.view) topInteractingNodeAtPosition:location withSupportedMouseButton:buttonType] isKindOfClass:[INSKButtonNode class]];
+    }
+    if (buttonWillBeTouched && self.globalTouchesActive > 0) {
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:1 alpha:ButtonAlpha];
+    } else {
+        self.globalTouchVisualization.color = [SKColor colorWithRed:0 green:1 blue:0 alpha:ButtonAlpha];
+    }
+}
+
+#endif
 
 
 @end
