@@ -310,12 +310,14 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed++;
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
     
     // No scene at all, ignore all events.
     if (self.scene == nil) {
         return;
     }
     
+    // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
         CGPoint positionInScene = [theEvent locationInNode:self.scene];
@@ -329,7 +331,7 @@
         self.nodeForMouseEvent = nodeForEvent;
     }
     
-    // deliver touch to node
+    // Deliver touch to node
     [self.nodeForMouseEvent mouseDown:theEvent];
 }
 
@@ -341,7 +343,8 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed++;
-
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
+    
     // Support AppKit's defaults behavior
     if (!self.deliverRightMouseButtonEventsToScene) {
         [super rightMouseDown:theEvent];
@@ -353,6 +356,7 @@
         return;
     }
     
+    // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
         CGPoint positionInScene = [theEvent locationInNode:self.scene];
@@ -366,7 +370,7 @@
         self.nodeForMouseEvent = nodeForEvent;
     }
     
-    // deliver touch to node
+    // Deliver touch to node
     [self.nodeForMouseEvent rightMouseDown:theEvent];
 }
 
@@ -378,12 +382,14 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed++;
-
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
+    
     // No scene at all, ignore all events.
     if (self.scene == nil) {
         return;
     }
-    
+
+    // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
         CGPoint positionInScene = [theEvent locationInNode:self.scene];
@@ -397,7 +403,7 @@
         self.nodeForMouseEvent = nodeForEvent;
     }
     
-    // deliver touch to node
+    // Deliver touch to node
     [self.nodeForMouseEvent otherMouseDown:theEvent];
 }
 
@@ -445,12 +451,10 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed--;
-    if (self.numberOfMouseButtonsPressed < 0) {
-        self.numberOfMouseButtonsPressed = 0;
-    } else {
-        // Deliver event to active node.
-        [self.nodeForMouseEvent mouseUp:theEvent];
-    }
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
+    
+    // Deliver event to active node.
+    [self.nodeForMouseEvent mouseUp:theEvent];
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent {
@@ -461,6 +465,7 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed--;
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
     
     // Support AppKit's defaults behavior
     if (!self.deliverRightMouseButtonEventsToScene) {
@@ -469,12 +474,7 @@
     }
 
     // Deliver event to active node.
-    if (self.numberOfMouseButtonsPressed < 0) {
-        self.numberOfMouseButtonsPressed = 0;
-    } else {
-        // Deliver event to active node.
-        [self.nodeForMouseEvent rightMouseUp:theEvent];
-    }
+    [self.nodeForMouseEvent rightMouseUp:theEvent];
 }
 
 - (void)otherMouseUp:(NSEvent *)theEvent {
@@ -485,14 +485,10 @@
     
     // Track mouse events
     self.numberOfMouseButtonsPressed--;
+    //NSLog(@"currently mouse buttons pressed: %ld", (long)self.numberOfMouseButtonsPressed);
     
     // Deliver event to active node.
-    if (self.numberOfMouseButtonsPressed < 0) {
-        self.numberOfMouseButtonsPressed = 0;
-    } else {
-        // Deliver event to active node.
-        [self.nodeForMouseEvent otherMouseUp:theEvent];
-    }
+    [self.nodeForMouseEvent otherMouseUp:theEvent];
 }
 
 #endif // OS X

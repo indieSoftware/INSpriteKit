@@ -357,15 +357,6 @@ static CGFloat const ButtonAlpha = 0.7;
     }
 }
 
-- (void)mouseDragged:(NSEvent *)theEvent {
-}
-
-- (void)rightMouseDragged:(NSEvent *)theEvent {
-}
-
-- (void)otherMouseDragged:(NSEvent *)theEvent {
-}
-
 - (void)mouseUp:(NSEvent *)theEvent {
     [self processMouseUp:theEvent forMouseButton:INSKMouseButtonLeft];
 }
