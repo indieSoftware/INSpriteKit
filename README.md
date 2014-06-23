@@ -3,9 +3,10 @@
 [![CocoaDocs](http://cocoapod-badges.herokuapp.com/v/INSpriteKit/badge.png)](http://cocoadocs.org/docsets/INSpriteKit)
 
 INSpriteKit adds some functionality to use with Sprite Kit.
-This library is designed prior for iOS, but may also be used with OS X. In the later case mouse events are interpreted as touches.
+This library is designed prior for iOS, but may also be used with OS X. In the later case mouse events (especially left mouse button clicks) are interpreted as touches.
 
-The library consists of
+
+## Features
 
 ### Math functions
 - Different vector calculation methods for CGPoint and methods to convert.
@@ -51,7 +52,7 @@ To run an example project run `pod install` from the project directory first (co
 Then open the workspace file INSpriteKitExample.xcworkspace with Xcode and run the example or the tests.
 The example scenes are within the 'ExampleScenes' directory, just go through them to see how to use the library.
 
-To see the difference between INSKView and SKView just rename the skView classes' name in the Storyboard (Xib-File for the OS X project).
+To see the difference in behavior between INSKView and SKView just rename the skView classes' name in the Storyboard (WindowController.xib file for the OS X project) from INSKView to SKView.
 
 
 ## Requirements
@@ -82,6 +83,25 @@ INSpriteKit is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
     pod "INSpriteKit"
+
+
+## Known Bugs
+
+### OS X touch delivery with AppKit controls over a Sprite Kit scene
+On OS X there may occur a touch delivery bug when having AppKit controls over the Sprite Kit scene. Some mouse up events may be lost.
+
+To reproduce the bug run the OS X example project and start the TouchHandlingScene. Move the mouse over the upper left corner of the AppKit button at the bottom of the scene so the mouse is also over the red button pointing to both buttons.
+Pressing the left mouse button will now trigger the AppKit button and pressing the right mouse button will trigger the red Sprite Kit button.
+
+However, when pressing and holding the left mouse button there, then pressing and holding the right mouse button and afterwards releasing the left mouse button prior the right will result in a lost event. In this case the mouse down event of the right mouse button won't be delivered to the scene, but the right mouse button up event so it will be overreleased.
+
+Reverting the order will produce a click down event which will not be lifted. So when pressing and holding the right mouse button there, then pressing and holding the left mouse button and afterwards releasing the right mouse button prior the left will also result in a lost event. In this case the mouse up event of the right mouse button won't be delivered.
+
+You can see the lost events by watching the little green/cyan square at the right of the buttons. When the total number of buttons pressed is negative the square will disappear and when a click is not released the size of the square won't shrink back to the normal size.
+
+Using [NSEvent addLocalMonitorForEventsMatchingMask:handler:] for event observing instead will result in a likewise buggy behavior, because clicks on the table view's cells won't deliver the corresponding touch up events.
+
+Any help will be appreciated, so if anybody can fix this or point me to a good direction don't hesitate to drop me a message.
 
 
 ## Version
