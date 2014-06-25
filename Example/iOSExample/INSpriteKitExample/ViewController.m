@@ -44,19 +44,21 @@
     skView.showsDrawCount = YES;
     skView.ignoresSiblingOrder = NO;
     
-    // Create and configure the scene.
-    Class sceneClass = [[NSBundle mainBundle] classNamed:self.sceneName];
-    SKScene *scene = [sceneClass sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene.
-    [skView presentScene:scene];
+    if (skView.scene == nil) {
+        // Create and configure the scene.
+        Class sceneClass = [[NSBundle mainBundle] classNamed:self.sceneName];
+        SKScene *scene = [sceneClass sceneWithSize:skView.bounds.size];
+        scene.scaleMode = SKSceneScaleModeAspectFill;
+        
+        // Present the scene.
+        [skView presentScene:scene];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 
-    // Presenting a nil scene will call willMoveFromView: on the old scene.
+    // Presenting a nil scene will call willMoveFromView: on the old scene which is often needed for cleanups.
     SKView * skView = (SKView *)self.view;
     [skView presentScene:nil];
 }
