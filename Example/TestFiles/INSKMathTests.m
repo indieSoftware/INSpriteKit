@@ -125,7 +125,7 @@
 
 #pragma mark - CGPoint calculations
 
-// TODO create some tests
+// any tests needed for wrapping methods?
 
 
 #pragma mark - CGSize calculations
@@ -298,8 +298,124 @@
 
 #pragma mark - angular convertions and calculations
 
-// TODO create some tests
+- (void)test_angularConvertions_returnsCorrectValues {
+    CGFloat degrees = 0.0;
+    CGFloat radians = 0.0;
+    XCTAssert(ScalarNearOther(DegreesToRadians(degrees), radians), @"convertion not correct");
+    XCTAssert(ScalarNearOther(RadiansToDegrees(radians), degrees), @"convertion not correct");
+    degrees = 90.0;
+    radians = M_PI_2;
+    XCTAssert(ScalarNearOther(DegreesToRadians(degrees), radians), @"convertion not correct");
+    XCTAssert(ScalarNearOther(RadiansToDegrees(radians), degrees), @"convertion not correct");
+    degrees = 180.0;
+    radians = M_PI;
+    XCTAssert(ScalarNearOther(DegreesToRadians(degrees), radians), @"convertion not correct");
+    XCTAssert(ScalarNearOther(RadiansToDegrees(radians), degrees), @"convertion not correct");
+    degrees = 360.0;
+    radians = M_PI_X_2;
+    XCTAssert(ScalarNearOther(DegreesToRadians(degrees), radians), @"convertion not correct");
+    XCTAssert(ScalarNearOther(RadiansToDegrees(radians), degrees), @"convertion not correct");
+}
 
+- (void)test_angularPointConvertions_returnsCorrectStructsAndValues {
+    CGFloat angle = 0.0;
+    CGPoint point = CGPointMake(1.0, 0.0);
+    CGPoint retPoint = CGPointForAngle(angle);
+    XCTAssertEqualWithAccuracy(angle, CGPointToAngle(point), INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.x, point.x, INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.y, point.y, INSK_EPSILON, @"convertion not correct");
+    
+    point = CGPointMake(0.0, 1.0);
+    angle = M_PI_2;
+    retPoint = CGPointForAngle(angle);
+    XCTAssertEqualWithAccuracy(angle, CGPointToAngle(point), INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.x, point.x, INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.y, point.y, INSK_EPSILON, @"convertion not correct");
+
+    point = CGPointMake(0.0, -1.0);
+    angle = -M_PI_2;
+    retPoint = CGPointForAngle(angle);
+    XCTAssertEqualWithAccuracy(angle, CGPointToAngle(point), INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.x, point.x, INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.y, point.y, INSK_EPSILON, @"convertion not correct");
+
+    point = CGPointMake(-1.0, 0.0);
+    angle = M_PI;
+    retPoint = CGPointForAngle(angle);
+    XCTAssertEqualWithAccuracy(angle, CGPointToAngle(point), INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.x, point.x, INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.y, point.y, INSK_EPSILON, @"convertion not correct");
+    angle = -M_PI;
+    retPoint = CGPointForAngle(angle);
+    XCTAssertEqualWithAccuracy(retPoint.x, point.x, INSK_EPSILON, @"convertion not correct");
+    XCTAssertEqualWithAccuracy(retPoint.y, point.y, INSK_EPSILON, @"convertion not correct");
+}
+
+- (void)test_angleIn2Pi_withAngleInBounds_returnsSameAngle {
+    CGFloat angle = 0.0;
+    XCTAssertEqualWithAccuracy(angle, AngleIn2Pi(angle), INSK_EPSILON, @"wrapping not correct");
+    angle = M_PI_2;
+    XCTAssertEqualWithAccuracy(angle, AngleIn2Pi(angle), INSK_EPSILON, @"wrapping not correct");
+    angle = M_PI;
+    XCTAssertEqualWithAccuracy(angle, AngleIn2Pi(angle), INSK_EPSILON, @"wrapping not correct");
+}
+
+- (void)test_angleIn2Pi_withNegativeAngle_returnsPositiveAngleWrappedAround {
+    XCTAssertEqualWithAccuracy(3*M_PI_2, AngleIn2Pi(-M_PI_2), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(M_PI, AngleIn2Pi(-M_PI), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(0.0, AngleIn2Pi(-2.0*M_PI+INSK_EPSILON), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(M_PI, AngleIn2Pi(-3*M_PI), 0.001, @"wrapping not correct");
+}
+
+- (void)test_angleIn2Pi_withTooBigAngle_returnsPositiveAngleWrappedAround {
+    XCTAssertEqualWithAccuracy(0.0, AngleIn2Pi(M_PI_X_2), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(M_PI, AngleIn2Pi(3*M_PI), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(M_PI_2, AngleIn2Pi(5*M_PI_2), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(0.0, AngleIn2Pi(4*M_PI), 0.001, @"wrapping not correct");
+}
+
+- (void)test_angleInPi_withAngleInBounds_returnsSameAngle {
+    CGFloat angle = 0.0;
+    XCTAssertEqualWithAccuracy(angle, AngleInPi(angle), INSK_EPSILON, @"wrapping not correct");
+    angle = M_PI_2;
+    XCTAssertEqualWithAccuracy(angle, AngleInPi(angle), INSK_EPSILON, @"wrapping not correct");
+    angle = -M_PI_2;
+    XCTAssertEqualWithAccuracy(angle, AngleInPi(angle), INSK_EPSILON, @"wrapping not correct");
+}
+
+- (void)test_angleInPi_withTooSmallAngle_returnsAngleWrappedAround {
+    XCTAssertEqualWithAccuracy(M_PI, AngleInPi(-M_PI-0.0001), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(M_PI_2, AngleInPi(-3*M_PI_2-INSK_EPSILON), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(0.0, AngleInPi(-2.0*M_PI+INSK_EPSILON), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(-M_PI_2, AngleInPi(-5*M_PI_2), 0.001, @"wrapping not correct");
+}
+
+- (void)test_angleInPi_withTooBigAngle_returnsAngleWrappedAround {
+    XCTAssertEqualWithAccuracy(-M_PI, AngleInPi(M_PI+INSK_EPSILON), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(-M_PI_2, AngleInPi(3*M_PI_2), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(0.0, AngleInPi(4*M_PI_2+INSK_EPSILON), 0.001, @"wrapping not correct");
+    XCTAssertEqualWithAccuracy(0.0, AngleInPi(4*M_PI+INSK_EPSILON), 0.001, @"wrapping not correct");
+}
+
+- (void)test_shortestAngleBetween_withTwoEqualAngles_returnsZero {
+    XCTAssertEqualWithAccuracy(0.0, ShortestAngleBetween(0.1, 0.1), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(0.0, ShortestAngleBetween(3*M_PI, 3*M_PI), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(0.0, ShortestAngleBetween(-M_PI_4, -M_PI_4), 0.001, @"calculation not correct");
+}
+
+- (void)test_shortestAngleBetween_aSmallAngle_andABigAngle_returnsTheDifference {
+    XCTAssertEqualWithAccuracy(M_PI_2, ShortestAngleBetween(0.0, M_PI_2-INSK_EPSILON), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(M_PI_4, ShortestAngleBetween(M_PI_4, M_PI_2-INSK_EPSILON), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(M_PI, ShortestAngleBetween(M_PI_2, 3*M_PI_2-0.0001), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(-M_PI, ShortestAngleBetween(M_PI_2, 3*M_PI_2+0.0001), 0.001, @"calculation not correct");
+}
+
+- (void)test_shortestAngleBetween_aBigAngle_andASmallAngle_returnsTheDifference {
+    XCTAssertEqualWithAccuracy(-M_PI_2, ShortestAngleBetween(M_PI_2-INSK_EPSILON, 0.0), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(-M_PI_4, ShortestAngleBetween(M_PI_2-INSK_EPSILON, M_PI_4), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(-M_PI, ShortestAngleBetween(3*M_PI_2-0.0001, M_PI_2), 0.001, @"calculation not correct");
+    XCTAssertEqualWithAccuracy(M_PI, ShortestAngleBetween(3*M_PI_2+0.0001, M_PI_2), 0.001, @"calculation not correct");
+}
 
 
 @end
