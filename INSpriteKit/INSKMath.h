@@ -47,6 +47,11 @@ static double const M_PI_180 = 0.01745329251994329547437168059786927;
  */
 static double const M_180_PI = 57.29577951308232286464772187173366547;
 
+/**
+ M_PI*2
+ */
+static double const M_PI_X_2 = 6.28318530717958623199592693708837032;
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,7 +71,7 @@ static inline CGPoint CGPointFromSize(CGSize size) {
 }
 
 /**
- Converts a CGPoin directly into a CGSize.
+ Converts a CGPoint directly into a CGSize.
  */
 static inline CGSize CGSizeFromPoint(CGPoint point) {
     return CGSizeMake(point.x, point.y);
@@ -381,7 +386,7 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
 
 /**
  Given an angle in radians, creates a vector of length 1.0 and returns the result as a new CGPoint.
- An angle of 0 is assumed to point to the right.
+ An angle of 0 is assumed to point to the right so the point (x=1,y=0) will be returned in this case.
  */
 static inline CGPoint CGPointForAngle(CGFloat angle) {
     return CGPointMake(cos(angle), sin(angle));
@@ -389,52 +394,64 @@ static inline CGPoint CGPointForAngle(CGFloat angle) {
 
 /**
  Returns the angle in radians of the vector described by a CGPoint.
- The range of the angle is -M_PI to M_PI; an angle of 0 points to the right.
+ The range of the angle is -M_PI to M_PI with an angle of 0 points to the right.
+ An angle of M_PI will point to the left, a negative angle points down and a positive value up.
  */
 static inline CGFloat CGPointToAngle(CGPoint point) {
     return atan2(point.y, point.x);
 }
 
 /**
- Returns the angle in radians of the vector described by a CGPoint.
- The range of the angle is 0 to 2 * M_PI; an angle of 0 points to the right.
+ Wraps a radian angle around so it stays in the range of 0 to 2 * M_PI.
  */
-static inline CGFloat CGPointToPositiveAngle(CGPoint point) {
-    CGFloat angle = atan2(point.y, point.x);
+static inline CGFloat AngleIn2Pi(CGFloat angle) {
+    while (angle >= M_PI_X_2) {
+        angle -= M_PI_X_2;
+    }
     while (angle < 0.0) {
-        angle += 2 * M_PI;
+        angle += M_PI_X_2;
     }
     return angle;
 }
-
+    
 /**
- Returns the shortest angle between two angles. The result is always between -M_PI and M_PI.
+ Wraps a radian angle around so it stays in the range of -M_PI to M_PI.
+ */
+static inline CGFloat AngleInPi(CGFloat angle) {
+    while (angle >= M_PI) {
+        angle -= M_PI_X_2;
+    }
+    while (angle < -M_PI) {
+        angle += M_PI_X_2;
+    }
+    return angle;
+}
+    
+/**
+ Returns the shortest angle between two radian angles. The result is always between -M_PI and M_PI.
+ 
+ If the angle1 is smaller than angle2 a negative angle will be returned.
+ If angle1 is bigger than angle2 a positive angle will be returned.
+ 
+ @param angle1 The first angle in radians.
+ @parma angle2 The second angle in radians.
+ @return The difference angle in radians. A positive value means clockwise, a negative counterclockwise direction.
  */
 static inline CGFloat ShortestAngleBetween(CGFloat angle1, CGFloat angle2) {
-    CGFloat angle = fmod(angle1 - angle2, M_PI * 2.0);
-    if (angle >= M_PI) {
-        angle -= M_PI * 2.0;
+    if (angle1 < 0.0) {
+        angle1 += M_PI_X_2;
     }
-    if (angle <= -M_PI) {
-        angle += M_PI * 2.0;
+    if (angle2 < 0.0) {
+        angle2 += M_PI_X_2;
+    }
+    CGFloat angle = angle2 - angle1;
+    while (angle > M_PI) {
+        angle -= M_PI_X_2;
+    }
+    while (angle < -M_PI) {
+        angle += M_PI_X_2;
     }
     return angle;
-}
-
-/**
- Rotates a CGPoint counter clockwise by an angle around a pivot.
- 
- @param point The point to rotate.
- @param pivot The pivot the point has to rotate around.
- @param angle The angle of rotation clockwise in radians.
- @return A new rotated point.
- */
-static inline CGPoint CGPointRotateByAngle(CGPoint point, CGPoint pivot, CGFloat angle) {
-    CGPoint radius = CGPointSubtract(point, pivot);
-	CGFloat cosAngle = cosf(angle);
-    CGFloat sinAngle = sinf(angle);
-	CGPoint newPoint = CGPointMake(radius.x * cosAngle - radius.y * sinAngle + pivot.x, radius.x * sinAngle + radius.y * cosAngle + pivot.y);
-	return newPoint;
 }
 
 
