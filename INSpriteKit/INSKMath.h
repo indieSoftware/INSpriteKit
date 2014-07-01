@@ -107,7 +107,7 @@ static inline CGVector CGVectorFromCGPoint(CGPoint point) {
  Converts a GLKVector2 into a CGPoint.
  
  @param vector A GLKVector2.
- @param A CGPoint.
+ @return A CGPoint.
  */
 static inline CGPoint CGPointFromGLKVector2(GLKVector2 vector) {
     return CGPointMake(vector.x, vector.y);
@@ -177,7 +177,7 @@ static inline CGFloat ScalarSign(CGFloat value) {
  @param point The point.
  @param dx The X offset.
  @param dy The y offset.
- @param A new point.
+ @return A new point.
  */
 static inline CGPoint CGPointOffset(CGPoint point, CGFloat dx, CGFloat dy) {
     return CGPointFromGLKVector2(GLKVector2Add(GLKVector2FromCGPoint(point), GLKVector2Make(dx, dy)));
@@ -524,7 +524,7 @@ static inline CGPoint CGPointForAngle(CGFloat angle) {
  The range of the angle is -M_PI to M_PI with an angle of 0 points to the right.
  An angle of M_PI will point to the left, a negative angle points down and a positive value up.
  
- @param A point as a vector.
+ @param point A point as a vector.
  @return The angle in radians.
  */
 static inline CGFloat CGPointToAngle(CGPoint point) {
