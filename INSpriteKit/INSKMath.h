@@ -65,6 +65,9 @@ extern "C" {
 
 /**
  Converts a CGSize directly into a CGPoint.
+ 
+ @param size The size.
+ @return A CGPoint.
  */
 static inline CGPoint CGPointFromSize(CGSize size) {
     return CGPointMake(size.width, size.height);
@@ -72,6 +75,9 @@ static inline CGPoint CGPointFromSize(CGSize size) {
 
 /**
  Converts a CGPoint directly into a CGSize.
+ 
+ @param point The point.
+ @return A CGSize.
  */
 static inline CGSize CGSizeFromPoint(CGPoint point) {
     return CGSizeMake(point.x, point.y);
@@ -79,6 +85,9 @@ static inline CGSize CGSizeFromPoint(CGPoint point) {
 
 /**
  Converts a CGVector into a CGPoint.
+ 
+ @param vector A CGVector.
+ @return A CGPoint.
  */
 static inline CGPoint CGPointFromCGVector(CGVector vector) {
     return CGPointMake(vector.dx, vector.dy);
@@ -86,6 +95,9 @@ static inline CGPoint CGPointFromCGVector(CGVector vector) {
 
 /**
  Converts a CGPoint into a CGVector.
+ 
+ @param point A CGPoint.
+ @return A CGVector.
  */
 static inline CGVector CGVectorFromCGPoint(CGPoint point) {
     return CGVectorMake(point.x, point.y);
@@ -93,6 +105,9 @@ static inline CGVector CGVectorFromCGPoint(CGPoint point) {
 
 /**
  Converts a GLKVector2 into a CGPoint.
+ 
+ @param vector A GLKVector2.
+ @param A CGPoint.
  */
 static inline CGPoint CGPointFromGLKVector2(GLKVector2 vector) {
     return CGPointMake(vector.x, vector.y);
@@ -100,6 +115,9 @@ static inline CGPoint CGPointFromGLKVector2(GLKVector2 vector) {
 
 /**
  Converts a CGPoint into a GLKVector2 so it can be used with the GLKMath functions from GL Kit.
+ 
+ @param point A CGPoint.
+ @return A GLKVector2.
  */
 static inline GLKVector2 GLKVector2FromCGPoint(CGPoint point) {
     return GLKVector2Make(point.x, point.y);
@@ -113,6 +131,11 @@ static inline GLKVector2 GLKVector2FromCGPoint(CGPoint point) {
 
 /**
  Ensures that a scalar value stays within the range [min..max], inclusive.
+ 
+ @param value The value to clamp.
+ @param min The minimum the value shouldn't exceed.
+ @param max The maximum the value shouldn't exceed.
+ @return The value clamped.
  */
 static inline CGFloat Clamp(CGFloat value, CGFloat min, CGFloat max) {
     return ((value < min) ? min : ((value > max) ? max : value));
@@ -120,6 +143,10 @@ static inline CGFloat Clamp(CGFloat value, CGFloat min, CGFloat max) {
 
 /**
  Returns only YES if two scalars are approximately equal, only within a difference of the value defined by INSK_EPSILON.
+ 
+ @param value A value.
+ @param other Another value.
+ @return True if both values are approximately equal.
  */
 static inline BOOL ScalarNearOther(CGFloat value, CGFloat other) {
     if (value <= other + INSK_EPSILON && value >= other - INSK_EPSILON) {
@@ -129,7 +156,10 @@ static inline BOOL ScalarNearOther(CGFloat value, CGFloat other) {
 }
 
 /**
- Returns 1.0 if a floating point value is positive; -1.0 if it is negative.
+ Returns 1.0 if a floating point value is positive, including zero or returns -1.0 if it is negative.
+ 
+ @param value A value.
+ @return +1.0 if the value is positive or zero, -1.0 if it is negative.
  */
 static inline CGFloat ScalarSign(CGFloat value) {
     return ((value >= 0.0) ? 1.0 : -1.0);
@@ -143,6 +173,11 @@ static inline CGFloat ScalarSign(CGFloat value) {
 
 /**
  Adds an offset (dx, dy) to the point.
+ 
+ @param point The point.
+ @param dx The X offset.
+ @param dy The y offset.
+ @param A new point.
  */
 static inline CGPoint CGPointOffset(CGPoint point, CGFloat dx, CGFloat dy) {
     return CGPointFromGLKVector2(GLKVector2Add(GLKVector2FromCGPoint(point), GLKVector2Make(dx, dy)));
@@ -150,6 +185,10 @@ static inline CGPoint CGPointOffset(CGPoint point, CGFloat dx, CGFloat dy) {
 
 /**
  Adds two CGPoint values and returns the result as a new CGPoint.
+ 
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGPoint CGPointAdd(CGPoint point1, CGPoint point2) {
     return CGPointFromGLKVector2(GLKVector2Add(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2)));
@@ -157,6 +196,10 @@ static inline CGPoint CGPointAdd(CGPoint point1, CGPoint point2) {
 
 /**
  Subtracts point2 from point1 and returns the result as a new CGPoint.
+ 
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGPoint CGPointSubtract(CGPoint point1, CGPoint point2) {
     return CGPointFromGLKVector2(GLKVector2Subtract(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2)));
@@ -164,6 +207,10 @@ static inline CGPoint CGPointSubtract(CGPoint point1, CGPoint point2) {
 
 /**
  Multiplies two CGPoint values and returns the result as a new CGPoint.
+ 
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGPoint CGPointMultiply(CGPoint point1, CGPoint point2) {
     return CGPointFromGLKVector2(GLKVector2Multiply(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2)));
@@ -171,6 +218,10 @@ static inline CGPoint CGPointMultiply(CGPoint point1, CGPoint point2) {
 
 /**
  Multiplies the x and y fields of a CGPoint with the same scalar value and returns the result as a new CGPoint.
+
+ @param point A point.
+ @param value A scalar.
+ @return A new point.
  */
 static inline CGPoint CGPointMultiplyScalar(CGPoint point, CGFloat value) {
     return CGPointFromGLKVector2(GLKVector2MultiplyScalar(GLKVector2FromCGPoint(point), value));
@@ -178,6 +229,10 @@ static inline CGPoint CGPointMultiplyScalar(CGPoint point, CGFloat value) {
 
 /**
  Divides point1 by point2 and returns the result as a new CGPoint.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGPoint CGPointDivide(CGPoint point1, CGPoint point2) {
     return CGPointFromGLKVector2(GLKVector2Divide(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2)));
@@ -185,6 +240,10 @@ static inline CGPoint CGPointDivide(CGPoint point1, CGPoint point2) {
 
 /**
  Divides the x and y fields of a CGPoint by the same scalar value and returns the result as a new CGPoint.
+
+ @param point A point.
+ @param value A scalar.
+ @return A new point.
  */
 static inline CGPoint CGPointDivideScalar(CGPoint point, CGFloat value) {
     return CGPointFromGLKVector2(GLKVector2DivideScalar(GLKVector2FromCGPoint(point), value));
@@ -192,6 +251,9 @@ static inline CGPoint CGPointDivideScalar(CGPoint point, CGFloat value) {
 
 /**
  Returns the length (magnitude) of the vector described by a CGPoint.
+
+ @param point A point.
+ @return The length scalar.
  */
 static inline CGFloat CGPointLength(CGPoint point) {
     return GLKVector2Length(GLKVector2FromCGPoint(point));
@@ -199,6 +261,9 @@ static inline CGFloat CGPointLength(CGPoint point) {
 
 /**
  Returns the square length by not calling sqrt() when calculating the length.
+
+ @param point A point.
+ @return The squared length.
  */
 static inline CGFloat CGPointLengthSq(CGPoint point) {
     GLKVector2 vector = GLKVector2FromCGPoint(point);
@@ -207,6 +272,9 @@ static inline CGFloat CGPointLengthSq(CGPoint point) {
 
 /**
  Normalizes the vector described by a CGPoint to length 1.0 and returns the result as a new CGPoint.
+
+ @param point A point.
+ @return A new point.
  */
 static inline CGPoint CGPointNormalize(CGPoint point) {
     return CGPointFromGLKVector2(GLKVector2Normalize(GLKVector2FromCGPoint(point)));
@@ -214,6 +282,10 @@ static inline CGPoint CGPointNormalize(CGPoint point) {
 
 /**
  Calculates the distance between two CGPoints.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGFloat CGPointDistance(CGPoint point1, CGPoint point2) {
     return GLKVector2Distance(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2));
@@ -221,6 +293,10 @@ static inline CGFloat CGPointDistance(CGPoint point1, CGPoint point2) {
 
 /**
  Calculates the square distance between two CGPoints by not calling sqrt() when calculating the distance.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGFloat CGPointDistanceSq(CGPoint point1, CGPoint point2) {
 	return CGPointLengthSq(CGPointSubtract(point1, point2));
@@ -228,6 +304,9 @@ static inline CGFloat CGPointDistanceSq(CGPoint point1, CGPoint point2) {
 
 /**
  Negates a point by multiplying x and y with -1 and returns the result as a new CGPoint.
+
+ @param point A point.
+ @return A new point.
  */
 static inline CGPoint CGPointNegate(CGPoint point) {
     return CGPointFromGLKVector2(GLKVector2Negate(GLKVector2FromCGPoint(point)));
@@ -236,6 +315,11 @@ static inline CGPoint CGPointNegate(CGPoint point) {
 /**
  Performs a linear interpolation between two CGPoint values.
  point1 will be the start point and point2 the end point while t gives the percentag in the range of 0 to 1.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @param t The percentage from 0 to 1 for interpolating point1 to point2.
+ @return A new point.
  */
 static inline CGPoint CGPointLerp(CGPoint point1, CGPoint point2, CGFloat t) {
     return CGPointFromGLKVector2(GLKVector2Lerp(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2), t));
@@ -243,6 +327,10 @@ static inline CGPoint CGPointLerp(CGPoint point1, CGPoint point2, CGFloat t) {
 
 /**
  Returns the dot product of the two CGPoint values.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGFloat CGPointDotProduct(CGPoint point1, CGPoint point2) {
     return GLKVector2DotProduct(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2));
@@ -250,6 +338,10 @@ static inline CGFloat CGPointDotProduct(CGPoint point1, CGPoint point2) {
 
 /**
  Returns the cross product of the two CGPoint values.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGFloat CGPointCrossProduct(CGPoint point1, CGPoint point2) {
 	return point1.x * point2.y - point1.y * point2.x;
@@ -257,6 +349,10 @@ static inline CGFloat CGPointCrossProduct(CGPoint point1, CGPoint point2) {
 
 /**
  Returns the projection of point1 over point2.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return A new point.
  */
 static inline CGPoint CGPointProject(CGPoint point1, CGPoint point2) {
     return CGPointFromGLKVector2(GLKVector2Project(GLKVector2FromCGPoint(point1), GLKVector2FromCGPoint(point2)));
@@ -264,6 +360,11 @@ static inline CGPoint CGPointProject(CGPoint point1, CGPoint point2) {
 
 /**
  Returns a CGPoint next to point, but between min and max inclusive.
+
+ @param point A point.
+ @param min A minimum point.
+ @param max A maximum point.
+ @return A new point.
  */
 static inline CGPoint CGPointClamp(CGPoint point, CGPoint min, CGPoint max) {
     return CGPointMake(Clamp(point.x, min.x, max.x), Clamp(point.y, min.y, max.y));
@@ -272,6 +373,10 @@ static inline CGPoint CGPointClamp(CGPoint point, CGPoint min, CGPoint max) {
 /**
  Uniforms a point to a rect by substracting the rect's origin from the point vector and
  uniforming it afterwards to the rect's size so it will be scaled procentually.
+
+ @param point A point.
+ @param rect A rectangle.
+ @return A new point.
  */
 static inline CGPoint CGPointNormalizedInRect(CGPoint point, CGRect rect) {
     GLKVector2 relativePoint = GLKVector2Subtract(GLKVector2FromCGPoint(point), GLKVector2FromCGPoint(rect.origin));
@@ -280,6 +385,10 @@ static inline CGPoint CGPointNormalizedInRect(CGPoint point, CGRect rect) {
 
 /**
  Uniforms the point to the size so the point will be procentually long to the size.
+
+ @param point A point.
+ @param size A size.
+ @return A new point.
  */
 static inline CGPoint CGPointNormalizedInSize(CGPoint point, CGSize size) {
     return CGPointFromGLKVector2(GLKVector2Divide(GLKVector2FromCGPoint(point), GLKVector2Make(size.width, size.height)));
@@ -287,6 +396,11 @@ static inline CGPoint CGPointNormalizedInSize(CGPoint point, CGSize size) {
 
 /**
  Returns true if two CGPoints are nearly equal within a variance, otherwise false.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @param variance A small delta scalar.
+ @return True if both points are within the variance, otherwise false.
  */
 static inline BOOL CGPointNearToPointWithVariance(CGPoint point1, CGPoint point2, CGFloat variance) {
     if (point1.x <= point2.x + variance && point1.x >= point2.x - variance) {
@@ -299,6 +413,10 @@ static inline BOOL CGPointNearToPointWithVariance(CGPoint point1, CGPoint point2
 
 /**
  Returns true if the CGPoints are nearly equal within a variance of INSK_EPSILON.
+
+ @param point1 A point.
+ @param point2 Another point.
+ @return True if bot points are approximately equal.
  */
 static inline BOOL CGPointNearToPoint(CGPoint point1, CGPoint point2) {
     return CGPointNearToPointWithVariance(point1, point2, INSK_EPSILON);
@@ -372,6 +490,9 @@ static inline CGSize CGSizeScaledToSizeAspectFill(CGSize origSize, CGSize destSi
 
 /**
  Converts an angle in degrees to radians.
+ 
+ @param degrees An angle in degrees.
+ @return The angle in radians.
  */
 static inline CGFloat DegreesToRadians(CGFloat degrees) {
     return degrees * M_PI_180;
@@ -379,6 +500,9 @@ static inline CGFloat DegreesToRadians(CGFloat degrees) {
 
 /**
  Converts an angle in radians to degrees.
+ 
+ @param radians An angle in radians.
+ @return The angle in degrees.
  */
 static inline CGFloat RadiansToDegrees(CGFloat radians) {
     return radians * M_180_PI;
@@ -387,6 +511,9 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
 /**
  Given an angle in radians, creates a vector of length 1.0 and returns the result as a new CGPoint.
  An angle of 0 is assumed to point to the right so the point (x=1,y=0) will be returned in this case.
+ 
+ @param angle An angle in radians.
+ @return A CGPoint as a vector.
  */
 static inline CGPoint CGPointForAngle(CGFloat angle) {
     return CGPointMake(cos(angle), sin(angle));
@@ -396,6 +523,9 @@ static inline CGPoint CGPointForAngle(CGFloat angle) {
  Returns the angle in radians of the vector described by a CGPoint.
  The range of the angle is -M_PI to M_PI with an angle of 0 points to the right.
  An angle of M_PI will point to the left, a negative angle points down and a positive value up.
+ 
+ @param A point as a vector.
+ @return The angle in radians.
  */
 static inline CGFloat CGPointToAngle(CGPoint point) {
     return atan2(point.y, point.x);
@@ -403,6 +533,9 @@ static inline CGFloat CGPointToAngle(CGPoint point) {
 
 /**
  Wraps a radian angle around so it stays in the range of 0 to 2 * M_PI.
+ 
+ @param angle An angle in radians from -M_PI to M_PI.
+ @return The angle in radians from 0 to 2*M_PI.
  */
 static inline CGFloat AngleIn2Pi(CGFloat angle) {
     while (angle >= M_PI_X_2) {
@@ -416,6 +549,9 @@ static inline CGFloat AngleIn2Pi(CGFloat angle) {
     
 /**
  Wraps a radian angle around so it stays in the range of -M_PI to M_PI.
+ 
+ @param angle An angle in radians from 0 to 2*M_PI.
+ @return The angle in radians from -M_PI to M_PI.
  */
 static inline CGFloat AngleInPi(CGFloat angle) {
     while (angle >= M_PI) {
@@ -435,7 +571,7 @@ static inline CGFloat AngleInPi(CGFloat angle) {
  
  @param angle1 The first angle in radians.
  @parma angle2 The second angle in radians.
- @return The difference angle in radians. A positive value means clockwise, a negative counterclockwise direction.
+ @return The difference angle in radians. A positive value means a clockwise, a negative counterclockwise direction.
  */
 static inline CGFloat ShortestAngleBetween(CGFloat angle1, CGFloat angle2) {
     if (angle1 < 0.0) {
