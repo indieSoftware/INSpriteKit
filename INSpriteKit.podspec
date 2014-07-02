@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "INSpriteKit"
-  s.version          = "0.1.0"
+  s.version          = "1.0"
   s.summary          = "A little iOS Library with SpriteKit extensions."
   s.homepage         = "https://github.com/indieSoftware/INSpriteKit"
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   
   s.frameworks       = 'SpriteKit', 'GLKit'
   
-  s.source           = { :git => "https://github.com/indieSoftware/INSpriteKit.git", :tag => "0.1.0" }
+  s.source           = { :git => "https://github.com/indieSoftware/INSpriteKit.git", :tag => "1.0" }
   s.source_files     = 'INSpriteKit/**/*.{h,m}'
 
 end
