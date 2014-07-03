@@ -57,8 +57,7 @@ To see the difference in behavior between INSKView and SKView just rename the sk
 
 ## Requirements
 
-iOS 7+ or OS X 10.9+
-ARC enabled
+iOS 7+ or OS X 10.9+, ARC enabled
 
 Needs the following Frameworks:
 - SpriteKit
@@ -97,9 +96,9 @@ Using [NSEvent addLocalMonitorForEventsMatchingMask:handler:] for event observin
 Any help will be appreciated, so if anybody can fix this or point me to a good direction don't hesitate to drop me a message.
 
 
-## Version
+## Changelog
 
-[ChangeLog](./CHANGELOG.md)
+[CHANGELOG.md](./CHANGELOG.md)
 
 
 ## License
