@@ -20,7 +20,7 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 ### INSKButtonNode: A UIButton adaption for Sprite Kit
 - Has full support for touch and state handling.
 - Set different visual representations for the states disabled, normal, highlighted, selected and selected+highlighted.
-- Get called back when the button is being pressed, released and released inside of its frame or use a delegate to get informed.
+- Get called back with selectors or via delegate when the button is being pressed, released and released inside of its frame.
 
 ### INSKScrollNode: A UIScrollView adaption for Sprite Kit
 - Has full support for scrolling a content node into all directions.
@@ -32,9 +32,9 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 - Present images which are greater than 1024x1024 (respectively 2048x2048).
 
 ### Math functions
-- Different vector calculation methods for CGPoint and methods to convert.
+- Different vector calculation methods for CGPoint and appropriate converting methods.
 - Methods for scalars like ScalarNearOther() to determine if a CGFloat is the same as another plus minus epsilon.
-- Angular convertions and calculations.
+- Angular conversions and calculations.
 
 ### Some categories
 - SKNode: `bringToFront` and `sendToBack` for manipulating the tree order.
