@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		198A9AD9BE6242D9B696845F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F45D98FAE76F409C8FBCB4A3 /* libPods.a */; };
 		263D8CEB195479B8000752D0 /* TouchHandlingScene2.m in Sources */ = {isa = PBXBuildFile; fileRef = 263D8CEA195479B8000752D0 /* TouchHandlingScene2.m */; };
+		267B1EF4196C0AC20046B102 /* TreeOrderManipulationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 267B1EF3196C0AC20046B102 /* TreeOrderManipulationScene.m */; };
 		269039B81952EF7700C5422B /* INSKMathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 269039B71952EF7700C5422B /* INSKMathTests.m */; };
 		269039C01952F06400C5422B /* indie_banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 269039BD1952F06400C5422B /* indie_banner.jpg */; };
 		269039C11952F06400C5422B /* indie_banner_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 269039BE1952F06400C5422B /* indie_banner_small.png */; };
@@ -47,6 +48,8 @@
 		1B7D5B20C47040CB81278150 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		263D8CE9195479B8000752D0 /* TouchHandlingScene2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHandlingScene2.h; sourceTree = "<group>"; };
 		263D8CEA195479B8000752D0 /* TouchHandlingScene2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchHandlingScene2.m; sourceTree = "<group>"; };
+		267B1EF2196C0AC20046B102 /* TreeOrderManipulationScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeOrderManipulationScene.h; sourceTree = "<group>"; };
+		267B1EF3196C0AC20046B102 /* TreeOrderManipulationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreeOrderManipulationScene.m; sourceTree = "<group>"; };
 		269039B71952EF7700C5422B /* INSKMathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSKMathTests.m; sourceTree = "<group>"; };
 		269039BD1952F06400C5422B /* indie_banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = indie_banner.jpg; sourceTree = "<group>"; };
 		269039BE1952F06400C5422B /* indie_banner_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = indie_banner_small.png; sourceTree = "<group>"; };
@@ -150,6 +153,8 @@
 				269039CB1952F0B300C5422B /* TouchHandlingScene.m */,
 				263D8CE9195479B8000752D0 /* TouchHandlingScene2.h */,
 				263D8CEA195479B8000752D0 /* TouchHandlingScene2.m */,
+				267B1EF2196C0AC20046B102 /* TreeOrderManipulationScene.h */,
+				267B1EF3196C0AC20046B102 /* TreeOrderManipulationScene.m */,
 			);
 			name = ExampleScenes;
 			path = ../../ExampleScenes;
@@ -423,6 +428,7 @@
 			files = (
 				269039CC1952F0B300C5422B /* ButtonNodeScene.m in Sources */,
 				263D8CEB195479B8000752D0 /* TouchHandlingScene2.m in Sources */,
+				267B1EF4196C0AC20046B102 /* TreeOrderManipulationScene.m in Sources */,
 				26A5C3931954279A0063868F /* WindowController.m in Sources */,
 				269039CE1952F0B300C5422B /* ScrollNodeScene.m in Sources */,
 				269039CF1952F0B300C5422B /* TouchHandlingScene.m in Sources */,
