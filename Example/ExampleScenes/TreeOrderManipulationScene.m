@@ -24,6 +24,10 @@
 #import "TreeOrderManipulationScene.h"
 
 
+// set to YES to see the insertChild:atIndex: bug in Sprite Kit when moving the white label up and down
+static BOOL const ShowSpriteKitBug = NO;
+
+
 static CGFloat const ButtonAlpha = 0.7;
 
 
@@ -48,28 +52,28 @@ static CGFloat const ButtonAlpha = 0.7;
     
     // Label for the first button
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The left button moves the white label to the back.";
+    label.text = @"Manipulate the tree order (red - blue - cyan - yellow - white) with the buttons.";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, 390);
+    [self addChild:label];
+    
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"They will move the white sprite up and down in the tree.";
     label.fontSize = 20;
     label.position = CGPointMake(0, 360);
     [self addChild:label];
     
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The middle button moves the white label to the middle of the stack.";
+    label.text = @"In code bringToFront, sendToBack and insertChildOrNil:atIndex: will be used.";
     label.fontSize = 20;
     label.position = CGPointMake(0, 330);
     [self addChild:label];
     
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"The right button moves the white label to the front.";
-    label.fontSize = 20;
-    label.position = CGPointMake(0, 300);
-    [self addChild:label];
-    
     // Create buttons for manipulating the tree order
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(130, 100)];
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
     button.color = [SKColor greenColor];
     button.colorBlendFactor = 1;
-    button.position = CGPointMake(-150, 150);
+    button.position = CGPointMake(-240, 250);
     button.name = @"back";
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"Back";
@@ -81,25 +85,40 @@ static CGFloat const ButtonAlpha = 0.7;
     [button setTouchUpInsideTarget:self selector:@selector(sendSpriteToBack)];
     [self addChild:button];
 
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(130, 100)];
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
     button.color = [SKColor greenColor];
     button.colorBlendFactor = 1;
-    button.position = CGPointMake(0, 150);
-    button.name = @"between";
+    button.position = CGPointMake(-80, 250);
+    button.name = @"down";
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Between";
+    label.text = @"Down";
     label.fontSize = 30;
     label.fontColor = [SKColor blackColor];
     button.nodeNormal = label.copy;
     label.fontColor = [SKColor darkGrayColor];
     button.nodeHighlighted = label.copy;
-    [button setTouchUpInsideTarget:self selector:@selector(moveSpriteInBetween)];
+    [button setTouchUpInsideTarget:self selector:@selector(moveSpriteDown)];
     [self addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(130, 100)];
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
     button.color = [SKColor greenColor];
     button.colorBlendFactor = 1;
-    button.position = CGPointMake(150, 150);
+    button.position = CGPointMake(80, 250);
+    button.name = @"up";
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"Up";
+    label.fontSize = 30;
+    label.fontColor = [SKColor blackColor];
+    button.nodeNormal = label.copy;
+    label.fontColor = [SKColor darkGrayColor];
+    button.nodeHighlighted = label.copy;
+    [button setTouchUpInsideTarget:self selector:@selector(moveSpriteUp)];
+    [self addChild:button];
+    
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
+    button.color = [SKColor greenColor];
+    button.colorBlendFactor = 1;
+    button.position = CGPointMake(240, 250);
     button.name = @"front";
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"Front";
@@ -113,7 +132,7 @@ static CGFloat const ButtonAlpha = 0.7;
 
     // The stack of sprites
     SKNode *stackRoot = [SKNode node];
-    stackRoot.position = CGPointMake(0, -50);
+    stackRoot.position = CGPointMake(0, 50);
     stackRoot.name = @"Stack Root";
     [self addChild:stackRoot];
     
@@ -127,8 +146,18 @@ static CGFloat const ButtonAlpha = 0.7;
     sprite.position = CGPointMake(75, -50);
     [stackRoot addChild:sprite];
     
+    sprite = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:0 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
+    sprite.name = @"Cyan Sprite";
+    sprite.position = CGPointMake(-75, 50);
+    [stackRoot addChild:sprite];
+    
+    sprite = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
+    sprite.name = @"Yellow Sprite";
+    sprite.position = CGPointMake(75, 50);
+    [stackRoot addChild:sprite];
+    
     // The linked sprite node which changes in order
-    self.whiteSprite = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
+    self.whiteSprite = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:1 blue:1 alpha:1] size:CGSizeMake(200, 100)];
     self.whiteSprite.name = @"White Sprite";
     self.whiteSprite.position = CGPointMake(0, 0);
     [stackRoot addChild:self.whiteSprite];
@@ -144,12 +173,36 @@ static CGFloat const ButtonAlpha = 0.7;
     [self.whiteSprite bringToFront];
 }
 
-- (void)moveSpriteInBetween {
-    SKNode *parent = self.whiteSprite.parent;
-    [self.whiteSprite removeFromParent];
-    [parent insertChildOrNil:self.whiteSprite atIndex:1];
-    // use the follwing line instead of the above one to see the bug in Sprite Kit
-    // [parent insertChild:self.whiteSprite atIndex:1];
+- (void)moveSpriteUp {
+    if (ShowSpriteKitBug) {
+        // use Sprite Kit's buggy insertChild:atIndex:
+        NSInteger index = [self.whiteSprite.parent.children indexOfObject:self.whiteSprite];
+        index = MIN(self.whiteSprite.parent.children.count-1, index+1);
+        SKNode *parent = self.whiteSprite.parent;
+        [self.whiteSprite removeFromParent];
+        [parent insertChild:self.whiteSprite atIndex:index];
+    } else {
+        // use INSpriteKit's insertChildOrNil:atIndex:
+        NSInteger index = [self.whiteSprite.parent.children indexOfObject:self.whiteSprite];
+        index = MIN(self.whiteSprite.parent.children.count-1, index+1);
+        [self.whiteSprite.parent insertChildOrNil:self.whiteSprite atIndex:index];
+    }
+}
+
+- (void)moveSpriteDown {
+    if (ShowSpriteKitBug) {
+        // use Sprite Kit's buggy insertChild:atIndex:
+        NSInteger index = [self.whiteSprite.parent.children indexOfObject:self.whiteSprite];
+        index = MIN(self.whiteSprite.parent.children.count-1, index+1);
+        SKNode *parent = self.whiteSprite.parent;
+        [self.whiteSprite removeFromParent];
+        [parent insertChild:self.whiteSprite atIndex:index];
+    } else {
+        // use INSpriteKit's insertChildOrNil:atIndex:
+        NSInteger index = [self.whiteSprite.parent.children indexOfObject:self.whiteSprite];
+        index = MAX(0, index-1);
+        [self.whiteSprite.parent insertChildOrNil:self.whiteSprite atIndex:index];
+    }
 }
 
 
