@@ -61,7 +61,7 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
 - (void)sendToBack {
     SKNode *parent = self.parent;
     [self removeFromParent];
-    [parent insertChild:self atIndex:0];
+    [parent insertChildOrNil:self atIndex:0];
 }
 
 - (void)addChildOrNil:(SKNode *)node {
@@ -71,8 +71,24 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
 }
 
 - (void)insertChildOrNil:(SKNode *)node atIndex:(NSInteger)index {
-    if (node != nil) {
-        [self insertChild:node atIndex:index];
+    // skip nils
+    if (node == nil) {
+        return;
+    }
+    
+    // remove from old parent
+    if (node.parent != nil) {
+        [node removeFromParent];
+    }
+    
+    // get all children beginning from the index and remove them
+    NSRange range = NSMakeRange(index, self.children.count - index);
+    NSArray *childrenAtIndex = [self.children subarrayWithRange:range];
+    [self removeChildrenInArray:childrenAtIndex];
+    // add node and the children afterwards
+    [self addChild:node];
+    for (SKNode *child in childrenAtIndex) {
+        [self addChild:child];
     }
 }
 

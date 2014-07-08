@@ -55,6 +55,8 @@
  */
 @property (nonatomic, assign) INSKMouseButton supportedMouseButtons;
 
+#pragma mark - Tree order manipulation
+/// @name Tree order manipulation
 
 /**
  Removes and re-adds the node to its parent so the node will be at top of all other parent's childen in the tree.
@@ -83,16 +85,18 @@
 
 
 /**
- Inserts a node as child to specific position, but may also be nil which will not result in an exception.
+ Inserts a node as child to a specific position the safe and working way.
  
- Same as
+ Due to a bug in Sprite Kit on iOS 7 insertChild:atIndex: doesn't insert the node but adds it only
+ so the rendering of an inserted node will always be the last in order which is not the correct behavior.
+ This method will remove all children beginning from the index, adding the node and re-adding all children afterwards.
+ So this method workarounds the rendering bug and should be used instead of SKNode's insertChild:atIndex:.
  
-    if (node != nil) {
-        [self insertChild:node atIndex:index];
-    }
+ At plus it is safe to insert nil which does nothing or a node which has already a parent in which case
+ it is first removed from the parent before adding to the new.
  
- @param node The node or nil to insert.
- @param index The index where to insert the node.
+ @param node The node to insert. May be nil.
+ @param index The index in the children array where to insert the node. Has to be in bounds of the current children array.
  */
 - (void)insertChildOrNil:(SKNode *)node atIndex:(NSInteger)index;
 
@@ -109,6 +113,9 @@
  */
 - (void)changeParent:(SKNode *)parent;
 
+
+#pragma mark - Actions
+/// @name Actions
 
 /**
  Runs a new action sequence with the given actions.
