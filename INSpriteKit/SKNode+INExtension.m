@@ -102,7 +102,9 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
     } else if (self.parent == parent) {
         // Already child of the parent, so do nothing
     } else {
-        CGPoint convertedPosition = [self.parent convertPoint:self.position toNode:parent];
+        // Convert the position over the scene to keep a global location
+        CGPoint convertedPosition = [self.parent convertPoint:self.position toNode:self.scene];
+        convertedPosition = [self.scene convertPoint:convertedPosition toNode:parent];
         [self removeFromParent];
         [parent addChild:self];
         self.position = convertedPosition;
