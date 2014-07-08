@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2600637918FD201E00C438E9 /* indie_banner_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2600637818FD201E00C438E9 /* indie_banner_small.png */; };
 		263D8CE819546104000752D0 /* TouchHandlingScene2.m in Sources */ = {isa = PBXBuildFile; fileRef = 263D8CE719546104000752D0 /* TouchHandlingScene2.m */; };
+		267B1EF1196BF2D20046B102 /* TreeOrderManipulationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 267B1EF0196BF2D20046B102 /* TreeOrderManipulationScene.m */; };
 		268C9CB318F5B2C600B5CAE5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB218F5B2C600B5CAE5 /* Foundation.framework */; };
 		268C9CB518F5B2C600B5CAE5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB418F5B2C600B5CAE5 /* CoreGraphics.framework */; };
 		268C9CB718F5B2C600B5CAE5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 268C9CB618F5B2C600B5CAE5 /* UIKit.framework */; };
@@ -49,6 +50,8 @@
 		2600637818FD201E00C438E9 /* indie_banner_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = indie_banner_small.png; path = ../../Assets/indie_banner_small.png; sourceTree = "<group>"; };
 		263D8CE619546104000752D0 /* TouchHandlingScene2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHandlingScene2.h; sourceTree = "<group>"; };
 		263D8CE719546104000752D0 /* TouchHandlingScene2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchHandlingScene2.m; sourceTree = "<group>"; };
+		267B1EEF196BF2D20046B102 /* TreeOrderManipulationScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeOrderManipulationScene.h; sourceTree = "<group>"; };
+		267B1EF0196BF2D20046B102 /* TreeOrderManipulationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreeOrderManipulationScene.m; sourceTree = "<group>"; };
 		2685CEE498864743889A487D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		268C9CAF18F5B2C600B5CAE5 /* INSpriteKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INSpriteKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		268C9CB218F5B2C600B5CAE5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -239,6 +242,8 @@
 				26FEFF911952CF1300768A4F /* TouchHandlingScene.m */,
 				263D8CE619546104000752D0 /* TouchHandlingScene2.h */,
 				263D8CE719546104000752D0 /* TouchHandlingScene2.m */,
+				267B1EEF196BF2D20046B102 /* TreeOrderManipulationScene.h */,
+				267B1EF0196BF2D20046B102 /* TreeOrderManipulationScene.m */,
 			);
 			name = ExampleScenes;
 			path = ../../ExampleScenes;
@@ -413,6 +418,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				263D8CE819546104000752D0 /* TouchHandlingScene2.m in Sources */,
+				267B1EF1196BF2D20046B102 /* TreeOrderManipulationScene.m in Sources */,
 				26FEFF951952CF1300768A4F /* TouchHandlingScene.m in Sources */,
 				26FEFF921952CF1300768A4F /* ButtonNodeScene.m in Sources */,
 				268C9CCB18F5B2C600B5CAE5 /* ViewController.m in Sources */,

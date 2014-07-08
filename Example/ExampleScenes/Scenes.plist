@@ -6,5 +6,6 @@
 	<string>ScrollNodeScene</string>
 	<string>TouchHandlingScene</string>
 	<string>TouchHandlingScene2</string>
+	<string>TreeOrderManipulationScene</string>
 </array>
 </plist>
