@@ -76,7 +76,7 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
         return;
     }
     
-    // remove from old parent
+    // remove node from old parent which may be this one
     if (node.parent != nil) {
         [node removeFromParent];
     }
@@ -85,10 +85,14 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
     NSRange range = NSMakeRange(index, self.children.count - index);
     NSArray *childrenAtIndex = [self.children subarrayWithRange:range];
     [self removeChildrenInArray:childrenAtIndex];
+
     // add node and the children afterwards
     [self addChild:node];
     for (SKNode *child in childrenAtIndex) {
-        [self addChild:child];
+        // prevent adding the node twice for the case it was already a child
+        if (child != node) {
+            [self addChild:child];
+        }
     }
 }
 
