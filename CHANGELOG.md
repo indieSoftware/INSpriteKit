@@ -1,5 +1,11 @@
 # INSpriteKit CHANGELOG
 
+## 1.0.1
+
+- Fixed insertChildOrNil:atIndex as a replacement for the buggy insertChild:atIndex:
+- Added a test scene for the tree order manipulation by bringToFront, sendToBack and insertChildOrNil:atIndex:
+
+
 ## 1.0.0
 
 Initial release includes:
