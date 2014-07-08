@@ -34,6 +34,9 @@ static CGFloat const ButtonAlpha = 0.7;
 @interface TreeOrderManipulationScene ()
 
 @property (nonatomic, strong) SKSpriteNode *whiteSprite;
+@property (nonatomic, strong) SKSpriteNode *greenSprite;
+@property (nonatomic, strong) SKSpriteNode *greenParentBlue;
+@property (nonatomic, strong) SKSpriteNode *greenParentRed;
 
 @end
 
@@ -71,7 +74,7 @@ static CGFloat const ButtonAlpha = 0.7;
     
     // Create buttons for manipulating the tree order
     button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor greenColor];
+    button.color = [SKColor lightGrayColor];
     button.colorBlendFactor = 1;
     button.position = CGPointMake(-240, 250);
     button.name = @"back";
@@ -86,7 +89,7 @@ static CGFloat const ButtonAlpha = 0.7;
     [self addChild:button];
 
     button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor greenColor];
+    button.color = [SKColor lightGrayColor];
     button.colorBlendFactor = 1;
     button.position = CGPointMake(-80, 250);
     button.name = @"down";
@@ -101,7 +104,7 @@ static CGFloat const ButtonAlpha = 0.7;
     [self addChild:button];
     
     button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor greenColor];
+    button.color = [SKColor lightGrayColor];
     button.colorBlendFactor = 1;
     button.position = CGPointMake(80, 250);
     button.name = @"up";
@@ -116,7 +119,7 @@ static CGFloat const ButtonAlpha = 0.7;
     [self addChild:button];
     
     button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor greenColor];
+    button.color = [SKColor lightGrayColor];
     button.colorBlendFactor = 1;
     button.position = CGPointMake(240, 250);
     button.name = @"front";
@@ -162,6 +165,63 @@ static CGFloat const ButtonAlpha = 0.7;
     self.whiteSprite.position = CGPointMake(0, 0);
     [stackRoot addChild:self.whiteSprite];
     
+
+    
+    // Description of the second test
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"Switch the green's parent with the following buttons (uses changeParent:).";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, -130);
+    [self addChild:label];
+
+    // Parent switching buttons
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(200, 100)];
+    button.color = [SKColor lightGrayColor];
+    button.colorBlendFactor = 1;
+    button.position = CGPointMake(-110, -200);
+    button.name = @"Left";
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"To red";
+    label.fontSize = 30;
+    label.fontColor = [SKColor blackColor];
+    button.nodeNormal = label.copy;
+    label.fontColor = [SKColor darkGrayColor];
+    button.nodeHighlighted = label.copy;
+    [button setTouchUpInsideTarget:self selector:@selector(changeParentRed)];
+    [self addChild:button];
+    
+    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(200, 100)];
+    button.color = [SKColor lightGrayColor];
+    button.colorBlendFactor = 1;
+    button.position = CGPointMake(110, -200);
+    button.name = @"right";
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"To blue";
+    label.fontSize = 30;
+    label.fontColor = [SKColor blackColor];
+    button.nodeNormal = label.copy;
+    label.fontColor = [SKColor darkGrayColor];
+    button.nodeHighlighted = label.copy;
+    [button setTouchUpInsideTarget:self selector:@selector(changeParentBlue)];
+    [self addChild:button];
+
+    // The linked green sprite node which jumps from parent to parent
+    self.greenSprite = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:1 blue:0 alpha:1] size:CGSizeMake(200, 100)];
+    self.greenSprite.name = @"Green Sprite";
+    self.greenSprite.position = CGPointMake(0, -350);
+    [self addChild:self.greenSprite];
+
+    // The green parent nodes
+    self.greenParentRed = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1 green:0 blue:0 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
+    self.greenParentRed.name = @"Red Sprite";
+    self.greenParentRed.position = CGPointMake(-75, -400);
+    [self addChild:self.greenParentRed];
+    
+    self.greenParentBlue = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:0 blue:1 alpha:ButtonAlpha] size:CGSizeMake(200, 100)];
+    self.greenParentBlue.name = @"Blue Sprite";
+    self.greenParentBlue.position = CGPointMake(75, -400);
+    [self addChild:self.greenParentBlue];
+    
     return self;
 }
 
@@ -203,6 +263,14 @@ static CGFloat const ButtonAlpha = 0.7;
         index = MAX(0, index-1);
         [self.whiteSprite.parent insertChildOrNil:self.whiteSprite atIndex:index];
     }
+}
+
+- (void)changeParentRed {
+    [self.greenSprite changeParent:self.greenParentRed];
+}
+
+- (void)changeParentBlue {
+    [self.greenSprite changeParent:self.greenParentBlue];
 }
 
 
