@@ -37,13 +37,17 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 - Angular conversions and calculations.
 
 ### Some categories
-- SKNode: `insertChildOrNil:atIndex:` as a working replacement for `insertChild:atIndex:` which is buggy on iOS 7.
-- SKNode: `bringToFront` and `sendToBack` for manipulating the tree order.
-- SKNode: `changeParent:` replaces the node's parent and converts its position.
-- SKSpriteNode: `isPointInside:` checks if a position point is inside of the sprite node's texture.
-- SKEmitterNode: `emitterLife` calculates an emitter's total life time.
-- SKEmitterNode: `runActionToRemoveWhenFinished` adds an action which will remove the emitter if finished emitting.
-- ... and some more additionals.
+- SKNode
+  - `insertChildOrNil:atIndex:` as a working replacement for `insertChild:atIndex:` which is buggy on iOS 7.
+  - `bringToFront` and `sendToBack` for manipulating the tree order.
+  - `changeParent:` replaces the node's parent and converts its position.
+- SKSpriteNode
+  - `isPointInside:` checks if a position point is inside of the sprite node's texture.
+  - `sizeUnscaled` returns the sprite's non-scaled size.
+- SKEmitterNode
+  - `emitterLife` calculates an emitter's total life time.
+  - `runActionToRemoveWhenFinished` adds an action which will remove the emitter if finished emitting.
+- ... and some more ...
 
 
 ## Examples
