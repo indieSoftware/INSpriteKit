@@ -1,5 +1,12 @@
 # INSpriteKit CHANGELOG
 
+## 1.0.2
+
+- Fixed sendToBack in SKNode+INExtension
+- Fixed insertChildOrNil:atIndex: in SKNode+INExtension
+- Added another test cases in the tree manipulating test scene
+
+
 ## 1.0.1
 
 - Fixed insertChildOrNil:atIndex as a replacement for the buggy insertChild:atIndex:
