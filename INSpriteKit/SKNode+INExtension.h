@@ -106,7 +106,7 @@
  
  Removes the node from the current parent and adds it to the new.
  The node's position will be converted so the node's position in the global scene will remain.
- Both nodes have to be in the scene graph.
+ Both nodes have to be in the scene graph otherwise the node is just added to the new parent without any conversions.
  The scale value is unaffected by this so has to be adopted manually if needed.
  If the node currently has no parent it will just be added to the new parent without any new position calculations.
  

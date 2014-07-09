@@ -101,6 +101,10 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
         [parent addChild:self];
     } else if (self.parent == parent) {
         // Already child of the parent, so do nothing
+    } else if (self.scene == nil || parent.scene == nil || self.scene != parent.scene) {
+        // No scene to translate over, just add to the new parent
+        [self removeFromParent];
+        [parent addChild:self];
     } else {
         // Convert the position over the scene to keep a global location
         CGPoint convertedPosition = [self.parent convertPoint:self.position toNode:self.scene];
