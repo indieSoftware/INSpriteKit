@@ -1,5 +1,12 @@
 # INSpriteKit CHANGELOG
 
+## 1.1
+
+- Added the possibility to call changeParent: on SKNode even when a node is not in a scene
+- Added ScalarNearOtherWithVariance() to the math
+- Added stringifyNodeTree to SKNode+INExtension
+
+
 ## 1.0.2
 
 - Fixed sendToBack in SKNode+INExtension

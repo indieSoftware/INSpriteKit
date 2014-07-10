@@ -41,13 +41,13 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
   - `insertChildOrNil:atIndex:` as a working replacement for `insertChild:atIndex:` which is buggy on iOS 7.
   - `bringToFront` and `sendToBack` for manipulating the tree order.
   - `changeParent:` replaces the node's parent and converts its position.
+  - `stringifyNodeTree` creates a NSString from a node's tree for debugging purposes.
 - SKSpriteNode
   - `isPointInside:` checks if a position point is inside of the sprite node's texture.
   - `sizeUnscaled` returns the sprite's non-scaled size.
 - SKEmitterNode
   - `emitterLife` calculates an emitter's total life time.
   - `runActionToRemoveWhenFinished` adds an action which will remove the emitter if finished emitting.
-- ... and some more ...
 
 
 ## Examples
