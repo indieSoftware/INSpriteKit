@@ -142,6 +142,21 @@ static inline CGFloat Clamp(CGFloat value, CGFloat min, CGFloat max) {
 }
 
 /**
+ Returns only YES if two scalars are approximately equal within a given variance.
+ 
+ @param value A value.
+ @param other Another value.
+ @param variance The delta in which both values may vary.
+ @return True if both values are approximately equal.
+ */
+static inline BOOL ScalarNearOtherWithVariance(CGFloat value, CGFloat other, CGFloat variance) {
+    if (value <= other + variance && value >= other - variance) {
+        return YES;
+    }
+    return NO;
+}
+    
+/**
  Returns only YES if two scalars are approximately equal, only within a difference of the value defined by INSK_EPSILON.
  
  @param value A value.

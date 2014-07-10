@@ -104,6 +104,25 @@
     XCTAssert(result == NO, @"different values should not be near each other");
 }
 
+- (void)test_scalarNearOtherWithVariance_withSameValues_returnsTrue {
+    BOOL result = ScalarNearOtherWithVariance(5.6, 5.6, 0.2);
+    XCTAssert(result == YES, @"same values should be near each other");
+
+    result = ScalarNearOtherWithVariance(5.6, 5.7, 0.2);
+    XCTAssert(result == YES, @"same values should be near each other");
+
+    result = ScalarNearOtherWithVariance(5.5, 5.7, 0.2);
+    XCTAssert(result == YES, @"same values should be near each other");
+}
+
+- (void)test_scalarNearOtherWithVariance_withDifferentValues_returnsFalse {
+    BOOL result = ScalarNearOtherWithVariance(1.2, 5.6, 0.1);
+    XCTAssert(result == NO, @"different values should not be near each other");
+
+    result = ScalarNearOtherWithVariance(5.4, 5.7, 0.2);
+    XCTAssert(result == NO, @"different values should not be near each other");
+}
+
 
 #pragma mark - ScalarSign()
 
