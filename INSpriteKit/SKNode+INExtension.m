@@ -123,5 +123,21 @@ static const char *SKNodeINExtensionSupportedMouseButtonKey = "SKNodeINExtension
     [self runAction:[SKAction sequence:actions] withKey:key];
 }
 
+- (NSString *)stringifyNodeTree {
+    NSMutableString *string = [NSMutableString string];
+    [self stringifyNodeTree:string atLevel:0];
+    return string.copy;
+}
+
+- (void)stringifyNodeTree:(NSMutableString *)string atLevel:(NSUInteger)level {
+    for (NSUInteger index = 0; index < level; ++index) {
+        [string appendString:@"-"];
+    }
+    [string appendFormat:@" '%@' (%@) %@\n", self.name, NSStringFromClass(self.class), NSStringFromCGPoint(self.position)];
+    for (SKNode *child in self.children) {
+        [child stringifyNodeTree:string atLevel:level+1];
+    }
+}
+
 
 @end

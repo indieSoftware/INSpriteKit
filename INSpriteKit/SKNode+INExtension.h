@@ -143,4 +143,18 @@
 - (void)runActions:(NSArray *)actions withKey:(NSString *)key;
 
 
+#pragma mark - Debugging
+/// @name Debugging
+
+/**
+ Returns a string representation of the node tree for debugging purposes.
+ 
+ The method will print the tree's nodes.
+ Each node's name, it's class and position will be printed, indented by '-' characters depending of their level.
+ 
+ @return The node's tree as a string representation.
+ */
+- (NSString *)stringifyNodeTree;
+
+
 @end
