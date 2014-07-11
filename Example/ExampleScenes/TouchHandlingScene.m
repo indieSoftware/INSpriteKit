@@ -62,17 +62,17 @@ static CGFloat const ButtonAlpha = 0.7;
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"The red button has a higher touch priority, the green button has a higher zPosition,";
     label.fontSize = 14;
-    label.position = CGPointMake(0, (self.size.height/2)-70);
+    label.position = CGPointMake(0, (self.size.height/2)-100);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"the blue button is added at last to the tree so they all receive touches before the yellow button.";
     label.fontSize = 14;
-    label.position = CGPointMake(0, (self.size.height/2)-100);
+    label.position = CGPointMake(0, (self.size.height/2)-130);
     [layer addChild:label];
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.text = @"On OS X the yellow button also reacts on right mouse button clicks and thus solely.";
     label.fontSize = 14;
-    label.position = CGPointMake(0, (self.size.height/2)-130);
+    label.position = CGPointMake(0, (self.size.height/2)-160);
     [layer addChild:label];
     
     // Create overlapping buttons
