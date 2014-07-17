@@ -174,6 +174,68 @@
     return self;
 }
 
++ (instancetype)buttonNodeWithTitle:(NSString *)title fontSize:(CGFloat)fontSize {
+    return [[self alloc] initWithTitle:title fontSize:fontSize];
+}
+
+- (instancetype)initWithTitle:(NSString *)title fontSize:(CGFloat)fontSize {
+    // get title size, add some border and use it as button size
+    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = title;
+    if (fontSize > 0.0) {
+        label.fontSize = fontSize;
+    }
+    CGSize titleSize = label.frame.size;
+    titleSize.width += 20;
+    titleSize.height += 20;
+    self = [self initWithSize:titleSize];
+    if (self == nil) return self;
+
+    // normale state
+    label.color = [SKColor blackColor];
+    label.colorBlendFactor = 1;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+
+    SKSpriteNode *labelBackground = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:titleSize];
+    labelBackground.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
+    [labelBackground addChild:label];
+    _nodeNormal = labelBackground;
+    
+    // highlight state
+    SKLabelNode *highlightLabel = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    highlightLabel.text = title;
+    if (fontSize > 0.0) {
+        highlightLabel.fontSize = fontSize;
+    }
+    highlightLabel.color = [SKColor blackColor];
+    highlightLabel.colorBlendFactor = 1;
+    highlightLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+
+    SKSpriteNode *highlightBackground = [SKSpriteNode spriteNodeWithColor:[SKColor lightGrayColor] size:titleSize];
+    highlightBackground.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
+    [highlightBackground addChild:highlightLabel];
+    _nodeHighlighted = highlightBackground;
+
+    // disabled state
+    SKLabelNode *disabledLabel = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    disabledLabel.text = title;
+    if (fontSize > 0.0) {
+        disabledLabel.fontSize = fontSize;
+    }
+    disabledLabel.color = [SKColor whiteColor];
+    disabledLabel.colorBlendFactor = 1;
+    disabledLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    
+    SKSpriteNode *disabledBackground = [SKSpriteNode spriteNodeWithColor:[SKColor darkGrayColor] size:titleSize];
+    disabledBackground.name = @"INSKButtonNodeDefaultRepresentation"; // only for debugging
+    [disabledBackground addChild:disabledLabel];
+    _nodeDisabled = disabledBackground;
+    
+    [self updateSubnodes];
+    
+    return self;
+}
+
 - (void)setupINSKButton {
     self.userInteractionEnabled = YES;
     

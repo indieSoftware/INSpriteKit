@@ -264,6 +264,36 @@
 - (instancetype)initWithToggleImageNamed:(NSString *)imageName highlightImageNamed:(NSString *)highlightImageName selectedImageNamed:(NSString *)selectedImageName selectedHighlightImageNamed:(NSString *)selectedHighlightImageName;
 
 
+/**
+ Creates and returns a new instance of INSKButtonNode with a label as visual representation.
+ 
+ Calls initWithTitle: and is meant for debugging purposes.
+ 
+ @param title The button's title.
+ @param fontSize The font's size.
+ @return A new button instance.
+ @see initWithTitle:
+ */
++ (instancetype)buttonNodeWithTitle:(NSString *)title fontSize:(CGFloat)fontSize;
+
+
+/**
+ Initializes a INSKButtonNode instance with a label as visual representation.
+ 
+ A new button instance will be initialized with a label and a background sprite for the states normal, hightlighted and disabled.
+ This method is only designed as an easier debugging button which has a colored shape and a simple text in it.
+ There are no (easy) possiblities to change the font, the color, and sort of.
+ In a productive environment the 'real' button will be much more complex with a sprite as background, a customized font, etc.
+ If you need a button with a title in a productive setting create a new button with it's init or initWithSize: method, create label and sprite nodes and assign them to the button's node-X properties.
+ However, if you don't have any sprites, yet, and just need a button for tests, use this initializer.
+ 
+ @param title The button's title.
+ @param fontSize The font's size. Use 0 for a default font size.
+ @return The initialized node.
+ */
+- (instancetype)initWithTitle:(NSString *)title fontSize:(CGFloat)fontSize;
+
+
 // ------------------------------------------------------------
 #pragma mark - Properties
 // ------------------------------------------------------------

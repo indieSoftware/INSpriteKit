@@ -111,6 +111,21 @@
     ((SKSpriteNode *)button.nodeSelectedHighlighted).colorBlendFactor = 0.2;
     [self addChild:button];
     
+    
+    // Label for the fourth button
+    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
+    label.text = @"A simple label button.";
+    label.fontSize = 20;
+    label.position = CGPointMake(0, -320);
+    [self addChild:label];
+    
+    // Create a labeled button
+    button = [INSKButtonNode buttonNodeWithTitle:@"A labeled button" fontSize:0];
+    button.position = CGPointMake(0, -360);
+    button.name = @"labeled button";
+    button.inskButtonNodeDelegate = self;
+    [self addChild:button];
+    
     return self;
 }
 
@@ -144,6 +159,8 @@
         INSKButtonNode *buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"push button"];
         buttonToDisable.enabled = !buttonToDisable.enabled;
         buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"push button 2"];
+        buttonToDisable.enabled = !buttonToDisable.enabled;
+        buttonToDisable = (INSKButtonNode *)[button.parent childNodeWithName:@"labeled button"];
         buttonToDisable.enabled = !buttonToDisable.enabled;
     }
 }
