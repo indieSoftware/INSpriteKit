@@ -23,6 +23,7 @@
 
 #import "SKNode+INExtension.h"
 #import <objc/runtime.h>
+#import "INSKOSBridge.h"
 
 
 static const char *SKNodeINExtensionTouchPriorityKey = "SKNodeINExtensionTouchPriorityKey";

@@ -44,6 +44,12 @@
 
 #define UIImage NSImage
 
+
+static inline NSString* NSStringFromCGPoint(CGPoint point) {
+    return [NSString stringWithFormat:@"{%.0f, %.0f}", point.x, point.y];
+}
+
+
 @interface NSImage (Bridge)
 
 /// @see CGImageForProposedRect:context:hints:
