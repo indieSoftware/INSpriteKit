@@ -21,6 +21,7 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 - Has full support for touch and state handling.
 - Set different visual representations for the states disabled, normal, highlighted, selected and selected+highlighted.
 - Get called back with selectors or via delegate when the button is being pressed, released and released inside of its frame.
+- Shortcut method buttonNodeWithTitle:fontSize: for creating labeled buttons in a test environment.
 
 ### INSKScrollNode: A UIScrollView adaption for Sprite Kit
 - Has full support for scrolling a content node into all directions.

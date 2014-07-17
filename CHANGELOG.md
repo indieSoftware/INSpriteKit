@@ -5,6 +5,7 @@
 - Added the possibility to call changeParent: on SKNode even when a node is not in a scene
 - Added ScalarNearOtherWithVariance() to the math
 - Added stringifyNodeTree to SKNode+INExtension
+- Added buttonNodeWithTitle:fontSize: to INSKButtonNode for easy creating labeled buttons in a non-productive environment
 
 
 ## 1.0.2
