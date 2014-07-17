@@ -79,17 +79,38 @@
  This class represents a button which can be enabled and disabled.
  The highlight state will be updated by the user's touch and the correspondign selectors will be called.
  The INSKButtonNode instance can also be used as a toggle button with a selected state which will also be automatically updated.
+ 
  After initializing a new instance assign SKNode objects to the node properties.
  They will be added to and removed from the scene's tree automatically upon the state changes of the button.
  At least the nodeNormal and nodeHighlighted node should be set with a visual representation or the button will be invisible.
+
  It is possible to use the same node for different states, i.e. use the same visual representation for normal and highlight just assign the SKNode to all the nodeXXX properties.
  The nodeDisabled is only used if the enabled flag is manually set to NO.
  nodeSelectedNormal and nodeSelectedHighlighted are only needed if the selected flag is also used.
+ 
  Register for target-selector callbacks to get informed about user input or use the delegate protocol.
  
+ Use the `buttonNodeWithSize:` class methods for initializing the button with a size and assign the visual nodes afterwards.
+
+    CGSize myButtonSize = ...
+    INSKButtonNode *button = [INSKButtonNode buttonNodeWithSize:myButtonSize];
+    button.nodeNormal = ...
+    button.nodeHighlighted = ...
+    [button setTouchUpInsideTarget:self selector:@selector(myButtonPressed:)];
+    ...
+    [self addChild:button];
+
+ You can also call the SKNode's class method `node` or use `alloc` + `init` and assigning a size afterwards.
+ 
+    CGSize myButtonSize = ...
+    INSKButtonNode *button = [INSKButtonNode node];
+    button.size = myButtonSize
+    ...
+ 
+ Or use the class methods like `buttonNodeWithSize:` for initializing the button already with image nodes and a size of the image.
+ 
     INSKButtonNode *button = [INSKButtonNode buttonNodeWithImageNamed:@"imageName"];
-    button.position = buttonPosition;
-    [button setTouchUpInsideTarget:self selector:@selector(buttonPressed:)];
+    [button setTouchUpInsideTarget:self selector:@selector(myButtonPressed:)];
     [self addChild:button];
  
  */
@@ -131,13 +152,6 @@
     button.nodeHighlighted = buttonHighlightRepresentation;
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
 
- Or if you need more control of the image loading process and other create the node with the SKNode's class method `node` or use alloc + init.
- 
-    INSKButtonNode *button = [INSKButtonNode node];
-    button.size = ...
-    button.normalNode = ...
-    ...
- 
  @param size The size of the button.
  @return The initialized node.
  */
