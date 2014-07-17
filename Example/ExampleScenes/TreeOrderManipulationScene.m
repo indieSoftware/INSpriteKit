@@ -53,7 +53,7 @@ static CGFloat const ButtonAlpha = 0.7;
     INSKButtonNode *button;
     SKLabelNode *label;
     
-    // Label for the first button
+    // Label for the first test
     label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
     label.name = @"1. label";
     label.text = @"Manipulate the tree order (red - blue - cyan - yellow - white) with the buttons.";
@@ -76,63 +76,27 @@ static CGFloat const ButtonAlpha = 0.7;
     [self addChild:label];
     
     // Create buttons for manipulating the tree order
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"Back" fontSize:0];
     button.position = CGPointMake(-240, 250);
     button.name = @"back";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Back";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(sendSpriteToBack)];
     [self addChild:button];
 
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"Down" fontSize:0];
     button.position = CGPointMake(-80, 250);
     button.name = @"down";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Down";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(moveSpriteDown)];
     [self addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"Up" fontSize:0];
     button.position = CGPointMake(80, 250);
     button.name = @"up";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Up";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(moveSpriteUp)];
     [self addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"Front" fontSize:0];
     button.position = CGPointMake(240, 250);
     button.name = @"front";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Front";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(bringSpriteToFront)];
     [self addChild:button];
 
@@ -179,63 +143,27 @@ static CGFloat const ButtonAlpha = 0.7;
     [self addChild:label];
 
     // Parent switching buttons
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"To red" fontSize:0];
     button.position = CGPointMake(-240, -200);
     button.name = @"To red";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"To red";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(changeParentRed)];
     [self addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"To blue" fontSize:0];
     button.position = CGPointMake(-80, -200);
     button.name = @"To blue";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"To blue";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(changeParentBlue)];
     [self addChild:button];
 
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"To scene" fontSize:0];
     button.position = CGPointMake(80, -200);
     button.name = @"To scene";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"To scene";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(changeParentScene)];
     [self addChild:button];
     
-    button = [INSKButtonNode buttonNodeWithSize:CGSizeMake(140, 100)];
-    button.color = [SKColor lightGrayColor];
-    button.colorBlendFactor = 1;
+    button = [INSKButtonNode buttonNodeWithTitle:@"Log" fontSize:0];
     button.position = CGPointMake(240, -200);
     button.name = @"Log";
-    label = [SKLabelNode labelNodeWithFontNamed:@"ChalkboardSE-Regular"];
-    label.text = @"Log";
-    label.fontSize = 30;
-    label.fontColor = [SKColor blackColor];
-    button.nodeNormal = label.copy;
-    label.fontColor = [SKColor darkGrayColor];
-    button.nodeHighlighted = label.copy;
     [button setTouchUpInsideTarget:self selector:@selector(logNodeTree)];
     [self addChild:button];
     
