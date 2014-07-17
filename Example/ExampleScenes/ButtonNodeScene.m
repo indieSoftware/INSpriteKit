@@ -72,7 +72,8 @@
     // Create "push button 2" with more control
     UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner_small" ofType:@"png"]];
     UIImage *imageHighlighted = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"indie_banner" ofType:@"jpg"]];
-    button = [[INSKButtonNode alloc] initWithSize:image.size];
+    button = [INSKButtonNode node]; // or use alloc + init
+    button.size = image.size;
     SKSpriteNode *buttonNormalRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:image]];
     button.nodeNormal = buttonNormalRepresentation;
     SKSpriteNode *buttonHighlightRepresentation = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:imageHighlighted]];

@@ -131,6 +131,13 @@
     button.nodeHighlighted = buttonHighlightRepresentation;
     [button setTouchUpInsideTarget:self selector:@selector(buttonTouchedUpInside:)];
 
+ Or if you need more control of the image loading process and other create the node with the SKNode's class method `node` or use alloc + init.
+ 
+    INSKButtonNode *button = [INSKButtonNode node];
+    button.size = ...
+    button.normalNode = ...
+    ...
+ 
  @param size The size of the button.
  @return The initialized node.
  */
