@@ -50,34 +50,45 @@
         // calculate columns and rows
         self.numberOfColumns = ceilf(self.size.width / tileSize.width);
         self.numberOfRows = ceilf(self.size.height / tileSize.height);
-        CGSize croppedTileSize = CGSizeMake(self.size.width - ((self.numberOfColumns - 1) * tileSize.width), self.size.height - ((self.numberOfRows - 1) * tileSize.height));
-        
-        // create tiles from top left corner
-        CGImageRef imageRef = image.CGImage;
-        for (NSUInteger column = 0; column < self.numberOfColumns; column++) {
-            for (NSUInteger row = 0; row < self.numberOfRows; row++) {
-                // get tile texture
-                CGRect rect = CGRectMake(column * tileSize.width, row * tileSize.height, tileSize.width, tileSize.height);
-                if (column == self.numberOfColumns - 1) {
-                    rect.size.width = croppedTileSize.width;
+        if (self.numberOfColumns > 0 && self.numberOfRows > 0) {
+            // Calculate the size of the last tile, the one at the bottom right corner, because it may have less width and height than the normal expected tileSize.
+            CGSize croppedTileSize = CGSizeMake(self.size.width - ((self.numberOfColumns - 1) * tileSize.width), self.size.height - ((self.numberOfRows - 1) * tileSize.height));
+            
+            // Create tiles from top left corner
+            CGImageRef imageRef = image.CGImage;
+            NSAssert(imageRef != nil, @"expecting an imageRef");
+            CGImageRetain(imageRef);
+            for (NSUInteger column = 0; column < self.numberOfColumns; ++column) {
+                for (NSUInteger row = 0; row < self.numberOfRows; ++row) {
+                    // Size of tile
+                    CGRect rect = CGRectMake(column * tileSize.width, row * tileSize.height, tileSize.width, tileSize.height);
+                    if (column == self.numberOfColumns - 1) {
+                        // Last column, use width of cropped tile
+                        rect.size.width = croppedTileSize.width;
+                    }
+                    if (row == self.numberOfRows - 1) {
+                        // Last row, use height of cropped tile
+                        rect.size.height = croppedTileSize.height;
+                    }
+                    // Get tile texture
+                    CGImageRef tileImage = CGImageCreateWithImageInRect(imageRef, rect);
+                    NSAssert(tileImage != nil, @"expecting an imageRef");
+                    SKTexture *texture = [SKTexture textureWithCGImage:tileImage];
+                    NSAssert(texture != nil, @"expecting a created texture");
+                    CGImageRelease(tileImage);
+                    
+                    // Add tile node
+                    SKSpriteNode *tileNode = [SKSpriteNode spriteNodeWithTexture:texture];
+                    tileNode.anchorPoint = CGPointZero;
+                    CGPoint position = CGPointMake(column * tileSize.width - self.size.width * self.anchorPoint.x, (self.numberOfRows - (row + 1)) * tileSize.height - self.size.height * self.anchorPoint.y);
+                    if (row < self.numberOfRows - 1) {
+                        position.y = position.y - (tileSize.height - croppedTileSize.height);
+                    }
+                    tileNode.position = position;
+                    [self addChild:tileNode];
                 }
-                if (row == self.numberOfRows - 1) {
-                    rect.size.height = croppedTileSize.height;
-                }
-                CGImageRef tileImage = CGImageCreateWithImageInRect(imageRef, rect);
-                SKTexture *texture = [SKTexture textureWithCGImage:tileImage];
-                CGImageRelease(tileImage);
-                
-                // add tile node
-                SKSpriteNode *tileNode = [SKSpriteNode spriteNodeWithTexture:texture];
-                tileNode.anchorPoint = CGPointZero;
-                CGPoint position = CGPointMake(column * tileSize.width - self.size.width * self.anchorPoint.x, (self.numberOfRows - (row + 1)) * tileSize.height - self.size.height * self.anchorPoint.y);
-                if (row < self.numberOfRows - 1) {
-                    position.y = position.y - (tileSize.height - croppedTileSize.height);
-                }
-                tileNode.position = position;
-                [self addChild:tileNode];
             }
+            CGImageRelease(imageRef);
         }
     }
     
