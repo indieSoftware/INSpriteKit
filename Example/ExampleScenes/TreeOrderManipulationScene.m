@@ -24,10 +24,10 @@
 #import "TreeOrderManipulationScene.h"
 
 
-// set to YES to see the insertChild:atIndex: bug in Sprite Kit when moving the white label up and down
+// Set to YES to see the insertChild:atIndex: bug in Sprite Kit when moving the white label up and down.
 static BOOL const ShowSpriteKitBug = NO;
 
-
+// The alpha value for all buttons in the scene.
 static CGFloat const ButtonAlpha = 0.7;
 
 

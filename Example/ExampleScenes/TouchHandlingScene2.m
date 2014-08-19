@@ -24,7 +24,9 @@
 #import "TouchHandlingScene2.h"
 
 
+// The alpha value for all buttons in the scene.
 static CGFloat const ButtonAlpha = 1.0;
+// The alpha value for the sprites in the scene.
 static CGFloat const SpriteAlpha = 0.4;
 
 
