@@ -1,5 +1,11 @@
 # INSpriteKit CHANGELOG
 
+## 1.2
+
+- Added the feature to tile a huge image and to pass the tiles to a INSKTiledImageNode instead of a single huge file
+- Added a test scene for INSKTiledImageNode
+
+
 ## 1.1
 
 - Added the possibility to call changeParent: on SKNode even when a node is not in a scene

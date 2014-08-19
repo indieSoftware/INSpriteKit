@@ -31,10 +31,11 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 ### INSKTiledImageNode: A SKSpriteNode for huge sprites
 - A sprite node to present images which are otherwise too huge for being used as a texture.
 - Present images which are greater than 1024x1024 (respectively 2048x2048).
+- Tile a huge image, save the tiles to disc, load them later and pass them to a INSKTiledImageNode instead of a single huge file.
 
 ### Math functions
 - Different vector calculation methods for CGPoint and appropriate converting methods.
-- Methods for scalars like ScalarNearOther() to determine if a CGFloat is the same as another plus minus epsilon.
+- Methods for scalars like `ScalarNearOther()` to determine if a CGFloat is the same as another plus minus epsilon.
 - Angular conversions and calculations.
 
 ### Some categories
@@ -55,7 +56,7 @@ This library is designed prior for iOS, but may also be used with OS X. On OS X 
 
 There are two example projects one for iOS and the other for OS X. They both use the same example scenes and tests and can be found inside of the 'Example' directory.
 To run an example project run `pod install` from the project directory first (cocoapods installed required).
-Then open the workspace file INSpriteKitExample.xcworkspace with Xcode and run the example or the tests.
+Then open the workspace file `INSpriteKitExample.xcworkspace` with Xcode and run the example or the tests.
 The example scenes are within the 'ExampleScenes' directory, just go through them to see how to use the library.
 
 To see the difference in behavior between INSKView and SKView just rename the skView classes' name in the Storyboard (WindowController.xib file for the OS X project) from INSKView to SKView.
