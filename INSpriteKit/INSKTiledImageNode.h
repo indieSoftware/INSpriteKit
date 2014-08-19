@@ -38,6 +38,8 @@
     imageNode.position = positionOfImageNode;
     [self addChild:imageNode];
  
+ The tiled image node itself has a blue background, but shouldn't be visible because the tiled images should be drawn on top of this.
+ However, if loading and tiling the huge image fails the blue becomes visible. So if encountered with a blue image have a look why the real image coudn't be displayed.
  */
 @interface INSKTiledImageNode : SKSpriteNode
 
@@ -98,6 +100,58 @@
  @param tileSize The size each tile should have at most. Width and height have to be each greater than zero.
  */
 - (instancetype)initWithImage:(UIImage *)image tileSize:(CGSize)tileSize;
+
+
+/**
+ Creates and returns a new instance of INSKTiledImageNode.
+ 
+ Calls initWithImageTiles:.
+ 
+ @param imageTiles The image to show tiled into smaller images.
+ @return A new instance.
+ @see initWithImageTiles:
+ */
++ (instancetype)tiledImageNodeWithImageTiles:(NSArray *)imageTiles;
+
+
+/**
+ Initializes a INSKTiledImageNode instance with a pack of image tiles.
+ 
+ Instead of a huge image the smaller image tiles are passed in an array of arrays.
+ The imageTiles array represents the columns and contains NSArray objects which represents the UIImage objects themselves as the secified column's row.
+ As an example tiling an image into 2x2 pieces the image tile array should look something like the following:
+ 
+    NSArray *imageTiles = [
+        [
+            image00,    // top left
+            image01     // bottom left
+        ], [
+            image10,    // top right
+            image11     // bottom right
+        ]
+    ];
+ 
+ The image tile matrix must have a propper sizes, as created by the imageTiled:tileSize: method.
+ Use the imageTiled:tileSize: method to create the image tile matrix to be sure.
+ 
+ @param imageTiles The image tiles array.
+ @see imageTiled:tileSize:
+ */
+- (instancetype)initWithImageTiles:(NSArray *)imageTiles;
+
+
+/**
+ Creates a matrix of tiled images from a given huge image and a tile size.
+ 
+ When an image is too huge to load it as a single image on a mobile device it may be necessary to tile it and save the tiles to disc on a Mac.
+ The tiles then can be loaded separately from the bundle on a mobile device and passed to the tiled image node.
+ 
+ @param image The huge image to tile.
+ @param tileSize The tile size.
+ @return A matrix of images which tiles the original huge image.
+ @see initWithImageTiles:
+ */
++ (NSArray *)imageTiled:(UIImage *)image tileSize:(CGSize)tileSize;
 
 
 @end
