@@ -4,6 +4,7 @@
 <array>
 	<string>ButtonNodeScene</string>
 	<string>ScrollNodeScene</string>
+	<string>TiledImageNodeScene</string>
 	<string>TouchHandlingScene</string>
 	<string>TouchHandlingScene2</string>
 	<string>TreeOrderManipulationScene</string>

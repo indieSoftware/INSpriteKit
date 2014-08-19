@@ -28,6 +28,8 @@
 		268C9CF618F5B4DF00B5CAE5 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */; };
 		268C9CFC18F5BBAC00B5CAE5 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */; };
 		269039BB1952EFEC00C5422B /* INSKMathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 269039BA1952EFEC00C5422B /* INSKMathTests.m */; };
+		26DEC0B919A38B850075683B /* TiledImageNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0B819A38B850075683B /* TiledImageNodeScene.m */; };
+		26DEC0BB19A3914F0075683B /* hugeImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 26DEC0BA19A3914F0075683B /* hugeImage.jpg */; };
 		26FEFF921952CF1300768A4F /* ButtonNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 26FEFF8C1952CF1300768A4F /* ButtonNodeScene.m */; };
 		26FEFF931952CF1300768A4F /* Scenes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26FEFF8D1952CF1300768A4F /* Scenes.plist */; };
 		26FEFF941952CF1300768A4F /* ScrollNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 26FEFF8F1952CF1300768A4F /* ScrollNodeScene.m */; };
@@ -77,6 +79,9 @@
 		268C9CF518F5B4DF00B5CAE5 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Spaceship.png; path = ../../Assets/Spaceship.png; sourceTree = "<group>"; };
 		269039BA1952EFEC00C5422B /* INSKMathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSKMathTests.m; sourceTree = "<group>"; };
+		26DEC0B719A38B850075683B /* TiledImageNodeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiledImageNodeScene.h; sourceTree = "<group>"; };
+		26DEC0B819A38B850075683B /* TiledImageNodeScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiledImageNodeScene.m; sourceTree = "<group>"; };
+		26DEC0BA19A3914F0075683B /* hugeImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = hugeImage.jpg; path = ../../Assets/hugeImage.jpg; sourceTree = "<group>"; };
 		26FEFF8B1952CF1300768A4F /* ButtonNodeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonNodeScene.h; sourceTree = "<group>"; };
 		26FEFF8C1952CF1300768A4F /* ButtonNodeScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonNodeScene.m; sourceTree = "<group>"; };
 		26FEFF8D1952CF1300768A4F /* Scenes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Scenes.plist; sourceTree = "<group>"; };
@@ -190,6 +195,7 @@
 		268C9CEE18F5B41800B5CAE5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				26DEC0BA19A3914F0075683B /* hugeImage.jpg */,
 				268C9CEF18F5B41800B5CAE5 /* indie_banner.jpg */,
 				2600637818FD201E00C438E9 /* indie_banner_small.png */,
 				268C9CFB18F5BBAC00B5CAE5 /* Spaceship.png */,
@@ -238,6 +244,8 @@
 				26FEFF8C1952CF1300768A4F /* ButtonNodeScene.m */,
 				26FEFF8E1952CF1300768A4F /* ScrollNodeScene.h */,
 				26FEFF8F1952CF1300768A4F /* ScrollNodeScene.m */,
+				26DEC0B719A38B850075683B /* TiledImageNodeScene.h */,
+				26DEC0B819A38B850075683B /* TiledImageNodeScene.m */,
 				26FEFF901952CF1300768A4F /* TouchHandlingScene.h */,
 				26FEFF911952CF1300768A4F /* TouchHandlingScene.m */,
 				263D8CE619546104000752D0 /* TouchHandlingScene2.h */,
@@ -329,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DEC0BB19A3914F0075683B /* hugeImage.jpg in Resources */,
 				2600637918FD201E00C438E9 /* indie_banner_small.png in Resources */,
 				268C9CFC18F5BBAC00B5CAE5 /* Spaceship.png in Resources */,
 				268C9CBF18F5B2C600B5CAE5 /* InfoPlist.strings in Resources */,
@@ -426,6 +435,7 @@
 				268C9CF618F5B4DF00B5CAE5 /* TableViewController.m in Sources */,
 				268C9CC118F5B2C600B5CAE5 /* main.m in Sources */,
 				26FEFF941952CF1300768A4F /* ScrollNodeScene.m in Sources */,
+				26DEC0B919A38B850075683B /* TiledImageNodeScene.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
