@@ -80,6 +80,7 @@ static CGFloat const TileSizeHeight = 500;
     [self clearScrollContent];
     // Load the huge image
     UIImage *image = [UIImage imageNamed:@"hugeImage.jpg"];
+    NSAssert(image != nil, @"image shouldn't be nil");
     // Create a tiled image node
     INSKTiledImageNode *tiledImageNode = [INSKTiledImageNode tiledImageNode:image tileSize:CGSizeMake(TileSizeWidth, TileSizeHeight)];
     tiledImageNode.position = CGPointMake(tiledImageNode.size.width/2, -tiledImageNode.size.height/2);
@@ -100,6 +101,7 @@ static CGFloat const TileSizeHeight = 500;
     [self clearScrollContent];
     // Load the huge image
     UIImage *image = [UIImage imageNamed:@"hugeImage.jpg"];
+    NSAssert(image != nil, @"image shouldn't be nil");
     // Create image tiles which may be saved to and loaded from disc,
     // here we pass them directly to the image node.
     NSArray *imageTiles = [INSKTiledImageNode imageTiled:image tileSize:CGSizeMake(TileSizeWidth, TileSizeHeight)];

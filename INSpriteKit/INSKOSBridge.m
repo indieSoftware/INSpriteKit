@@ -50,6 +50,10 @@
     return [[self alloc] initWithContentsOfFile:path];
 }
 
++ (UIImage *)imageWithCGImage:(CGImageRef)imageRef {
+    return [[self alloc] initWithCGImage:imageRef size:NSZeroSize];
+}
+
 @end
 
 

@@ -58,6 +58,9 @@ static inline NSString* NSStringFromCGPoint(CGPoint point) {
 /// @see initWithContentsOfFile:
 + (UIImage *)imageWithContentsOfFile:(NSString *)path;
 
+/// @see initWithCGImage:size:
++ (UIImage *)imageWithCGImage:(CGImageRef)imageRef;
+
 @end
 
 

@@ -20,6 +20,8 @@
 		269039CF1952F0B300C5422B /* TouchHandlingScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 269039CB1952F0B300C5422B /* TouchHandlingScene.m */; };
 		26A5C3931954279A0063868F /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A5C3911954279A0063868F /* WindowController.m */; };
 		26A5C3941954279A0063868F /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 26A5C3921954279A0063868F /* WindowController.xib */; };
+		26C8F6F619B5B09E00B5E78E /* TiledImageNodeScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C8F6F519B5B09E00B5E78E /* TiledImageNodeScene.m */; };
+		26C8F6F819B5B1B400B5E78E /* hugeImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 26C8F6F719B5B1B400B5E78E /* hugeImage.jpg */; };
 		26FEFF511952CCB600768A4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26FEFF501952CCB600768A4F /* Cocoa.framework */; };
 		26FEFF531952CCB600768A4F /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26FEFF521952CCB600768A4F /* SpriteKit.framework */; };
 		26FEFF5D1952CCB600768A4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 26FEFF5B1952CCB600768A4F /* InfoPlist.strings */; };
@@ -64,6 +66,9 @@
 		26A5C3901954279A0063868F /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		26A5C3911954279A0063868F /* WindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
 		26A5C3921954279A0063868F /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
+		26C8F6F419B5B09E00B5E78E /* TiledImageNodeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiledImageNodeScene.h; sourceTree = "<group>"; };
+		26C8F6F519B5B09E00B5E78E /* TiledImageNodeScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiledImageNodeScene.m; sourceTree = "<group>"; };
+		26C8F6F719B5B1B400B5E78E /* hugeImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hugeImage.jpg; sourceTree = "<group>"; };
 		26FEFF4D1952CCB600768A4F /* INSpriteKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INSpriteKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26FEFF501952CCB600768A4F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		26FEFF521952CCB600768A4F /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
@@ -126,6 +131,7 @@
 				269039BD1952F06400C5422B /* indie_banner.jpg */,
 				269039BE1952F06400C5422B /* indie_banner_small.png */,
 				269039BF1952F06400C5422B /* Spaceship.png */,
+				26C8F6F719B5B1B400B5E78E /* hugeImage.jpg */,
 			);
 			name = Assets;
 			path = ../../Assets;
@@ -149,6 +155,8 @@
 				269039C61952F0B300C5422B /* ButtonNodeScene.m */,
 				269039C81952F0B300C5422B /* ScrollNodeScene.h */,
 				269039C91952F0B300C5422B /* ScrollNodeScene.m */,
+				26C8F6F419B5B09E00B5E78E /* TiledImageNodeScene.h */,
+				26C8F6F519B5B09E00B5E78E /* TiledImageNodeScene.m */,
 				269039CA1952F0B300C5422B /* TouchHandlingScene.h */,
 				269039CB1952F0B300C5422B /* TouchHandlingScene.m */,
 				263D8CE9195479B8000752D0 /* TouchHandlingScene2.h */,
@@ -344,6 +352,7 @@
 				26FEFF6F1952CCB600768A4F /* Images.xcassets in Resources */,
 				26FEFF5D1952CCB600768A4F /* InfoPlist.strings in Resources */,
 				26FEFF631952CCB600768A4F /* Credits.rtf in Resources */,
+				26C8F6F819B5B1B400B5E78E /* hugeImage.jpg in Resources */,
 				26FEFF651952CCB600768A4F /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +443,7 @@
 				269039CF1952F0B300C5422B /* TouchHandlingScene.m in Sources */,
 				26FEFF5F1952CCB600768A4F /* main.m in Sources */,
 				26FEFF6A1952CCB600768A4F /* AppDelegate.m in Sources */,
+				26C8F6F619B5B09E00B5E78E /* TiledImageNodeScene.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
