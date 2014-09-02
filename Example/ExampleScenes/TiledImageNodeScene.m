@@ -100,7 +100,8 @@ static CGFloat const TileSizeHeight = 500;
     [self clearScrollContent];
     // Load the huge image
     UIImage *image = [UIImage imageNamed:@"hugeImage.jpg"];
-    // Create image tiles which may be saved and loaded, but here we pass them directly to the image node
+    // Create image tiles which may be saved to and loaded from disc,
+    // here we pass them directly to the image node.
     NSArray *imageTiles = [INSKTiledImageNode imageTiled:image tileSize:CGSizeMake(TileSizeWidth, TileSizeHeight)];
     // Create a tiled image node
     INSKTiledImageNode *tiledImageNode = [INSKTiledImageNode tiledImageNodeWithImageTiles:imageTiles];
