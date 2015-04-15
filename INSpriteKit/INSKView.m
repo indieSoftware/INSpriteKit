@@ -194,6 +194,11 @@
     if (self.scene == nil) {
         return;
     }
+    
+    // User interaction disabled, ignore touches.
+    if (!self.userInteractionEnabled) {
+        return;
+    }
 
     // Deliver touches to touched nodes.
     for (UITouch *touch in touches) {
@@ -317,6 +322,11 @@
         return;
     }
     
+    // User interaction disabled, ignore events.
+    if (!self.userInteractionEnabled) {
+        return;
+    }
+    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
@@ -356,6 +366,11 @@
         return;
     }
     
+    // User interaction disabled, ignore events.
+    if (!self.userInteractionEnabled) {
+        return;
+    }
+    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
@@ -389,6 +404,11 @@
         return;
     }
 
+    // User interaction disabled, ignore events.
+    if (!self.userInteractionEnabled) {
+        return;
+    }
+    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.

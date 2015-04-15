@@ -1,5 +1,10 @@
 # INSpriteKit CHANGELOG
 
+## 1.2.1
+
+- Bugfix: The view should ignore all touches if its disabled itself
+
+
 ## 1.2
 
 - Added the feature to tile a huge image and to pass the tiles to a INSKTiledImageNode instead of a single huge file
