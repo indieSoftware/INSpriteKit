@@ -322,11 +322,6 @@
         return;
     }
     
-    // User interaction disabled, ignore events.
-    if (!self.userInteractionEnabled) {
-        return;
-    }
-    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
@@ -366,11 +361,6 @@
         return;
     }
     
-    // User interaction disabled, ignore events.
-    if (!self.userInteractionEnabled) {
-        return;
-    }
-    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
@@ -404,11 +394,6 @@
         return;
     }
 
-    // User interaction disabled, ignore events.
-    if (!self.userInteractionEnabled) {
-        return;
-    }
-    
     // First button clicked
     if (self.numberOfMouseButtonsPressed == 1) {
         // Find node for event.
